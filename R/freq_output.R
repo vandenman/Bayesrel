@@ -1,7 +1,8 @@
 #' this function calls on other functions in order to return the fuentist estimates
 #' and bootstrapped cinfidence intervals, which can be of different types
 
-freqFun<- function(data, boot.n, boot.interval.type, estimates, interval, omega.freq.method, omega.conf.type){
+freqFun<- function(data, boot.n, boot.interval.type, estimates, interval, omega.freq.method,
+                   omega.conf.type){
   p <- ncol(data)
   n <- nrow(data)
   res <- list()
@@ -40,8 +41,9 @@ freqFun<- function(data, boot.n, boot.interval.type, estimates, interval, omega.
   #omega --------------------------------------------------------------------------
   if ("omega" %in% estimates){
     if (omega.freq.method == "cfa"){
-      res$est$freq.omega <- applyOmega_boot(data)
+      res$est$freq.omega <- applyOmega_boot_cfa(data)
       if (omega.conf.type == "boot"){
+        res$omega.conf.type = "boot"
         f.omega.boot.obj <- boot::boot(data, statistic = bootOmega_cfa, R = boot.n)
         tmp <- boot::boot.ci(f.omega.boot.obj, conf = interval, type = boot.interval.type)[[4]]
         if (tmp[1, 4] < 0 || tmp[1, 4] > 1 || is.na(tmp[1, 4])) {tmp[1, 4] <- NA}
@@ -50,6 +52,7 @@ freqFun<- function(data, boot.n, boot.interval.type, estimates, interval, omega.
         res$ci$up$freq.omega <- tmp[1, 5]
       }
       else{
+        res$omega.conf.type = "alg"
         omega.alg <- applyOmega_alg(data, interval)
         # res$est$freq.omega.alg <- omega.alg[1]
         res$ci$low$freq.omega <- omega.alg[2]
@@ -57,6 +60,7 @@ freqFun<- function(data, boot.n, boot.interval.type, estimates, interval, omega.
       }
     }
     if (omega.freq.method == "pa"){
+      res$omega.conf.type = "boot"
       res$est$freq.omega <- applyOmega_boot_pa(data, omega.freq.method)
       f.omega.boot.obj <- boot::boot(data, statistic = bootOmega_pa, R = boot.n)
       tmp <- boot::boot.ci(f.omega.boot.obj, conf = interval, type = boot.interval.type)[[4]]

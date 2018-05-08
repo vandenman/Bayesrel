@@ -10,7 +10,7 @@
 bre <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "basic",
                 jags = FALSE, n.iter = 2e3, n.burnin = 50, freq = TRUE,
                 estimates = c("alpha", "l2", "l6", "glb", "omega"), supr.warnings = TRUE,
-                omega.freq.method = "pa", omega.conf.type = "boot") {
+                omega.freq.method = "pa", omega.conf.type = "alg") {
   if (supr.warnings) {
     options(warn = - 1)
   }
@@ -39,7 +39,7 @@ bre <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "ba
     sum.res$freq <- freqFun(data, boot.n, boot.interval.type, estimates, interval, omega.freq.method, omega.conf.type)
     sum.res$freq.true <- TRUE
     sum.res$omega.freq.method <- omega.freq.method
-    sum.res$omega.conf.type <- omega.conf.type
+    sum.res$omega.conf.type <- sum.res$freq$omega.conf.type
   }
   if("glb" %in% estimates)
     unlink("param.csdp")

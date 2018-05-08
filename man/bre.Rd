@@ -10,7 +10,7 @@ this is also important for the package, whose print methods depend on that, unfo
 bre(raw.data, boot.n = 200, interval = 0.95, boot.interval.type = "basic",
   jags = FALSE, n.iter = 2000, n.burnin = 50, freq = TRUE,
   estimates = c("alpha", "l2", "l6", "glb", "omega"), supr.warnings = TRUE,
-  omega.freq.method = "pa", omega.conf.type = "boot")
+  omega.freq.method = "pa", omega.conf.type = "alg")
 }
 \description{
 maybe use a pca instead of a cfa. especially with the bad performance with small samples
