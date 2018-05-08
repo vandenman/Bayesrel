@@ -1,0 +1,56 @@
+#' function to calculate all the internal consitency estimates
+#' --------------------------- IMPORTANT ----------------------:
+#' decide on how to calculate the confidence interval for omega, bootstrapping or analytical by lavaan,
+#' this is also important for the package, whose print methods depend on that, unfortunately
+#'
+#' maybe use a pca instead of a cfa. especially with the bad performance with small samples
+#'
+#'
+#' @export
+bre <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "basic",
+                jags = FALSE, n.iter = 2e3, n.burnin = 50, freq = TRUE,
+                estimates = c("alpha", "l2", "l6", "glb", "omega"), supr.warnings = TRUE,
+                omega.freq.method = "pa", omega.conf.type = "boot") {
+  if (supr.warnings) {
+    options(warn = - 1)
+  }
+  estimates <- match.arg(estimates, several.ok = T)
+  sum.res <- list()
+  sum.res$call <- match.call()
+
+  data <- scale(raw.data, scale = F)
+
+  if("glb" %in% estimates){
+    control <- Rcsdp:::csdp.control(printlevel = 0)
+    Rcsdp:::write.control.file(control)
+  }
+
+  if (jags){
+    sum.res$bay <- jagsFun(data, n.iter, n.burnin, estimates, interval)
+    sum.res$bayes.method <- "jags"
+  }
+  else{
+    sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval)
+    sum.res$bayes.method <- "gibbs"
+  }
+
+  sum.res$freq.true <- FALSE
+  if(freq){
+    sum.res$freq <- freqFun(data, boot.n, boot.interval.type, estimates, interval, omega.freq.method, omega.conf.type)
+    sum.res$freq.true <- TRUE
+    sum.res$omega.freq.method <- omega.freq.method
+    sum.res$omega.conf.type <- omega.conf.type
+  }
+  if("glb" %in% estimates)
+    unlink("param.csdp")
+
+  sum.res$estimates <- estimates
+  sum.res$n.iter <- n.iter
+  sum.res$n.burnin <- n.burnin
+  sum.res$boot.interval.type <- boot.interval.type
+  sum.res$interval <- interval
+
+  class(sum.res) = 'bayesrel'
+  options(warn = 0)
+  return(sum.res)
+}
