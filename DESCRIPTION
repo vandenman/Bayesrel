@@ -11,7 +11,7 @@ Description: package provides the most common internal consistency estimates, be
     is sampling from the posterior inverse wishart for the covariance matrix based measures, and 
     gibbs sampling from the joint conditional distributions of a factor model in the case of omega 
     additionally, the bayesian posterior mcmc objects are provided, which allow for 
-    further analysis
+    further analysis. the bootstrapped samples for the estimators are alsp provided for the interested user
 License: What license is it under? open source I guess
 Encoding: UTF-8
 LazyData: true
