@@ -9,3 +9,5 @@ The package provides the most common internal consistency estimates, being:
     gibbs sampling from the joint conditional distributions of a factor model in the case of omega 
     additionally, the bayesian posterior mcmc objects are provided, which allow for 
     further analysis
+    
+    BEWARE: this is a work in progress. the basic features all work, yet the help and documentation is widely incomplete.
