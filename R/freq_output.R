@@ -63,7 +63,7 @@ freqFun<- function(data, boot.n, boot.interval.type, estimates, interval, omega.
       }
     }
     if (omega.freq.method == "pa"){
-      res$est$freq.omega <- applyOmega_boot_pa(data, omega.freq.method)
+      res$est$freq.omega <- applyOmega_boot_pa(cov(data))
       f.omega.boot.obj <- boot::boot(data, statistic = bootOmega_pa, R = boot.n)
       tmp <- boot::boot.ci(f.omega.boot.obj, conf = interval, type = boot.interval.type)[[4]]
       if (tmp[1, 4] < 0 || tmp[1, 4] > 1 || is.na(tmp[1, 4])) {tmp[1, 4] <- NA}

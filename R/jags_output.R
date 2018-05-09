@@ -1,12 +1,13 @@
 #' functions to return the jags sampled estimates of internal concsistency
 #' together with credible intervals as well as the sampled posterior distribution
 
-jagsFun <- function(data, n.iter, n.burnin, estimates, interval){
+jagsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov){
 
   bay.cov <- bayesianRel(data, inits = NULL, n.iter, n.burnin,
-                         n.thin = 1, n.chains = 1, DIC = FALSE)
-  # large object that contains all the cov matrices:
+                       n.thin = 1, n.chains = 1, DIC = FALSE)
+# large object that contains all the cov matrices:
   jC <- bay.cov$jags.res$BUGSoutput$sims.list$C
+
   res <- list()
 
   if ("alpha" %in% estimates){
@@ -43,6 +44,14 @@ jagsFun <- function(data, n.iter, n.burnin, estimates, interval){
 
   # special case omega ----------------------------------------------------------------
   if ("omega" %in% estimates){
+    if (omega.cov){
+      res$samp$jags.omega <- coda::as.mcmc(apply(jC, MARGIN = 1, applyOmega_boot_pa))
+      int <- coda::HPDinterval(res$samp$jags.omega, prob = interval)
+      res$cred$low$jags.omega <- int[1]
+      res$cred$up$jags.omega <- int[2]
+      res$est$jags.omega <- median(res$samp$jags.omega)
+    }
+    else{
     bay.omega <- bayesianOmega_h(data, inits = NULL, n.iter, n.burnin,
                                  n.thin = 1, n.chains = 1, DIC = FALSE)
     res$samp$jags.omega <- coda::as.mcmc(bay.omega$jags.res$BUGSoutput$sims.list$omega_h)
@@ -50,6 +59,7 @@ jagsFun <- function(data, n.iter, n.burnin, estimates, interval){
     res$cred$low$jags.omega <- int[1]
     res$cred$up$jags.omega <- int[2]
     res$est$jags.omega <- median(res$samp$jags.omega)
+    }
   }
   return(res)
 }

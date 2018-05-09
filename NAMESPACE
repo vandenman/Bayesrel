@@ -3,5 +3,5 @@
 S3method(print,bayesrel)
 S3method(print,summary.bayesrel)
 S3method(summary,bayesrel)
-export(bre)
+export(brel)
 export(probRel)

@@ -7,10 +7,10 @@
 #'
 #'
 #' @export
-bre <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "basic",
+brel <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "basic",
                 jags = FALSE, n.iter = 2e3, n.burnin = 50, freq = TRUE,
                 estimates = c("alpha", "l2", "l6", "glb", "omega"), supr.warnings = TRUE,
-                omega.freq.method = "cfa", omega.conf.type = "boot") {
+                omega.freq.method = "pa", omega.conf.type = "boot", omega.cov = FALSE) {
   if (supr.warnings) {
     options(warn = - 1)
   }
@@ -26,12 +26,14 @@ bre <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "ba
   }
 
   if (jags){
-    sum.res$bay <- jagsFun(data, n.iter, n.burnin, estimates, interval)
+    sum.res$bay <- jagsFun(data, n.iter, n.burnin, estimates, interval, omega.cov)
     sum.res$bayes.method <- "jags"
+    sum.res$omega.pa <- omega.cov
   }
   else{
-    sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval)
+    sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, omega.cov)
     sum.res$bayes.method <- "gibbs"
+    sum.res$omega.pa <- omega.cov
   }
 
   sum.res$freq.true <- FALSE

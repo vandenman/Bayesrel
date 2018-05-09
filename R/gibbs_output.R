@@ -2,7 +2,7 @@
 #' and the credible intervals together with the posterior distribution objects
 #' to be passed on for forther analysis
 
-gibbsFun <- function(data, n.iter, n.burnin, estimates, interval){
+gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov){
   if ("alpha" %in% estimates || "l2" %in% estimates || "l6" %in% estimates || "glb" %in% estimates){
     C <- covSamp(data, n.iter, n.burnin)
   }
@@ -42,12 +42,21 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval){
 
   # special case omega -----------------------------------------------------------------
   if ("omega" %in% estimates){
+    if (omega.cov){
+      res$samp$gibbs.omega <- coda::as.mcmc(apply(C, MARGIN = 1, applyOmega_boot_pa))
+      int <- coda::HPDinterval(res$samp$gibbs.omega, prob = interval)
+      res$cred$low$gibbs.omega <- int[1]
+      res$cred$up$gibbs.omega <- int[2]
+      res$est$gibbs.omega <- median(res$samp$gibbs.omega)
+    }
+    else{
     om.samp <- omegaSampler(data, n.iter, n.burnin)
     res$samp$gibbs.omega <- coda::as.mcmc(om.samp)
     int <- coda::HPDinterval(res$samp$gibbs.omega, prob = interval)
     res$cred$low$gibb.omega <- int[1]
     res$cred$up$gibbs.omega<- int[2]
     res$est$gibbs.omega <- median(res$samp$gibbs.omega)
+    }
   }
 
   return(res)

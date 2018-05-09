@@ -5,7 +5,7 @@
 \title{functions to return the jags sampled estimates of internal concsistency
 together with credible intervals as well as the sampled posterior distribution}
 \usage{
-jagsFun(data, n.iter, n.burnin, estimates, interval)
+jagsFun(data, n.iter, n.burnin, estimates, interval, omega.cov)
 }
 \description{
 functions to return the jags sampled estimates of internal concsistency

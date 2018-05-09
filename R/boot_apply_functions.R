@@ -30,7 +30,7 @@ bootOmega_cfa <- function(data, indices){
   return(om)
 }
 bootOmega_pa <- function(data, indices){
-  om <- applyOmega_boot_pa(data[indices, ], omega.freq.method = "pa")
+  om <- applyOmega_boot_pa(cov(data[indices, ]))
   return(om)
 }
 
@@ -71,10 +71,10 @@ applyOmega_boot_cfa <- function(data){
   return(om)
 }
 
-applyOmega_boot_pa <- function(data, omega.freq.method){
-  capture.output(f <- psych::fa(data, nfactors = 1, fm = omega.freq.method))
+applyOmega_boot_pa <- function(m){
+  f <- princFac(m)
   l.fa <- f$loadings
-  er.fa <- diag(f$residual)
+  er.fa <- f$err.var
   om <- sum(l.fa)^2 / (sum(l.fa)^2 + sum(er.fa))
   if (om < 0 || om > 1 || is.na(om)) om <- NA
   return(om)
@@ -96,7 +96,7 @@ applyOmega_alg <- function(data, interval){
   return(oms)
 }
 
-omega_base <- function(l, e){
+omegaBase <- function(l, e){
   o <- sum(l)^2 / (sum(l)^2 + sum(e))
   return(o)
 }

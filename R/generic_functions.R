@@ -34,6 +34,8 @@ summary.bayesrel <- function(x, ...){
                                 as.data.frame(as.matrix(x$freq$ci$low)))
     out.matrix$int$up <- rbind(as.data.frame(as.matrix(x$bay$cred$up)),
                                as.data.frame(as.matrix(x$freq$ci$up)))
+    out.matrix$omega.freq.method <- x$omega.freq.method
+    out.matrix$omega.conf.type <- x$omega.conf.type
   }
   else{
     out.matrix$est <- as.data.frame(as.matrix(x$bay$est))
@@ -45,9 +47,9 @@ summary.bayesrel <- function(x, ...){
   out.matrix$n.burnin <- x$n.burnin
   out.matrix$boot.interval.type <- x$boot.interval.type
   out.matrix$interval <- x$interval
-  out.matrix$omega.freq.method <- x$omega.freq.method
-  out.matrix$omega.conf.type <- x$omega.conf.type
   out.matrix$estimates <- x$estimates
+  out.matrix$omega.pa <- x$omega.pa
+  out.matrix$freq.true <- x$freq.true
 
   class(out.matrix) <- "summary.bayesrel"
   out.matrix
@@ -75,14 +77,21 @@ print.summary.bayesrel <- function(x, ...){
   print.default(x$n.burnin)
   cat("uncertainty interval:")
   print.default(x$interval)
-  cat("confidence intervals are estimated with bootstrapping interval type:")
-  print.default(x$boot.interval.type)
-  if ("omega" %in% x$estimates){
-    cat("frequentist omega method is:")
-    print.default(x$omega.freq.method)
-    cat("omega confidence interval is estimated with:")
-    print.default(x$omega.conf.type)
+  if (x$omega.pa){
+    cat("bayesian omega is calculated with posterior sampling from covariance matrices\n")
+    #print.default("")
   }
+  if (x$freq.true){
+    cat("confidence intervals are estimated with bootstrapping interval type:")
+    print.default(x$boot.interval.type)
+    if ("omega" %in% x$estimates){
+      cat("frequentist omega method is:")
+      print.default(x$omega.freq.method)
+      cat("omega confidence interval is estimated with:")
+      print.default(x$omega.conf.type)
+    }
+  }
+
 }
 
 
