@@ -1,7 +1,7 @@
 #' functions to return the jags sampled estimates of internal concsistency
 #' together with credible intervals as well as the sampled posterior distribution
 
-jagsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov){
+jagsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp){
 
   bay.cov <- bayesianRel(data, inits = NULL, n.iter, n.burnin,
                        n.thin = 1, n.chains = 1, DIC = FALSE)
@@ -44,7 +44,7 @@ jagsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov){
 
   # special case omega ----------------------------------------------------------------
   if ("omega" %in% estimates){
-    if (omega.cov){
+    if (omega.cov.samp){
       res$samp$jags.omega <- coda::as.mcmc(apply(jC, MARGIN = 1, applyOmega_boot_pa))
       int <- coda::HPDinterval(res$samp$jags.omega, prob = interval)
       res$cred$low$jags.omega <- int[1]

@@ -10,35 +10,59 @@ freqFun<- function(data, boot.n, boot.interval.type, estimates, interval, omega.
   if ("alpha" %in% estimates){
     res$est$freq.alpha <- applyAlpha(cov(data))
     f.alpha.boot.obj <- boot::boot(data, statistic = bootAlpha, R = boot.n)
-    tmp <- boot::boot.ci(f.alpha.boot.obj, conf = interval, type = boot.interval.type)[[4]]
-    res$ci$low$freq.alpha <- tmp[1, 4]
-    res$ci$up$freq.alpha <- tmp[1, 5]
+    if (length(unique(round(f.alpha.boot.obj$t, 4))) == 1){
+      res$ci$low$freq.alpha <- 1
+      res$ci$up$freq.alpha <- 1
+    }
+    else{
+      tmp <- boot::boot.ci(f.alpha.boot.obj, conf = interval, type = boot.interval.type)[[4]]
+      res$ci$low$freq.alpha <- tmp[1, 4]
+      res$ci$up$freq.alpha <- tmp[1, 5]
+    }
     res$boot$alpha <- f.alpha.boot.obj$t
   }
   if ("l2" %in% estimates){
     res$est$freq.l2 <- applyL2(cov(data))
     f.l2.boot.obj <- boot::boot(data, statistic = bootL2, R = boot.n)
-    tmp <- boot::boot.ci(f.l2.boot.obj, conf = interval, type = boot.interval.type)[[4]]
-    res$ci$low$freq.l2 <- tmp[1, 4]
-    res$ci$up$freq.l2 <- tmp[1, 5]
+    if (length(unique(round(f.l2.boot.obj$t, 4))) == 1){
+      res$ci$low$freq.l2 <- 1
+      res$ci$up$freq.l2 <- 1
+    }
+    else{
+      tmp <- boot::boot.ci(f.l2.boot.obj, conf = interval, type = boot.interval.type)[[4]]
+      res$ci$low$freq.l2 <- tmp[1, 4]
+      res$ci$up$freq.l2 <- tmp[1, 5]
+    }
     res$boot$l2 <- f.l2.boot.obj$t
   }
 
   if ("l6" %in% estimates){
     res$est$freq.l6 <- applyL6(cov(data))
     f.l6.boot.obj <- boot::boot(data, statistic = bootL6, R = boot.n)
-    tmp <- boot::boot.ci(f.l6.boot.obj, conf = interval, type = boot.interval.type)[[4]]
-    res$ci$low$freq.l6 <- tmp[1, 4]
-    res$ci$up$freq.l6 <- tmp[1, 5]
+    if (length(unique(round(f.l6.boot.obj$t, 4))) == 1){
+      res$ci$low$freq.l6 <- 1
+      res$ci$up$freq.l6 <- 1
+    }
+    else{
+      tmp <- boot::boot.ci(f.l6.boot.obj, conf = interval, type = boot.interval.type)[[4]]
+      res$ci$low$freq.l6 <- tmp[1, 4]
+      res$ci$up$freq.l6 <- tmp[1, 5]
+    }
     res$boot$l6 <- f.l6.boot.obj$t
   }
 
   if ("glb" %in% estimates){
     res$est$freq.glb <- applyGlb(cov(data))
     f.glb.boot.obj <- boot::boot(data, statistic = bootGlb, R = boot.n)
-    tmp <- boot::boot.ci(f.glb.boot.obj, conf = interval, type = boot.interval.type)[[4]]
-    res$ci$low$freq.glb <- tmp[1, 4]
-    res$ci$up$freq.glb <- tmp[1, 5]
+    if (length(unique(round(f.glb.boot.obj$t, 4))) == 1){
+      res$ci$low$freq.glb <- 1
+      res$ci$up$freq.glb <- 1
+    }
+    else{
+      tmp <- boot::boot.ci(f.glb.boot.obj, conf = interval, type = boot.interval.type)[[4]]
+      res$ci$low$freq.glb <- tmp[1, 4]
+      res$ci$up$freq.glb <- tmp[1, 5]
+    }
     res$boot$glb <- f.glb.boot.obj$t
   }
 
@@ -49,8 +73,8 @@ freqFun<- function(data, boot.n, boot.interval.type, estimates, interval, omega.
       if (omega.conf.type == "boot"){
         f.omega.boot.obj <- boot::boot(data, statistic = bootOmega_cfa, R = boot.n)
         tmp <- boot::boot.ci(f.omega.boot.obj, conf = interval, type = boot.interval.type)[[4]]
-        if (tmp[1, 4] < 0 || tmp[1, 4] > 1 || is.na(tmp[1, 4])) {tmp[1, 4] <- NA}
-        if (tmp[1, 5] < 0 || tmp[1, 5] > 1 || is.na(tmp[1, 5])) {tmp[1, 5] <- NA}
+        if (is.na(tmp[1, 4])) {tmp[1, 4] <- NA}
+        if (is.na(tmp[1, 5])) {tmp[1, 5] <- NA}
         res$ci$low$freq.omega <- tmp[1, 4]
         res$ci$up$freq.omega <- tmp[1, 5]
         res$boot$omega <- f.omega.boot.obj$t
