@@ -4,7 +4,7 @@
 
 gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp){
   if ("alpha" %in% estimates || "l2" %in% estimates || "l6" %in% estimates || "glb" %in% estimates || omega.cov.samp){
-    C <- covSamp(data, n.iter, n.burnin)
+    C <- covSamp2(data, n.iter, n.burnin)
   }
   res <- list()
 

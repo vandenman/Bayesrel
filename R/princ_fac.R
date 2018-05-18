@@ -45,7 +45,7 @@ princFac <- function(m, max.iter = 50){
 
 corSmooth2 <- function (x, eig.tol = 10^-12) {
   eigens <- try(eigen(x), TRUE)
-  if (class(eigens) == as.character("try-error")) {
+  if (inherits(eigens, "try-error")) {
     warning("I am sorry, there is something seriously wrong with the correlation matrix,\ncor.smooth failed to  smooth it because some of the eigen values are NA.  \nAre you sure you specified the data correctly?")
   }
   else {
