@@ -70,7 +70,13 @@ freqFun<- function(data, boot.n, boot.interval.type, estimates, interval, omega.
   if ("omega" %in% estimates){
     if (omega.freq.method == "cfa"){
       res$est$freq.omega <- applyOmega_boot_cfa(data)
-      if (omega.conf.type == "boot"){
+      if (omega.conf.type == "alg"){
+        omega.alg <- applyOmega_alg(data, interval)
+        # res$est$freq.omega.alg <- omega.alg[1]
+        res$ci$low$freq.omega <- omega.alg[2]
+        res$ci$up$freq.omega <- omega.alg[3]
+      }
+      else{
         f.omega.boot.obj <- boot::boot(data, statistic = bootOmega_cfa, R = boot.n)
         tmp <- boot::boot.ci(f.omega.boot.obj, conf = interval, type = boot.interval.type)[[4]]
         if (is.na(tmp[1, 4])) {tmp[1, 4] <- NA}
@@ -78,12 +84,6 @@ freqFun<- function(data, boot.n, boot.interval.type, estimates, interval, omega.
         res$ci$low$freq.omega <- tmp[1, 4]
         res$ci$up$freq.omega <- tmp[1, 5]
         res$boot$omega <- f.omega.boot.obj$t
-      }
-      else{
-        omega.alg <- applyOmega_alg(data, interval)
-        # res$est$freq.omega.alg <- omega.alg[1]
-        res$ci$low$freq.omega <- omega.alg[2]
-        res$ci$up$freq.omega <- omega.alg[3]
       }
     }
     if (omega.freq.method == "pa"){
