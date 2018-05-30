@@ -38,7 +38,8 @@ brel <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "b
 
   sum.res$freq.true <- FALSE
   if(freq){
-    sum.res$freq <- freqFun(data, boot.n, boot.interval.type, estimates, interval, omega.freq.method, omega.conf.type)
+    # sum.res$freq <- freqFun(data, boot.n, boot.interval.type, estimates, interval, omega.freq.method, omega.conf.type)
+    sum.res$freq <- freqFun2(data, boot.n, estimates, interval, omega.freq.method, omega.conf.type)
     sum.res$freq.true <- TRUE
     sum.res$omega.freq.method <- omega.freq.method
     sum.res$omega.conf.type <- omega.conf.type
