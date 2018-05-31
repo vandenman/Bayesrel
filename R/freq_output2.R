@@ -22,8 +22,8 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
       res$ci$up$freq.alpha <- 1
     }
     else{
-      res$ci$low$freq.alpha <- quantile(alpha.obj, probs = (1 - interval)/2)
-      res$ci$up$freq.alpha <- quantile(alpha.obj, probs = interval + (1 - interval)/2)
+      res$ci$low$freq.alpha <- quantile(alpha.obj, probs = (1 - interval)/2, na.rm = T)
+      res$ci$up$freq.alpha <- quantile(alpha.obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
     res$boot$alpha <- alpha.obj
   }
@@ -35,8 +35,8 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
       res$ci$up$freq.l2 <- 1
     }
     else{
-      res$ci$low$freq.l2 <- quantile(l2.obj, probs = (1 - interval)/2)
-      res$ci$up$freq.l2 <- quantile(l2.obj, probs = interval + (1 - interval)/2)
+      res$ci$low$freq.l2 <- quantile(l2.obj, probs = (1 - interval)/2, na.rm = T)
+      res$ci$up$freq.l2 <- quantile(l2.obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
     res$boot$l2 <- l2.obj
   }
@@ -49,8 +49,8 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
       res$ci$up$freq.l6 <- 1
     }
     else{
-      res$ci$low$freq.l6 <- quantile(l6.obj, probs = (1 - interval)/2)
-      res$ci$up$freq.l6 <- quantile(l6.obj, probs = interval + (1 - interval)/2)
+      res$ci$low$freq.l6 <- quantile(l6.obj, probs = (1 - interval)/2, na.rm = T)
+      res$ci$up$freq.l6 <- quantile(l6.obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
     res$boot$l6 <- l6.obj
   }
@@ -62,8 +62,8 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
       res$ci$up$freq.glb <- 1
     }
     else{
-      res$ci$low$freq.glb <- quantile(glb.obj, probs = (1 - interval)/2)
-      res$ci$up$freq.glb <- quantile(glb.obj, probs = interval + (1 - interval)/2)
+      res$ci$low$freq.glb <- quantile(glb.obj, probs = (1 - interval)/2, na.rm = T)
+      res$ci$up$freq.glb <- quantile(glb.obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
     res$boot$glb <- glb.obj
   }
@@ -86,8 +86,8 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
           res$ci$up$freq.omega <- 1
         }
         else{
-          res$ci$low$freq.omega <- quantile(omega.obj, probs = (1 - interval)/2)
-          res$ci$up$freq.omega <- quantile(omega.obj, probs = interval + (1 - interval)/2)
+          res$ci$low$freq.omega <- quantile(omega.obj, probs = (1 - interval)/2, na.rm = T)
+          res$ci$up$freq.omega <- quantile(omega.obj, probs = interval + (1 - interval)/2, na.rm = T)
         }
         res$boot$omega <- omega.obj
       }
@@ -99,8 +99,8 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
         res$ci$up$freq.omega <- 1
       }
       else{
-        res$ci$low$freq.omega <- quantile(omega.obj, probs = (1 - interval)/2)
-        res$ci$up$freq.omega <- quantile(omega.obj, probs = interval + (1 - interval)/2)
+        res$ci$low$freq.omega <- quantile(omega.obj, probs = (1 - interval)/2, na.rm = T)
+        res$ci$up$freq.omega <- quantile(omega.obj, probs = interval + (1 - interval)/2, na.rm = T)
       }
       res$boot$omega <- omega.obj
       res$est$freq.omega <- applyOmega_boot_pa(cov(data))
