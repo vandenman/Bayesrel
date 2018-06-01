@@ -8,10 +8,10 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
   p <- ncol(data)
   n <- nrow(data)
   res <- list()
-  boot.data <- array(0, c(boot.n, 1000, p))
+  boot.data <- array(0, c(boot.n, n, p))
   boot.cov <- array(0, c(boot.n, p, p))
   for (i in 1:boot.n){
-    boot.data[i, , ] <- as.matrix(dplyr::sample_n(as.data.frame(data), size = 1000, replace=TRUE))
+    boot.data[i, , ] <- as.matrix(dplyr::sample_n(as.data.frame(data), size = n, replace=TRUE))
     boot.cov[i, , ] <- cov(boot.data[i, , ])
   }
   if ("alpha" %in% estimates){
