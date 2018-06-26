@@ -101,7 +101,7 @@ omegaBase <- function(l, e){
   return(o)
 }
 
-quantiles <- function(samp, n.out){
-  q <- quantile(samp, probs = seq(0, 1, length.out = n.out))
+quantiles <- function(samp){
+  q <- quantile(samp, probs = seq(0, 1, length.out = 200))
   return(q)
 }
