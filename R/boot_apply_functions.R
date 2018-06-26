@@ -100,3 +100,8 @@ omegaBase <- function(l, e){
   o <- sum(l)^2 / (sum(l)^2 + sum(e))
   return(o)
 }
+
+quantiles <- function(samp, n.out){
+  q <- quantile(samp, probs = seq(0, 1, length.out = n.out))
+  return(q)
+}
