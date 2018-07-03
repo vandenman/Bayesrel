@@ -10,7 +10,7 @@ princFac <- function(m, max.iter = 50){
   h2 <- sum(diag(r))
   error <- h2
   i <- 1
-  while (error > min.error){
+  while (error > min.error || i == 1){
     r.eigen <- eigen(r)
 
     lambda <- as.matrix(r.eigen$vectors[, 1] * sqrt(r.eigen$values[1]))
