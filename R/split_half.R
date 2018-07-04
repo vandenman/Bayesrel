@@ -1,6 +1,36 @@
 
 # benton 2013
+MaxSplitExhaustive <- function(M){
+  #data – matrix of items scores (row=candidates,column=items)
+  cov1 <- M
+  nite <- ncol(M)
+  mat1 <- (bin.combs2(nite)+1)/2
+  res1 <- 0
+  for (jjz in 1:length(mat1[,1])){
+    xal <- mat1[jjz,]
+    gutt1 <- 4*(t(xal)%*%cov1%*%(1-xal))/sum(cov1)
+    resrand <- gutt1
+    if (resrand > res1){
+      res1 <- resrand
+    }
+  }
+  return(res1)
+}
 
+
+bin.combs2 <- function (p) {
+  retval <- matrix(0, nrow = 2^p, ncol = p)
+  for (n in 1:p) {
+    retval[, n] <- rep(c(rep(-1, (2^p/2^n)), rep(1, (2^p/2^n))),
+                       length = 2^p)
+  }
+  len <- (nrow(retval)/2)
+  comb <- retval[1:len, ]
+  comb
+}
+
+# this is the solution that is supposed to be faster.
+# yet when the covariance matrix has lots of negative entries, it doesnt produce a solution
 MaxSplitHalfHad12 <- function(M){
   #data – matrix of items scores (row=candidates,column=items)
   #start with odd vs even
@@ -73,5 +103,5 @@ MaxSplitHalf = function(M, xal){
              # feldt=as.vector(feldt),
              # xal=xal)
   return(res)
-  }
+}
 

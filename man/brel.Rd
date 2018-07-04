@@ -9,9 +9,10 @@ this is also important for the package, whose print methods depend on that, unfo
 \usage{
 brel(raw.data, boot.n = 200, interval = 0.95,
   boot.interval.type = "basic", jags = FALSE, n.iter = 2000,
-  n.burnin = 50, freq = TRUE, estimates = c("alpha", "l2", "l6", "glb",
-  "omega"), supr.warnings = TRUE, omega.freq.method = "pa",
-  omega.conf.type = "boot", omega.cov.samp = TRUE, returnSamples = FALSE)
+  n.burnin = 50, freq = TRUE, estimates = c("alpha", "l2", "l4", "l6",
+  "glb", "omega"), supr.warnings = TRUE, omega.freq.method = "pa",
+  omega.conf.type = "boot", omega.cov.samp = TRUE, returnSamples = FALSE,
+  prior.samp = FALSE)
 }
 \description{
 maybe use a pca instead of a cfa. especially with the bad performance with small samples

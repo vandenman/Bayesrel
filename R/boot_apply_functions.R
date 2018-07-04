@@ -1,44 +1,5 @@
 #' the basic functions for calculating and bootstrapping the internal consistency estimates
 
-#########   boot functions ##########
-
-bootAlpha <- function(data, indices){
-  a <- applyAlpha(cov(data[indices, ]))
-  return(a)
-}
-
-#freq conf intervall with bootstrapping
-bootL2 <- function(data, indices){
-  l2 <- applyL2(cov(data[indices, ]))
-  return(l2)
-}
-
-#freq conf intervall with bootstrapping
-bootL6 <- function(data, indices){
-  l6 <- applyL6(cov(data[indices, ]))
-  return(l6)
-}
-
-#freq conf intervall with bootstrapping
-bootL4 <- function(data, indices){
-  l4 <- applyL4(cov(data[indices, ]))
-  return(l4)
-}
-
-# define function for bootstrapping
-bootGlb <- function(data, indices){
-  gl <- glb.algebraic2(cov(data[indices, ]))$glb
-  return(gl)
-}
-
-bootOmega_cfa <- function(data, indices){
-  om <- applyOmega_boot_cfa(data[indices, ])
-  return(om)
-}
-bootOmega_pa <- function(data, indices){
-  om <- applyOmega_boot_pa(cov(data[indices, ]))
-  return(om)
-}
 
 #######  measures functions ##########
 
@@ -57,7 +18,7 @@ applyL2 <- function(M){
 }
 
 applyL4 <- function(M){
-  l4 <- MaxSplitHalfHad12(M)
+  l4 <- MaxSplitExhaustive(M)
   return(l4)
 }
 
@@ -107,12 +68,53 @@ applyOmega_alg <- function(data, interval){
   return(oms)
 }
 
-omegaBase <- function(l, e){
+omegaBasic <- function(l, e){
   o <- sum(l)^2 / (sum(l)^2 + sum(e))
   return(o)
 }
 
 quantiles <- function(samp){
-  q <- quantile(samp, probs = seq(0, 1, length.out = 200))
+  q <- quantile(samp, probs = seq(0, 1, length.out = 2e3))
   return(q)
+}
+
+
+#########   boot functions ##########
+
+bootAlpha <- function(data, indices){
+  a <- applyAlpha(cov(data[indices, ]))
+  return(a)
+}
+
+#freq conf intervall with bootstrapping
+bootL2 <- function(data, indices){
+  l2 <- applyL2(cov(data[indices, ]))
+  return(l2)
+}
+
+#freq conf intervall with bootstrapping
+bootL6 <- function(data, indices){
+  l6 <- applyL6(cov(data[indices, ]))
+  return(l6)
+}
+
+#freq conf intervall with bootstrapping
+bootL4 <- function(data, indices){
+  l4 <- applyL4(cov(data[indices, ]))
+  return(l4)
+}
+
+# define function for bootstrapping
+bootGlb <- function(data, indices){
+  gl <- glb.algebraic2(cov(data[indices, ]))$glb
+  return(gl)
+}
+
+bootOmega_cfa <- function(data, indices){
+  om <- applyOmega_boot_cfa(data[indices, ])
+  return(om)
+}
+bootOmega_pa <- function(data, indices){
+  om <- applyOmega_boot_pa(cov(data[indices, ]))
+  return(om)
 }
