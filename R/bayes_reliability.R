@@ -1,9 +1,5 @@
-#' function to calculate all the internal consitency estimates
-#' --------------------------- IMPORTANT ----------------------:
-#' decide on how to calculate the confidence interval for omega, bootstrapping or analytical by lavaan,
-#' this is also important for the package, whose print methods depend on that, unfortunately
 #'
-#' maybe use a pca instead of a cfa. especially with the bad performance with small samples
+#' function to calculate all the internal consitency estimates
 #'
 #'
 #' @export
@@ -40,6 +36,7 @@ brel <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "b
   sum.res$freq.true <- FALSE
   if(freq){
     # sum.res$freq <- freqFun(data, boot.n, boot.interval.type, estimates, interval, omega.freq.method, omega.conf.type)
+    # #this was the command with the boot package
     sum.res$freq <- freqFun2(data, boot.n, estimates, interval, omega.freq.method, omega.conf.type)
     sum.res$freq.true <- TRUE
     sum.res$omega.freq.method <- omega.freq.method
