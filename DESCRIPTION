@@ -22,5 +22,5 @@ Imports:
     lavaan,
     R2jags,
     Rcsdp, 
-    dplyr
+    survey
 RoxygenNote: 6.0.1.9000

@@ -26,6 +26,14 @@ jagsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp)
     res$est$jags.l2 <- median(res$samp$jags.l2)
   }
 
+  if ("l4" %in% estimates){
+    res$samp$jags.l4 <- coda::as.mcmc(apply(jC, MARGIN = 1, applyL4))
+    int <- coda::HPDinterval(res$samp$jags.l4, prob = interval)
+    res$cred$low$jags.l4 <- int[1]
+    res$cred$up$jags.l4 <- int[2]
+    res$est$jags.l4 <- median(res$samp$jags.l4)
+  }
+
   if ("l6" %in% estimates){
     res$samp$jags.l6 <- coda::as.mcmc(apply(jC, MARGIN = 1, applyL6))
     int <- coda::HPDinterval(res$samp$jags.l6, prob = interval)

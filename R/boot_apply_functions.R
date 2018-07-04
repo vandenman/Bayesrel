@@ -19,6 +19,12 @@ bootL6 <- function(data, indices){
   return(l6)
 }
 
+#freq conf intervall with bootstrapping
+bootL4 <- function(data, indices){
+  l4 <- applyL4(cov(data[indices, ]))
+  return(l4)
+}
+
 # define function for bootstrapping
 bootGlb <- function(data, indices){
   gl <- glb.algebraic2(cov(data[indices, ]))$glb
@@ -48,6 +54,11 @@ applyL2 <- function(M){
   diag(M0) <- 0
   l2 <- (sum(M0) + sqrt(p/(p-1) * sum(M0^2))) / sum(M)
   return(l2)
+}
+
+applyL4 <- function(M){
+  l4 <- MaxSplitHalfHad12(M)
+  return(l4)
 }
 
 applyL6 <- function(M){

@@ -3,7 +3,7 @@
 #' to be passed on for forther analysis
 
 gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp, returnSamples){
-  if ("alpha" %in% estimates || "l2" %in% estimates || "l6" %in% estimates || "glb" %in% estimates || omega.cov.samp){
+  if ("alpha" %in% estimates || "l2" %in% estimates || "l4" %in% estimates || "l6" %in% estimates || "glb" %in% estimates || omega.cov.samp){
     C <- covSamp2(data, n.iter, n.burnin)
   }
   else {
@@ -28,6 +28,14 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp
     res$cred$low$gibbs.l2 <- int[1]
     res$cred$up$gibbs.l2 <- int[2]
     res$est$gibbs.l2<- median(res$samp$gibbs.l2)
+  }
+
+  if ("l4" %in% estimates){
+    res$samp$gibbs.l4 <- coda::as.mcmc(apply(C, MARGIN = 1, applyL4))
+    int <- coda::HPDinterval(res$samp$gibbs.l4, prob = interval)
+    res$cred$low$gibbs.l4 <- int[1]
+    res$cred$up$gibbs.l4 <- int[2]
+    res$est$gibbs.l4<- median(res$samp$gibbs.l4)
   }
 
   if ("l6" %in% estimates){

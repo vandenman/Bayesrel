@@ -41,6 +41,20 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
     res$boot$l2 <- l2.obj
   }
 
+  if ("l4" %in% estimates){
+    res$est$freq.l4 <- applyL4(cov(data))
+    l4.obj <- apply(boot.cov, 1, applyL4)
+    if (length(unique(round(l4.obj, 4))) == 1){
+      res$ci$low$freq.l4 <- 1
+      res$ci$up$freq.l4 <- 1
+    }
+    else{
+      res$ci$low$freq.l4 <- quantile(l4.obj, probs = (1 - interval)/2, na.rm = T)
+      res$ci$up$freq.l4 <- quantile(l4.obj, probs = interval + (1 - interval)/2, na.rm = T)
+    }
+    res$boot$l4 <- l4.obj
+  }
+
   if ("l6" %in% estimates){
     res$est$freq.l6 <- applyL6(cov(data))
     l6.obj <- apply(boot.cov, 1, applyL6)
