@@ -1,6 +1,6 @@
 Package: bayesrel
 Type: Package
-Title: computes single-test reliability estimates both in the frequentist and bayesian way
+Title: single-test bayesian reliability estimates
 Version: 0.1.0
 Author: Julius Pfadt and Don van den Bergh
 Maintainer: Julius Pfadt <julius.pfadt@gmail.com>
