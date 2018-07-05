@@ -2,18 +2,15 @@
 % Please edit documentation in R/bayes_reliability.R
 \name{brel}
 \alias{brel}
-\title{function to calculate all the internal consitency estimates
---------------------------- IMPORTANT ----------------------:
-decide on how to calculate the confidence interval for omega, bootstrapping or analytical by lavaan,
-this is also important for the package, whose print methods depend on that, unfortunately}
+\title{function to calculate all the internal consitency estimates}
 \usage{
 brel(raw.data, boot.n = 200, interval = 0.95,
   boot.interval.type = "basic", jags = FALSE, n.iter = 2000,
   n.burnin = 50, freq = TRUE, estimates = c("alpha", "l2", "l4", "l6",
   "glb", "omega"), supr.warnings = TRUE, omega.freq.method = "pa",
   omega.conf.type = "boot", omega.cov.samp = TRUE, returnSamples = FALSE,
-  prior.samp = FALSE)
+  prior.samp = FALSE, if.item.dropped = FALSE)
 }
 \description{
-maybe use a pca instead of a cfa. especially with the bad performance with small samples
+function to calculate all the internal consitency estimates
 }
