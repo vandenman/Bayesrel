@@ -5,7 +5,8 @@
 \title{this function calls on other functions in order to return the fuentist estimates
 and bootstrapped confidence intervals, which can be of different types}
 \usage{
-freqFun2(data, boot.n, estimates, interval, omega.freq.method, omega.conf.type)
+freqFun2(data, boot.n, estimates, interval, omega.freq.method,
+  omega.conf.int.type)
 }
 \description{
 this function calls on other functions in order to return the fuentist estimates

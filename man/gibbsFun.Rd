@@ -2,15 +2,15 @@
 % Please edit documentation in R/gibbs_output.R
 \name{gibbsFun}
 \alias{gibbsFun}
-\title{this function calls on other functions in order to return the gibbs sampled estimates
+\title{this function calls on other functions in order to return the sampled estimates
 and the credible intervals together with the posterior distribution objects
 to be passed on for forther analysis}
 \usage{
 gibbsFun(data, n.iter, n.burnin, estimates, interval, omega.cov.samp,
-  returnSamples)
+  return.cov.samples)
 }
 \description{
-this function calls on other functions in order to return the gibbs sampled estimates
+this function calls on other functions in order to return the sampled estimates
 and the credible intervals together with the posterior distribution objects
 to be passed on for forther analysis
 }

@@ -17,9 +17,6 @@ print.bayesrel <- function(x, ...){
   cat("Point Estimates of Internal Consistency Measures: \n")
   cat("\n")
   print(est)
-  cat("\n")
-  cat("Bayesian Method:")
-  print(x$bayes.method)
 
 }
 
@@ -35,7 +32,7 @@ summary.bayesrel <- function(x, ...){
     out.matrix$int$up <- rbind(as.data.frame(as.matrix(x$bay$cred$up)),
                                as.data.frame(as.matrix(x$freq$ci$up)))
     out.matrix$omega.freq.method <- x$omega.freq.method
-    out.matrix$omega.conf.type <- x$omega.conf.type
+    out.matrix$omega.conf.int.type <- x$omega.conf.int.type
   }
   else{
     out.matrix$est <- as.data.frame(as.matrix(x$bay$est))
@@ -88,7 +85,7 @@ print.summary.bayesrel <- function(x, ...){
       cat("frequentist omega method is:")
       print.default(x$omega.freq.method)
       cat("omega confidence interval is estimated with:")
-      print.default(x$omega.conf.type)
+      print.default(x$omega.conf.int.type)
     }
   }
 

@@ -1,3 +1,4 @@
+#' this function uses an exhaustive algorithm to determine the best possible splithalf reliability
 
 # benton 2013
 MaxSplitExhaustive <- function(M){

@@ -1,4 +1,4 @@
-
+#' this fucntion samples priors for the estimates and the number of indicators
 
 priorSamp <- function(p, estimates, n.samp = 2e3){
 

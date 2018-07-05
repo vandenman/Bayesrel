@@ -6,7 +6,7 @@
 and bootstrapped cinfidence intervals, which can be of different types}
 \usage{
 freqFun(data, boot.n, boot.interval.type, estimates, interval,
-  omega.freq.method, omega.conf.type)
+  omega.freq.method, omega.conf.int.type)
 }
 \description{
 this function calls on other functions in order to return the fuentist estimates

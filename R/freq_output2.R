@@ -4,7 +4,7 @@
 #' and bootstrapped confidence intervals, which can be of different types
 
 freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
-                   omega.conf.type){
+                   omega.conf.int.type){
   p <- ncol(data)
   n <- nrow(data)
   res <- list()
@@ -86,7 +86,7 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
   if ("omega" %in% estimates){
     if (omega.freq.method == "cfa"){
       res$est$freq.omega <- applyOmega_boot_cfa(data)
-      if (omega.conf.type == "alg"){
+      if (omega.conf.int.type == "alg"){
         omega.alg <- applyOmega_alg(data, interval)
         # res$est$freq.omega.alg <- omega.alg[1]
         res$ci$low$freq.omega <- omega.alg[2]
