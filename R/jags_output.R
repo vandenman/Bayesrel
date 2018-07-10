@@ -13,7 +13,7 @@ bayesFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp
     res$samp$C <- jC
   }
   if ("alpha" %in% estimates){
-    res$samp$bayes.alpha <- coda::as.mcmc(apply(jC, MARGIN = 1, applyAlpha))
+    res$samp$bayes.alpha <- coda::as.mcmc(apply(jC, MARGIN = 1, applyalpha))
     int <- coda::HPDinterval(res$samp$bayes.alpha, prob = interval)
     res$cred$low$bayes.alpha <- int[1]
     res$cred$up$bayes.alpha <- int[2]
@@ -21,7 +21,7 @@ bayesFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp
   }
 
   if ("l2" %in% estimates){
-    res$samp$bayes.l2 <- coda::as.mcmc(apply(jC, MARGIN = 1, applyL2))
+    res$samp$bayes.l2 <- coda::as.mcmc(apply(jC, MARGIN = 1, applyl2))
     int <- coda::HPDinterval(res$samp$bayes.l2, prob = interval)
     res$cred$low$bayes.l2 <- int[1]
     res$cred$up$bayes.l2 <- int[2]
@@ -29,7 +29,7 @@ bayesFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp
   }
 
   if ("l4" %in% estimates){
-    res$samp$bayes.l4 <- coda::as.mcmc(apply(jC, MARGIN = 1, applyL4))
+    res$samp$bayes.l4 <- coda::as.mcmc(apply(jC, MARGIN = 1, applyl4))
     int <- coda::HPDinterval(res$samp$bayes.l4, prob = interval)
     res$cred$low$bayes.l4 <- int[1]
     res$cred$up$bayes.l4 <- int[2]
@@ -37,7 +37,7 @@ bayesFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp
   }
 
   if ("l6" %in% estimates){
-    res$samp$bayes.l6 <- coda::as.mcmc(apply(jC, MARGIN = 1, applyL6))
+    res$samp$bayes.l6 <- coda::as.mcmc(apply(jC, MARGIN = 1, applyl6))
     int <- coda::HPDinterval(res$samp$bayes.l6, prob = interval)
     res$cred$low$bayes.l6 <- int[1]
     res$cred$up$bayes.l6 <- int[2]
@@ -45,7 +45,7 @@ bayesFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp
   }
 
   if ("glb" %in% estimates){
-    res$samp$bayes.glb <- coda::as.mcmc(apply(jC, MARGIN = 1, applyGlb))
+    res$samp$bayes.glb <- coda::as.mcmc(apply(jC, MARGIN = 1, applyglb))
     int <- coda::HPDinterval(res$samp$bayes.glb, prob = interval)
     res$cred$low$bayes.glb <- int[1]
     res$cred$up$bayes.glb <- int[2]
@@ -55,7 +55,7 @@ bayesFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp
   # special case omega ----------------------------------------------------------------
   if ("omega" %in% estimates){
     if (omega.cov.samp){
-      res$samp$bayes.omega <- coda::as.mcmc(apply(jC, MARGIN = 1, applyOmega_boot_pa))
+      res$samp$bayes.omega <- coda::as.mcmc(apply(jC, MARGIN = 1, applyomega_boot_pa))
       int <- coda::HPDinterval(res$samp$bayes.omega, prob = interval)
       res$cred$low$bayes.omega <- int[1]
       res$cred$up$bayes.omega <- int[2]

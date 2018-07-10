@@ -27,7 +27,7 @@ brel <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "b
     sum.res$omega.pa <- omega.cov.samp
   }
   else{
-    sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, omega.cov.samp, return.cov.samples)
+    sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, omega.cov.samp, return.cov.samples, if.item.dropped)
     sum.res$omega.pa <- omega.cov.samp
   }
 
@@ -35,7 +35,7 @@ brel <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "b
   if(freq){
     # sum.res$freq <- freqFun(data, boot.n, boot.interval.type, estimates, interval, omega.freq.method, omega.conf.type)
     # #this was the command with the boot package
-    sum.res$freq <- freqFun2(data, boot.n, estimates, interval, omega.freq.method, omega.conf.int.type)
+    sum.res$freq <- freqFun2(data, boot.n, estimates, interval, omega.freq.method, omega.conf.int.type, if.item.dropped)
     sum.res$freq.true <- TRUE
     sum.res$omega.freq.method <- omega.freq.method
     sum.res$omega.conf.int.type <- omega.conf.int.type
@@ -44,13 +44,14 @@ brel <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "b
         print("algebraic confidence interval for omega not available with method PA")
     }
   }
-
+  sum.res$if.item.dropped <- if.item.dropped
   if("glb" %in% estimates)
     unlink("param.csdp")
 
   if (prior.samp) {
     sum.res$priors <- priorSamp(ncol(data), estimates)
   }
+
 
   sum.res$estimates <- estimates
   sum.res$n.iter <- n.iter

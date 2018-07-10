@@ -6,7 +6,7 @@
 and bootstrapped confidence intervals, which can be of different types}
 \usage{
 freqFun2(data, boot.n, estimates, interval, omega.freq.method,
-  omega.conf.int.type)
+  omega.conf.int.type, if.item.dropped)
 }
 \description{
 this function calls on other functions in order to return the fuentist estimates

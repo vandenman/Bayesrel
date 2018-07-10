@@ -3,13 +3,13 @@
 
 #######  measures functions ##########
 
-applyAlpha <- function(M){
+applyalpha <- function(M){
   p <- ncol(M)
   a <- (p/(p-1))*(1-(sum(diag((M)))/sum(M)))
   return(a)
 }
 
-applyL2 <- function(M){
+applyl2 <- function(M){
   p <- ncol(M)
   M0 <- M
   diag(M0) <- 0
@@ -17,22 +17,22 @@ applyL2 <- function(M){
   return(l2)
 }
 
-applyL4 <- function(M){
+applyl4 <- function(M){
   l4 <- MaxSplitExhaustive(M)
   return(l4)
 }
 
-applyL6 <- function(M){
+applyl6 <- function(M){
   l6 <- 1 - (sum(1 - (1 - (1 / diag(solve(M))))) / sum(M))
   return(l6)
 }
 
-applyGlb <- function(M){
+applyglb <- function(M){
   gl <- glb.algebraic2(M)$glb
   return(gl)
 }
 
-applyOmega_boot_cfa <- function(data){
+applyomega_boot_cfa <- function(data){
   lav.mod.file <- lavOneFile(data)
   colnames(data) <- lav.mod.file$names
   p <- ncol(data)
@@ -43,7 +43,7 @@ applyOmega_boot_cfa <- function(data){
   return(om)
 }
 
-applyOmega_boot_pa <- function(m){
+applyomega_boot_pa <- function(m){
   f <- princFac(m)
   l.fa <- f$loadings
   er.fa <- f$err.var
@@ -52,7 +52,7 @@ applyOmega_boot_pa <- function(m){
   return(om)
 }
 
-applyOmega_alg <- function(data, interval){
+applyomega_alg <- function(data, interval){
   lav.mod.file <- lavOneFile(data)
   colnames(data) <- lav.mod.file$names
   p <- ncol(data)
@@ -82,25 +82,25 @@ quantiles <- function(samp){
 #########   boot functions ##########
 
 bootAlpha <- function(data, indices){
-  a <- applyAlpha(cov(data[indices, ]))
+  a <- applyalpha(cov(data[indices, ]))
   return(a)
 }
 
 #freq conf intervall with bootstrapping
 bootL2 <- function(data, indices){
-  l2 <- applyL2(cov(data[indices, ]))
+  l2 <- applyl2(cov(data[indices, ]))
   return(l2)
 }
 
 #freq conf intervall with bootstrapping
 bootL6 <- function(data, indices){
-  l6 <- applyL6(cov(data[indices, ]))
+  l6 <- applyl6(cov(data[indices, ]))
   return(l6)
 }
 
 #freq conf intervall with bootstrapping
 bootL4 <- function(data, indices){
-  l4 <- applyL4(cov(data[indices, ]))
+  l4 <- applyl4(cov(data[indices, ]))
   return(l4)
 }
 
@@ -111,10 +111,10 @@ bootGlb <- function(data, indices){
 }
 
 bootOmega_cfa <- function(data, indices){
-  om <- applyOmega_boot_cfa(data[indices, ])
+  om <- applyomega_boot_cfa(data[indices, ])
   return(om)
 }
 bootOmega_pa <- function(data, indices){
-  om <- applyOmega_boot_pa(cov(data[indices, ]))
+  om <- applyomega_boot_pa(cov(data[indices, ]))
   return(om)
 }
