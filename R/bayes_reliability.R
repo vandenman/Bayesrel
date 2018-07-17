@@ -5,7 +5,7 @@
 #' @export
 brel <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "basic",
                 jags = FALSE, n.iter = 2e3, n.burnin = 50, freq = TRUE,
-                estimates = c("alpha", "l2", "l4", "l6", "glb", "omega"), supr.warnings = TRUE,
+                estimates = c("alpha", "lambda2", "lambda4", "lambda6", "glb", "omega"), supr.warnings = TRUE,
                 omega.freq.method = "pa", omega.conf.int.type = "boot", omega.cov.samp = FALSE,
                 return.cov.samples = FALSE, prior.samp = FALSE, if.item.dropped = FALSE) {
   if (supr.warnings) {

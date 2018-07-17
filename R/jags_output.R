@@ -20,7 +20,7 @@ bayesFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp
     res$est$bayes.alpha<- median(res$samp$bayes.alpha)
   }
 
-  if ("l2" %in% estimates){
+  if ("lambda2" %in% estimates){
     res$samp$bayes.l2 <- coda::as.mcmc(apply(jC, MARGIN = 1, applyl2))
     int <- coda::HPDinterval(res$samp$bayes.l2, prob = interval)
     res$cred$low$bayes.l2 <- int[1]
@@ -28,7 +28,7 @@ bayesFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp
     res$est$bayes.l2 <- median(res$samp$bayes.l2)
   }
 
-  if ("l4" %in% estimates){
+  if ("lambda4" %in% estimates){
     res$samp$bayes.l4 <- coda::as.mcmc(apply(jC, MARGIN = 1, applyl4))
     int <- coda::HPDinterval(res$samp$bayes.l4, prob = interval)
     res$cred$low$bayes.l4 <- int[1]
@@ -36,7 +36,7 @@ bayesFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp
     res$est$bayes.l4 <- median(res$samp$bayes.l4)
   }
 
-  if ("l6" %in% estimates){
+  if ("lambda6" %in% estimates){
     res$samp$bayes.l6 <- coda::as.mcmc(apply(jC, MARGIN = 1, applyl6))
     int <- coda::HPDinterval(res$samp$bayes.l6, prob = interval)
     res$cred$low$bayes.l6 <- int[1]

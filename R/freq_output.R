@@ -21,7 +21,7 @@ freqFun<- function(data, boot.n, boot.interval.type, estimates, interval, omega.
     }
     res$boot$alpha <- f.alpha.boot.obj$t
   }
-  if ("l2" %in% estimates){
+  if ("lambda2" %in% estimates){
     res$est$freq.l2 <- applyl2(cov(data))
     f.l2.boot.obj <- boot::boot(data, statistic = bootL2, R = boot.n)
     if (length(unique(round(f.l2.boot.obj$t, 4))) == 1){
@@ -36,7 +36,7 @@ freqFun<- function(data, boot.n, boot.interval.type, estimates, interval, omega.
     res$boot$l2 <- f.l2.boot.obj$t
   }
 
-  if ("l6" %in% estimates){
+  if ("lambda6" %in% estimates){
     res$est$freq.l6 <- applyl6(cov(data))
     f.l6.boot.obj <- boot::boot(data, statistic = bootL6, R = boot.n)
     if (length(unique(round(f.l6.boot.obj$t, 4))) == 1){

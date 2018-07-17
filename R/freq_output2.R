@@ -39,7 +39,7 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
       res$ifitem$alpha <- apply(Ctmp, 1, applyalpha)
     }
   }
-  if ("l2" %in% estimates){
+  if ("lambda2" %in% estimates){
     res$est$freq.l2 <- applyl2(cov(data))
     l2.obj <- apply(boot.cov, 1, applyl2)
     if (length(unique(round(l2.obj, 4))) == 1){
@@ -56,7 +56,7 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
     }
   }
 
-  if ("l4" %in% estimates){
+  if ("lambda4" %in% estimates){
     res$est$freq.l4 <- applyl4(cov(data))
     l4.obj <- apply(boot.cov, 1, applyl4)
     if (length(unique(round(l4.obj, 4))) == 1){
@@ -73,7 +73,7 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
     }
   }
 
-  if ("l6" %in% estimates){
+  if ("lambda6" %in% estimates){
     res$est$freq.l6 <- applyl6(cov(data))
     l6.obj <- apply(boot.cov, 1, applyl6)
     if (length(unique(round(l6.obj, 4))) == 1){

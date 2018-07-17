@@ -4,7 +4,7 @@
 
 gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp, return.cov.samples, if.item.dropped){
   p <- ncol(data)
-  if ("alpha" %in% estimates || "l2" %in% estimates || "l4" %in% estimates || "l6" %in% estimates || "glb" %in% estimates || omega.cov.samp){
+  if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates || "glb" %in% estimates || omega.cov.samp){
     C <- covSamp2(data, n.iter, n.burnin)
     if (if.item.dropped) {
       Ctmp <- array(0, c(p, n.iter - n.burnin, p - 1, p - 1))
@@ -32,7 +32,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp
     }
   }
 
-  if ("l2" %in% estimates){
+  if ("lambda2" %in% estimates){
     res$samp$bayes.l2 <- coda::as.mcmc(apply(C, MARGIN = 1, applyl2))
     int <- coda::HPDinterval(res$samp$bayes.l2, prob = interval)
     res$cred$low$bayes.l2 <- int[1]
@@ -44,7 +44,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp
     }
   }
 
-  if ("l4" %in% estimates){
+  if ("lambda4" %in% estimates){
     res$samp$bayes.l4 <- coda::as.mcmc(apply(C, MARGIN = 1, applyl4))
     int <- coda::HPDinterval(res$samp$bayes.l4, prob = interval)
     res$cred$low$bayes.l4 <- int[1]
@@ -56,7 +56,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.cov.samp
     }
   }
 
-  if ("l6" %in% estimates){
+  if ("lambda6" %in% estimates){
     res$samp$bayes.l6 <- coda::as.mcmc(apply(C, MARGIN = 1, applyl6))
     int <- coda::HPDinterval(res$samp$bayes.l6, prob = interval)
     res$cred$low$bayes.l6 <- int[1]
