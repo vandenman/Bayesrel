@@ -122,4 +122,3 @@ print.summary.bayesrel <- function(x, ...){
 
 }
 
-

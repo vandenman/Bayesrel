@@ -21,5 +21,6 @@ Imports:
     LaplacesDemon,
     lavaan,
     R2jags,
-    Rcsdp
+    Rcsdp, 
+    plotrix
 RoxygenNote: 6.0.1.9000

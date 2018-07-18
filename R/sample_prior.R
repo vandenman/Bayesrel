@@ -16,15 +16,15 @@ priorSamp <- function(p, estimates, n.samp = 2e3){
     priora <- apply(m, MARGIN = 1, bayesrel:::applyalpha)
     out$priorAlpha <- quantiles(priora[priora >= 0])
   }
-  if ("l2" %in% estimates){
+  if ("lambda2" %in% estimates){
     priorl2 <- apply(m, MARGIN = 1, bayesrel:::applyl2)
     out$priorLambda2 <- quantiles(priorl2[priorl2 >= 0])
   }
-  if ("l4" %in% estimates){
+  if ("lambda4" %in% estimates){
     priorl4 <- apply(m, MARGIN = 1, bayesrel:::applyl4)
     out$priorLambda4 <- quantiles(priorl4[priorl4 >= 0])
   }
-  if ("l6" %in% estimates){
+  if ("lambda6" %in% estimates){
     priorl6 <- apply(m, MARGIN = 1, bayesrel:::applyl6)
     out$priorLambda6 <- quantiles(priorl6[priorl6 >= 0])
   }
@@ -37,7 +37,7 @@ priorSamp <- function(p, estimates, n.samp = 2e3){
   }
   if ("omega" %in% estimates){
     prioromega <- apply(m, MARGIN = 1, bayesrel:::applyomega_boot_pa)
-    out$priorOmega <- quantiles(priorOmega[priorOmega >= 0])
+    out$priorOmega <- quantiles(prioromega[prioromega >= 0])
   }
 
   return(out)
