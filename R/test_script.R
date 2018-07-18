@@ -7,5 +7,5 @@
 #
 # summary(res)
 #
-# brelPlot(res, blackwhite = F, criteria = F)
+# brelPlot(res)
 # alpha

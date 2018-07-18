@@ -17,23 +17,23 @@ brelPlot <- function(res, top.align = FALSE, name = NULL, blackwhite = FALSE, cr
 
   hdi <- coda::HPDinterval(samp)
   med <- median(samp) # main alignment variable
-  rad <- .06 # radius of pie plots
+  rad <- .05 # radius of pie plots
   peak <- max(density(samp)$y)
 
   if (med > .65){
     mid <-  med/2
-    pos.x <- mid - .11
+    pos.x <- mid - .1
     pos.y <- peak * .6
   }
   if (med < .35) {
     mid <-  1 - (1 - med)/2
-    pos.x <- mid - .11
+    pos.x <- mid - .1
     pos.y <- peak * .6
 
   }
   if (med >= .35 && med <= .65) {top.align <- TRUE}
   if (top.align == TRUE) {
-    pos.x <- med - .11
+    pos.x <- med - .1
     pos.y <- peak * 1.35
     mid <- med #(pos.x + pos.x +.2)/2
     rad <- .04
@@ -128,16 +128,16 @@ brelPlot <- function(res, top.align = FALSE, name = NULL, blackwhite = FALSE, cr
 
     f.prior <- plotrix::floating.pie(xpos = pos.x, ypos = pos.y, x = pie.prior, radius = rad,
                             col = colos, startpos = 0)
-    plotrix::pie.labels(pos.x, pos.y, radius = rad + .007, labels = pie.prior.labels, f.prior)
-    f.post <- plotrix::floating.pie(xpos = pos.x +.22, ypos = pos.y, x = pie.post, radius = rad,
+    plotrix::pie.labels(pos.x, pos.y, radius = rad + .005, labels = pie.prior.labels, f.prior)
+    f.post <- plotrix::floating.pie(xpos = pos.x +.2, ypos = pos.y, x = pie.post, radius = rad,
                            col = colos, startpos = 0)
-    plotrix::pie.labels(pos.x +.22, pos.y, radius = rad + .007, labels = pie.post.labels, f.post)
-    text("prior", x = pos.x, y = pos.y * 1.12, cex = 1.5)
-    text("posterior", x = pos.x + 0.22, y = pos.y * 1.12, cex = 1.5)
-    segments(x0 = pos.x -.03, y0 = pos.y * 1.1, x1 = pos.x +.03, y1 = pos.y * 1.1, lwd = 1.75, lty = 5)
-    segments(x0 = pos.x + .172, y0 = pos.y * 1.1, x1 = pos.x + .268, y1 = pos.y * 1.1, lwd = 1.75, lty = 1)
+    plotrix::pie.labels(pos.x +.2, pos.y, radius = rad + .005, labels = pie.post.labels, f.post)
+    text("prior", x = pos.x, y = pos.y * 1.125, cex = 1.5)
+    text("posterior", x = pos.x + 0.2, y = pos.y * 1.125, cex = 1.5)
+    segments(x0 = pos.x -.03, y0 = pos.y * 1.105, x1 = pos.x +.03, y1 = pos.y * 1.105, lwd = 1.75, lty = 5)
+    segments(x0 = pos.x + .15, y0 = pos.y * 1.105, x1 = pos.x + .25, y1 = pos.y * 1.105, lwd = 1.75, lty = 1)
     text("Distribution", x = mid, y = pos.y * 1.18, cex = 1.75)
-    legend(x = mid, y = pos.y *.925, inset=.02, xjust = 0.5, fill=colos, horiz=TRUE, cex=1.25, bty = "n",
+    legend(x = mid, y = pos.y *.92, inset=.02, xjust = 0.5, fill=colos, horiz=TRUE, cex=1.25, bty = "n",
            c("poor","acceptable","preferable", "desirable?"))
 
 
@@ -168,14 +168,14 @@ brelPlot <- function(res, top.align = FALSE, name = NULL, blackwhite = FALSE, cr
 
       f.prior <- plotrix::floating.pie(xpos = pos.x, ypos = pos.y, x = pie.prior, radius = rad,
                                        col = colos, startpos = 0)
-      plotrix::pie.labels(pos.x, pos.y, radius = rad + .007, labels = pie.prior.labels, f.prior)
-      f.post <- plotrix::floating.pie(xpos = pos.x +.22, ypos = pos.y, x = pie.post, radius = rad,
+      plotrix::pie.labels(pos.x, pos.y, radius = rad + .005, labels = pie.prior.labels, f.prior)
+      f.post <- plotrix::floating.pie(xpos = pos.x +.2, ypos = pos.y, x = pie.post, radius = rad,
                                       col = colos, startpos = 0)
-      plotrix::pie.labels(pos.x +.22, pos.y, radius = 0.067, labels = pie.post.labels, f.post)
-      text("prior", x = pos.x, y = pos.y * 1.29, cex = 1.5)
-      text("posterior", x = pos.x + 0.22, y = pos.y * 1.29, cex = 1.5)
-      segments(x0 = pos.x -.03, y0 = pos.y * 1.245, x1 = pos.x +.03, y1 = pos.y * 1.245, lwd = 1.75, lty = 5)
-      segments(x0 = pos.x + .172, y0 = pos.y * 1.245, x1 = pos.x + .268, y1 = pos.y * 1.245, lwd = 1.75, lty = 1)
+      plotrix::pie.labels(pos.x +.2, pos.y, radius = rad + .005, labels = pie.post.labels, f.post)
+      text("prior", x = pos.x, y = pos.y * 1.27, cex = 1.5)
+      text("posterior", x = pos.x + 0.2, y = pos.y * 1.27, cex = 1.5)
+      segments(x0 = pos.x -.03, y0 = pos.y * 1.23, x1 = pos.x +.03, y1 = pos.y * 1.23, lwd = 1.75, lty = 5)
+      segments(x0 = pos.x + .15, y0 = pos.y * 1.23, x1 = pos.x + .25, y1 = pos.y * 1.23, lwd = 1.75, lty = 1)
       text("Distribution", x = mid, y = pos.y * 1.41, cex = 1.75)
       legend(x = mid, y = pos.y * 0.77, inset=.02, xjust = 0.5, fill=colos, horiz=TRUE, cex=1.25, bty = "n",
              c("poor","acceptable","preferable", "desirable?"))
