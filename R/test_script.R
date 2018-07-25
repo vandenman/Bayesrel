@@ -1,4 +1,4 @@
-
+#
 # data <- MASS::mvrnorm(200, rep(0, 4), psych::sim.congeneric())
 #
 # a <- Sys.time()
@@ -7,5 +7,5 @@
 #
 # summary(res)
 #
-# brelPlot(res)
-# alpha
+# plotBrel(res, "omega", name = expression(omega))
+#
