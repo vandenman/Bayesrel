@@ -14,7 +14,7 @@ brel <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "b
   estimates <- match.arg(estimates, several.ok = T)
   default <- c("alpha", "lambda2", "lambda4", "lambda6", "glb", "omega")
   mat <- match(default, estimates)
-  estimates <- estimates[m]
+  estimates <- estimates[mat]
   estimates <- estimates[!is.na(estimates)]
 
   sum.res <- list()
