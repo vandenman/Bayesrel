@@ -7,7 +7,7 @@ brel <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "b
                 jags = FALSE, n.iter = 2e3, n.burnin = 50, freq = TRUE,
                 estimates = c("alpha", "lambda2", "lambda4", "lambda6", "glb", "omega"), supr.warnings = TRUE,
                 omega.freq.method = "pa", omega.conf.int.type = "boot", omega.cov.samp = FALSE,
-                return.cov.samples = FALSE, prior.samp = FALSE, if.item.dropped = FALSE) {
+                return.cov.samples = FALSE, prior.samp = FALSE, if.item.dropped = FALSE, bayes = TRUE) {
   if (supr.warnings) {
     options(warn = - 1)
   }
@@ -26,16 +26,16 @@ brel <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "b
     control <- Rcsdp:::csdp.control(printlevel = 0)
     Rcsdp:::write.control.file(control)
   }
-
-  if (jags){
-    sum.res$bay <- jagsFun(data, n.iter, n.burnin, estimates, interval, omega.cov.samp, return.cov.samples)
-    sum.res$omega.pa <- omega.cov.samp
+  if (bayes){
+    if (jags){
+      sum.res$bay <- jagsFun(data, n.iter, n.burnin, estimates, interval, omega.cov.samp, return.cov.samples)
+      sum.res$omega.pa <- omega.cov.samp
+    }
+    else{
+      sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, omega.cov.samp, return.cov.samples, if.item.dropped)
+      sum.res$omega.pa <- omega.cov.samp
+    }
   }
-  else{
-    sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, omega.cov.samp, return.cov.samples, if.item.dropped)
-    sum.res$omega.pa <- omega.cov.samp
-  }
-
   sum.res$freq.true <- FALSE
   if(freq){
     # sum.res$freq <- freqFun(data, boot.n, boot.interval.type, estimates, interval, omega.freq.method, omega.conf.type)
