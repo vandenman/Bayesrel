@@ -1,11 +1,10 @@
-#
-# data <- MASS::mvrnorm(200, rep(0, 4), psych::sim.congeneric())
+
+# data <- MASS::mvrnorm(200, rep(0, 9), psych::sim.hierarchical())
 #
 # a <- Sys.time()
-# res <- brel(data, prior.samp = T)
+# res <- brel(data, estimates = "lambda4")
 # Sys.time() - a
 #
 # summary(res)
 #
-# plotBrel(res, "omega", name = expression(omega))
 #
