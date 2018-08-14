@@ -15,5 +15,5 @@ Description: package provides the most common internal consistency estimates, be
 License: What license is it under? open source I guess
 Encoding: UTF-8
 LazyData: true
-Imports: 
+Imports:
 RoxygenNote: 6.0.1.9000

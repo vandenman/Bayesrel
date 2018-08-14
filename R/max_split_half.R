@@ -2,6 +2,7 @@
 #' or uses a 12x12 hadamard matrix for possible starting points for 12 splits,
 #' the latter is much faster when the number of items increases e.g. 10 and up
 #' ref: Benton 2013
+#'
 
 MaxSplitExhaustive <- function(M){
   #data – matrix of items scores (row=candidates,column=items)

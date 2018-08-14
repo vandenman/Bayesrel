@@ -1,6 +1,5 @@
 #' hadamard support functions functions
-
-hadamard.sizes2 <- c(4, 16, 28, 36)
+#'
 
 hadamard2 <- function (n) {
   m <- n - (n%%4)
@@ -22,6 +21,8 @@ hadamard2 <- function (n) {
   }
   H
 }
+
+hadamard.sizes2 <- c(4, 16, 28, 36)
 
 hadamard.list2 <- list(c(1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 0, 0, 1, 0, 0, 1), c(1,
                                                                             1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1,
