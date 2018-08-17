@@ -10,8 +10,5 @@ ref: Benton 2013}
 MaxSplitExhaustive(M)
 }
 \description{
-this function uses either an exhaustive search to determine the best possible splithalf reliability
-or uses a 12x12 hadamard matrix for possible starting points for 12 splits,
-the latter is much faster when the number of items increases e.g. 10 and up
-ref: Benton 2013
+max split half by exhaustive search
 }

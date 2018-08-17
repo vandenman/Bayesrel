@@ -3,11 +3,13 @@
 #'
 #'
 #' @export
-brel <- function(raw.data, boot.n = 200, interval = .95, boot.interval.type = "basic",
-                jags = FALSE, n.iter = 2e3, n.burnin = 50, freq = TRUE,
+brel <- function(raw.data, boot.n = 200, interval = .95,
+                jags = FALSE, n.iter = 2e3, n.burnin = 50,
                 estimates = c("alpha", "lambda2", "lambda4", "lambda6", "glb", "omega"), supr.warnings = TRUE,
                 omega.freq.method = "pa", omega.conf.int.type = "boot", omega.cov.samp = FALSE,
-                return.cov.samples = FALSE, prior.samp = FALSE, if.item.dropped = FALSE, bayes = TRUE) {
+                return.cov.samples = FALSE, prior.samp = FALSE, if.item.dropped = FALSE,
+                bayes = TRUE, freq = TRUE,
+                boot.interval.type = "basic") {
   if (supr.warnings) {
     options(warn = - 1)
   }

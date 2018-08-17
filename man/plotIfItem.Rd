@@ -4,8 +4,8 @@
 \alias{plotIfItem}
 \title{plotting function of the posterior for the if-item-dropped statistics}
 \usage{
-plotIfItem(res, estimate, item.pos, criteria = TRUE, blackwhite = FALSE,
-  top.align = FALSE, greek = FALSE)
+plotIfItem(res, estimate, item.pos, criteria = TRUE,
+  blackwhite = FALSE, top.align = FALSE, greek = FALSE)
 }
 \description{
 plotting function of the posterior for the if-item-dropped statistics

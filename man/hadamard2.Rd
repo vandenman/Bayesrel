@@ -2,10 +2,10 @@
 % Please edit documentation in R/hadamard.R
 \name{hadamard2}
 \alias{hadamard2}
-\title{hadamard support functions functions}
+\title{hadamard support functions}
 \usage{
 hadamard2(n)
 }
 \description{
-hadamard support functions functions
+hadamard support functions
 }

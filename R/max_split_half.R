@@ -3,27 +3,8 @@
 #' the latter is much faster when the number of items increases e.g. 10 and up
 #' ref: Benton 2013
 #'
-#' this is the solution that is supposed to be faster.
-#' yet when the covariance matrix has lots of negative entries, it doesnt produce a solution
 
-MaxSplitHalfHad12 <- function(M){
-  #data – matrix of items scores (row=candidates,column=items)
-  #start with odd vs even
-  nite <- ncol(M)
-  sequence <- 1:nite
-  xal <- (sequence%%2)
-  res1 <- MaxSplitHalf(M, xal)
-  #now try 12 further splits based on 12*12 Hadamard matrix
-  had <- hadamard2(11)
-  for (iz in 1:12){
-    nextra <- max(nite-12,0)
-    resrand <- MaxSplitHalf(M, c(had[,iz], rep(0,nextra))[1:nite])
-    if (resrand>res1){res1<-resrand}
-  }
-  return(res1)
-}
-
-
+#' max split half by exhaustive search
 MaxSplitExhaustive <- function(M){
   #data – matrix of items scores (row=candidates,column=items)
   cov1 <- M
@@ -52,6 +33,26 @@ bin.combs2 <- function (p) {
   comb
 }
 
+#' max split half by using hadamard matrices as starting points
+#' this is the solution that is supposed to be faster.
+#' yet when the covariance matrix has lots of negative entries, it doesnt produce a solution
+MaxSplitHalfHad12 <- function(M){
+  #data – matrix of items scores (row=candidates,column=items)
+  #start with odd vs even
+  nite <- ncol(M)
+  sequence <- 1:nite
+  xal <- (sequence%%2)
+  res1 <- MaxSplitHalf(M, xal)
+  # #now try 12 further splits based on 12*12 Hadamard matrix
+  # had <- hadamard2(11)
+  had <- hadamard11
+  for (iz in 1:12){
+    nextra <- max(nite-12,0)
+    resrand <- MaxSplitHalf(M, c(had[,iz], rep(0,nextra))[1:nite])
+    if (resrand>res1){res1<-resrand}
+  }
+  return(res1)
+}
 
 #Function to find best split half from a given starting split
 MaxSplitHalf = function(M, xal){

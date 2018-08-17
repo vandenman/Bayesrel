@@ -2,14 +2,14 @@
 % Please edit documentation in R/max_split_half.R
 \name{MaxSplitHalfHad12}
 \alias{MaxSplitHalfHad12}
-\title{this function uses either an exhaustive search to determine the best possible splithalf reliability
-or uses a 12x12 hadamard matrix for possible starting points for 12 splits,
-the latter is much faster when the number of items increases e.g. 10 and up
-ref: Benton 2013}
+\title{max split half by using hadamard matrices as starting points
+this is the solution that is supposed to be faster.
+yet when the covariance matrix has lots of negative entries, it doesnt produce a solution}
 \usage{
 MaxSplitHalfHad12(M)
 }
 \description{
+max split half by using hadamard matrices as starting points
 this is the solution that is supposed to be faster.
 yet when the covariance matrix has lots of negative entries, it doesnt produce a solution
 }
