@@ -18,7 +18,7 @@ applyl2 <- function(M){
 }
 
 applyl4 <- function(M){
-  l4 <- MaxSplitHalfHad12(M)
+  l4 <- MaxSplitExhaustive(M)
   return(l4)
 }
 

@@ -2,10 +2,10 @@
 % Please edit documentation in R/sample_prior.R
 \name{priorSamp}
 \alias{priorSamp}
-\title{this fucntion samples priors for the estimates and the number of indicators}
+\title{this function samples priors for the estimates and the number of indicators}
 \usage{
 priorSamp(p, estimates, n.samp = 2000)
 }
 \description{
-this fucntion samples priors for the estimates and the number of indicators
+this function samples priors for the estimates and the number of indicators
 }
