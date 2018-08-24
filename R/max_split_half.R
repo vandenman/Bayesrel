@@ -44,7 +44,7 @@ MaxSplitHalfHad12 <- function(M){
   xal <- (sequence%%2)
   res1 <- MaxSplitHalf(M, xal)
   # #now try 12 further splits based on 12*12 Hadamard matrix
-  # had <- hadamard2(11)
+  # had <- hadamard2(nite)
   had <- hadamard11
   for (iz in 1:12){
     nextra <- max(nite-12,0)
@@ -58,47 +58,54 @@ MaxSplitHalfHad12 <- function(M){
 MaxSplitHalf = function(M, xal){
   #data – matrix of items scores (row=candidates,column=items)
   #xal – vector of 0s and 1s specifying initial split
-  nite = ncol(M)
-  cov1 = M
-  v = diag(cov1)
-  yal = 1-xal
-  ones = rep(1,nite)
-  covxy = t(xal)%*%cov1%*%yal
+  nite <- ncol(M)
+  cov1 <- M
+  v <- diag(cov1)
+  yal <- 1-xal
+  ones <- rep(1,nite)
+  covxy <- t(xal)%*%cov1%*%yal
   #Code to examine all possible swaps
-  maxchg1=9
-  while(maxchg1>0){
+  maxchg1 <- 9
+  maxchg.prev <- 0
+  while(maxchg1 > 0){
     #Calculate change for swapping items in X and Y;
     #This is equal to 2covxiyj+covxix+covyyj-vx-vy-covxiy-covxyj;
-    covxiyj = cov1
-    covxix = (cov1%*%xal)%*%t(ones)
-    covyyj = ones%*%(yal%*%cov1)
-    vx = v%*%t(ones)
-    vy = t(vx)
-    covxiy = (cov1%*%yal)%*%t(ones)
-    covxyj = ones%*%(xal%*%cov1)
-    result = 2*covxiyj+covxix+covyyj-vx-vy-covxiy-covxyj
+    covxiyj <- cov1
+    covxix <- (cov1%*%xal)%*%t(ones)
+    covyyj <- ones%*%(yal%*%cov1)
+    vx <- v%*%t(ones)
+    vy <- t(vx)
+    covxiy <- (cov1%*%yal)%*%t(ones)
+    covxyj <- ones%*%(xal%*%cov1)
+    result <- 2*covxiyj+covxix+covyyj-vx-vy-covxiy-covxyj
     for (i in 1:nite){
       for (j in 1:nite){
-        if (xal[i]==xal[j]){
-          result[i,j]=0}}}
+        if (xal[i] == xal[j]){
+          result[i,j] <- 0
+          }}}
     #Add bits for swapping with no other item
-    result = cbind(result,as.vector(cov1%*%xal-cov1%*%yal-v)*xal)
-    result = rbind(result,c(as.vector(cov1%*%yal-cov1%*%xal-v)*yal,0))
+    result <- cbind(result,as.vector(cov1%*%xal-cov1%*%yal-v)*xal)
+    result <- rbind(result,c(as.vector(cov1%*%yal-cov1%*%xal-v)*yal,0))
     #find indices of maximum change;
-    maxchg=0
-    maxchgx=0
-    maxchgy=0
-    which1=which(result==max(result),arr.ind=TRUE)[1,]
-    if (result[which1[1],which1[2]]>0){maxchgx=which1[1]
-    maxchgy=which1[2]
-    maxchg=result[which1[1],which1[2]]}
-    maxchg1 = maxchg
-    if (maxchgx>0 & maxchgx<(nite+1)) {xal[maxchgx]=0}
-    if (maxchgy>0 & maxchgy<(nite+1)) {xal[maxchgy]=1}
-    if (maxchgx>0 & maxchgx<(nite+1)) {yal[maxchgx]=1}
-    if (maxchgy>0 & maxchgy<(nite+1)) {yal[maxchgy]=0}
-    covxy = t(xal)%*%cov1%*%yal}
-  guttman = 4*covxy/sum(cov1)
+    maxchg <- 0
+    maxchgx <- 0
+    maxchgy <- 0
+    which1 <- which(result == max(result), arr.ind = TRUE)[1,]
+    if (result[which1[1],which1[2]]>0){
+      maxchgx <- which1[1]
+      maxchgy <- which1[2]
+      maxchg <- result[which1[1], which1[2]]}
+    maxchg1 <- maxchg
+    if (maxchgx>0 & maxchgx<(nite+1)) {xal[maxchgx] <- 0}
+    if (maxchgy>0 & maxchgy<(nite+1)) {xal[maxchgy] <- 1}
+    if (maxchgx>0 & maxchgx<(nite+1)) {yal[maxchgx] <- 1}
+    if (maxchgy>0 & maxchgy<(nite+1)) {yal[maxchgy] <- 0}
+    covxy <- t(xal)%*%cov1%*%yal
+    if(maxchg1 == maxchg.prev) {
+      break}
+    maxchg.prev <- maxchg1
+  }
+  guttman <- 4*covxy/sum(cov1)
   # pites = sum(xal)/nite
   # raju = covxy/(sum(cov1)*pites*(1-pites))
   # v1 = t(xal)%*%cov1%*%xal

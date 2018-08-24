@@ -1,5 +1,3 @@
-#' this function uses gibbs sampling to estimate the posterior distribution
-#' of a sample's covariance matrix
 
 covSamp <- function(data, n.iter, n.burnin){
   n <- nrow(data)
@@ -49,6 +47,8 @@ rinvwishart <- function(nu, S, k = nrow(S), dfChisq = nu:(nu-k+1), utz = upper.t
   return(chol2inv(Z %*% S))
 }
 
+#' this function uses gibbs sampling to estimate the posterior distribution
+#' of a sample's covariance matrix
 covSamp2 <- function(data, n.iter, n.burnin){
   n <- nrow(data)
   p <- ncol(data)

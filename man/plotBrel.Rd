@@ -5,7 +5,7 @@
 \title{plot function for a posterior sample, gives posterior and prior distribution and pie plots
 input is the main reliability estimation object and the estimate to be plotted}
 \usage{
-plotBrel(res, estimate, top.align = FALSE, greek = FALSE,
+plotBrel(x, estimate, top.align = FALSE, greek = FALSE,
   blackwhite = FALSE, criteria = TRUE)
 }
 \description{

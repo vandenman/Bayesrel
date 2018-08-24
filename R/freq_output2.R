@@ -1,10 +1,10 @@
 
 
-#' this function calls on other functions in order to return the fuentist estimates
+#' this function calls on other functions in order to return the frequentist estimates
 #' and bootstrapped confidence intervals, which can be of different types
 
 freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
-                   omega.conf.int.type, if.item.dropped){
+                   omega.conf.int.type, item.dropped, alpha.int.analytic){
   p <- ncol(data)
   n <- nrow(data)
   res <- list()
@@ -15,7 +15,7 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
     boot.cov[i, , ] <- cov(boot.data[i, , ])
   }
   res$boot$C <- boot.cov
-  if (if.item.dropped){
+  if (item.dropped){
     Ctmp <- array(0, c(p, p - 1, p - 1))
     Dtmp <- array(0, c(p, n, p - 1))
     for (i in 1:p){
@@ -25,17 +25,24 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
   }
   if ("alpha" %in% estimates){
     res$est$freq.alpha <- applyalpha(cov(data))
-    alpha.obj <- apply(boot.cov, 1, applyalpha)
-    if (length(unique(round(alpha.obj, 4))) == 1){
-      res$ci$low$freq.alpha <- 1
-      res$ci$up$freq.alpha <- 1
+    if (alpha.int.analytic){
+      int <- ciAlpha(1 - interval, n, cov(data))
+      res$ci$low$freq.alpha <- int[1]
+      res$ci$up$freq.alpha <- int[2]
+
+    } else{
+      alpha.obj <- apply(boot.cov, 1, applyalpha)
+      if (length(unique(round(alpha.obj, 4))) == 1){
+        res$ci$low$freq.alpha <- 1
+        res$ci$up$freq.alpha <- 1
+      }
+      else{
+        res$ci$low$freq.alpha <- quantile(alpha.obj, probs = (1 - interval)/2, na.rm = T)
+        res$ci$up$freq.alpha <- quantile(alpha.obj, probs = interval + (1 - interval)/2, na.rm = T)
+      }
+      res$boot$alpha <- alpha.obj
     }
-    else{
-      res$ci$low$freq.alpha <- quantile(alpha.obj, probs = (1 - interval)/2, na.rm = T)
-      res$ci$up$freq.alpha <- quantile(alpha.obj, probs = interval + (1 - interval)/2, na.rm = T)
-    }
-    res$boot$alpha <- alpha.obj
-    if (if.item.dropped){
+    if (item.dropped){
       res$ifitem$alpha <- apply(Ctmp, 1, applyalpha)
     }
   }
@@ -51,7 +58,7 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
       res$ci$up$freq.l2 <- quantile(l2.obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
     res$boot$l2 <- l2.obj
-    if (if.item.dropped){
+    if (item.dropped){
       res$ifitem$l2 <- apply(Ctmp, 1, applyl2)
     }
   }
@@ -68,7 +75,7 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
       res$ci$up$freq.l4 <- quantile(l4.obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
     res$boot$l4 <- l4.obj
-    if (if.item.dropped){
+    if (item.dropped){
       res$ifitem$l4 <- apply(Ctmp, 1, applyl4)
     }
   }
@@ -85,7 +92,7 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
       res$ci$up$freq.l6 <- quantile(l6.obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
     res$boot$l6 <- l6.obj
-    if (if.item.dropped){
+    if (item.dropped){
       res$ifitem$l6 <- apply(Ctmp, 1, applyl6)
     }
   }
@@ -101,7 +108,7 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
       res$ci$up$freq.glb <- quantile(glb.obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
     res$boot$glb <- glb.obj
-    if (if.item.dropped){
+    if (item.dropped){
       res$ifitem$glb <- apply(Ctmp, 1, applyglb)
     }
   }
@@ -129,7 +136,7 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
         }
         res$boot$omega <- omega.obj
       }
-      if (if.item.dropped){
+      if (item.dropped){
         res$ifitem$omega <- apply(Dtmp, 1, applyomega_boot_cfa)
       }
     }
@@ -145,7 +152,7 @@ freqFun2<- function(data, boot.n, estimates, interval, omega.freq.method,
       }
       res$boot$omega <- omega.obj
       res$est$freq.omega <- applyomega_boot_pa(cov(data))
-      if (if.item.dropped){
+      if (item.dropped){
         res$ifitem$omega <- apply(Ctmp, 1, applyomega_boot_pa)
       }
     }

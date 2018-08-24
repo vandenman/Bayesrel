@@ -7,7 +7,7 @@ brel <- function(raw.data, boot.n = 200, interval = .95,
                 jags = FALSE, n.iter = 2e3, n.burnin = 50,
                 estimates = c("alpha", "lambda2", "lambda4", "lambda6", "glb", "omega"), supr.warnings = TRUE,
                 omega.freq.method = "pa", omega.conf.int.type = "boot", omega.cov.samp = FALSE,
-                return.cov.samples = FALSE, prior.samp = FALSE, if.item.dropped = FALSE,
+                return.cov.samples = FALSE, prior.samp = FALSE, item.dropped = FALSE, alpha.int.analytic = FALSE,
                 bayes = TRUE, freq = TRUE,
                 boot.interval.type = "basic") {
   if (supr.warnings) {
@@ -34,7 +34,7 @@ brel <- function(raw.data, boot.n = 200, interval = .95,
       sum.res$omega.pa <- omega.cov.samp
     }
     else{
-      sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, omega.cov.samp, return.cov.samples, if.item.dropped)
+      sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, omega.cov.samp, return.cov.samples, item.dropped)
       sum.res$omega.pa <- omega.cov.samp
     }
   }
@@ -42,16 +42,18 @@ brel <- function(raw.data, boot.n = 200, interval = .95,
   if(freq){
     # sum.res$freq <- freqFun(data, boot.n, boot.interval.type, estimates, interval, omega.freq.method, omega.conf.type)
     # #this was the command with the boot package
-    sum.res$freq <- freqFun2(data, boot.n, estimates, interval, omega.freq.method, omega.conf.int.type, if.item.dropped)
+    sum.res$freq <- freqFun2(data, boot.n, estimates, interval, omega.freq.method, omega.conf.int.type, item.dropped,
+                             alpha.int.analytic)
     sum.res$freq.true <- TRUE
     sum.res$omega.freq.method <- omega.freq.method
     sum.res$omega.conf.int.type <- omega.conf.int.type
+    sum.res$alpha.int.analytic <- alpha.int.analytic
     if (omega.freq.method == "pa" && omega.conf.int.type == "alg"){
       sum.res$omega.conf.type <- "boot"
         print("algebraic confidence interval for omega not available with method PA")
     }
   }
-  sum.res$if.item.dropped <- if.item.dropped
+  sum.res$item.dropped <- item.dropped
   if("glb" %in% estimates)
     unlink("param.csdp")
 

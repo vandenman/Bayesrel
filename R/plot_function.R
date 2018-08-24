@@ -2,13 +2,13 @@
 #' input is the main reliability estimation object and the estimate to be plotted
 #'
 #' @export
-plotBrel <- function(res, estimate, top.align = FALSE, greek = FALSE, blackwhite = FALSE, criteria = TRUE){
+plotBrel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite = FALSE, criteria = TRUE){
   options(warn = -1)
   #estimate <- readline(prompt = "Enter the estimate you want to plot: ")
-  posi <- grep(estimate, res$estimates, ignore.case = T)
-  if (!is.null(name)) {estimate <- name}
-  samp <- coda::as.mcmc(unlist(res$bay$samp[posi]))
-  prior <- unlist(res$priors[posi])
+  posi <- grep(estimate, x$estimates, ignore.case = T)
+  #if (!is.null(name)) {estimate <- name}
+  samp <- coda::as.mcmc(unlist(x$bay$samp[posi]))
+  prior <- unlist(x$priors[posi])
   if (is.null(prior)) {
     return("You need to rerun the reliability estimation with ‘prior.samp = TRUE‘ for the plot")
   }
@@ -229,13 +229,13 @@ plotShadePrior <- function(dens, xx, cols, cutoffs, grey){
 #' plotting function of the posterior for the if-item-dropped statistics
 #'
 #' @export
-plotIfItem <- function(res, estimate, item.pos, criteria = TRUE, blackwhite = FALSE, top.align = FALSE, greek = FALSE){
+plotIfItem_one <- function(x, estimate, item.pos, criteria = TRUE, blackwhite = FALSE, top.align = FALSE, greek = FALSE){
   options(warn = -1)
   #estimate <- readline(prompt = "Enter the estimate you want to plot: ")
-  posi <- grep(estimate, res$estimates, ignore.case = T)
+  posi <- grep(estimate, x$estimates, ignore.case = T)
 
-  samp <- coda::as.mcmc(unlist(res$bay$samp[posi]))
-  ifitems <- as.matrix(as.data.frame(res$bay$ifitem$samp[posi]))
+  samp <- coda::as.mcmc(unlist(x$bay$samp[posi]))
+  ifitems <- as.matrix(as.data.frame(x$bay$ifitem$samp[posi]))
   if(dim(ifitems) == 0) {
     return("You need to rerun the reliability estimation with ‘if.item.dropped = TRUE‘ for the plot")
   }
@@ -450,4 +450,53 @@ plotIfItem <- function(res, estimate, item.pos, criteria = TRUE, blackwhite = FA
            c("poor","acceptable","preferable", "desirable?"))
   }
   options(warn = 0)
+}
+
+#' plots posterior distributions of chosen estimate and the item-dropped cases in one plot
+#' @export
+plotIfItem_all <- function(x, estimate, ordering = FALSE){
+  n.row <- length(unlist(x$bay$ifitem$est[1]))
+  posi <- grep(estimate, x$estimates, ignore.case = T)
+  main <- paste("If - Item - Dropped Posterior Plot for", estimate)
+
+  dat <- as.data.frame(as.matrix(unlist(x$bay$samp[posi])))
+  colnames(dat) <- "value"
+  dat$var <- "original"
+  dat$colo <- "1"
+
+  dat.del <- t(as.matrix(as.data.frame(x$bay$ifitem$samp[posi])))
+
+  names <- NULL
+  for(i in 1:(n.row)){
+    names[i] <- paste0("x", i)
+  }
+
+  for (i in 1:n.row){
+    tmp <- as.data.frame(dat.del[, i])
+    colnames(tmp) <- "value"
+    tmp$var <- names[i]
+    tmp$colo <- "2"
+    dat <- rbind(dat, tmp)
+  }
+  dat$var <- factor(dat$var, levels = unique(dat$var))
+  if (ordering){
+    est <- as.data.frame(unlist(x$bay$ifitem$est[posi]))
+    est[n.row + 1, ] <- 1
+    colnames(est) <- "value"
+    est$name <- c(names, "original")
+    est <- est[order(est$value, decreasing = T), ]
+    dat$var <- factor(dat$var, levels = c(est$name))
+  }
+
+  ggplot2::ggplot(dat, ggplot2::aes(x = value, y = var, fill = colo)) +
+    ggridges::stat_density_ridges(quantile_lines = TRUE, quantiles = 2, show.legend = F) +
+    ggplot2::theme_linedraw(base_family = "LM Roman 10") +
+    ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white"),
+                   strip.text = ggplot2::element_text(colour = "black")) +
+    ggplot2::xlab("Reliability") +
+    ggplot2::ylab("Item Dropped") +
+    ggplot2::scale_y_discrete(expand = ggplot2::expand_scale(add = c(0.25, 1.5))) +
+    ggplot2::ggtitle(main) +
+    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+
 }

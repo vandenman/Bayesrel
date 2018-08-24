@@ -22,6 +22,7 @@ applyl4 <- function(M){
   return(l4)
 }
 
+
 applyl6 <- function(M){
   l6 <- 1 - (sum(1 - (1 - (1 / diag(solve(M))))) / sum(M))
   return(l6)
@@ -118,3 +119,4 @@ bootOmega_pa <- function(data, indices){
   om <- applyomega_boot_pa(cov(data[indices, ]))
   return(om)
 }
+

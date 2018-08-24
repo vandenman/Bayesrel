@@ -9,8 +9,9 @@ brel(raw.data, boot.n = 200, interval = 0.95, jags = FALSE,
   "lambda4", "lambda6", "glb", "omega"), supr.warnings = TRUE,
   omega.freq.method = "pa", omega.conf.int.type = "boot",
   omega.cov.samp = FALSE, return.cov.samples = FALSE,
-  prior.samp = FALSE, if.item.dropped = FALSE, bayes = TRUE,
-  freq = TRUE, boot.interval.type = "basic")
+  prior.samp = FALSE, if.item.dropped = FALSE,
+  alpha.int.analytic = FALSE, bayes = TRUE, freq = TRUE,
+  boot.interval.type = "basic")
 }
 \description{
 function to calculate all the internal consitency estimates

@@ -33,6 +33,7 @@ summary.bayesrel <- function(x, ...){
                                as.data.frame(as.matrix(x$freq$ci$up)))
     out.matrix$omega.freq.method <- x$omega.freq.method
     out.matrix$omega.conf.int.type <- x$omega.conf.int.type
+    out.matrix$alpha.int.analytic <- x$alpha.int.analytic
   }
   else{
     out.matrix$est <- as.data.frame(as.matrix(x$bay$est))
@@ -47,10 +48,12 @@ summary.bayesrel <- function(x, ...){
   out.matrix$estimates <- x$estimates
   out.matrix$omega.pa <- x$omega.pa
   out.matrix$freq.true <- x$freq.true
-  out.matrix$ifitem$bool <- x$if.item.dropped
-  if (x$if.item.dropped){
+  out.matrix$ifitem$bool <- x$item.dropped
+  if (x$item.dropped){
     out.matrix$ifitem$bay.tab <- x$bay$ifitem$est
-    if (x$freq.true) out.matrix$ifitem$freq.tab <- x$freq$ifitem
+    if (x$freq.true) {
+      out.matrix$ifitem$freq.tab <- x$freq$ifitem
+      }
   }
   class(out.matrix) <- "summary.bayesrel"
   out.matrix
@@ -90,25 +93,35 @@ print.summary.bayesrel <- function(x, ...){
       cat("omega confidence interval is estimated with:")
       print.default(x$omega.conf.int.type)
     }
+    if (x$alpha.int.analytic){
+      cat("alpha confidence interval is analytically computed")
+    }
   }
 
   if (x$ifitem$bool){
-    p.length <- length(unlist(x$ifitem$bay.tab[1]))
-    n.row <- length(x$ifitem$bay.tab)
-    mat.ifitem.bay <- data.frame(matrix(0, p.length, n.row))
-    mat.ifitem.freq <- data.frame(matrix(0, p.length, n.row))
-    for (i in 1:n.row){
-      mat.ifitem.bay[, i] <- unlist(x$ifitem$bay.tab[i])
-      if (x$freq.true) mat.ifitem.freq[, i] <- unlist(x$ifitem$freq.tab[i])
+    n.row <- length(unlist(x$ifitem$bay.tab[1])) + 1
+    n.col <- length(x$ifitem$bay.tab)
+    mat.ifitem.bay <- data.frame(matrix(0, n.row, n.col))
+    mat.ifitem.bay[1, ] <- as.vector(unlist(x$est))[1:n.col]
+    for (i in 1:n.col){
+      mat.ifitem.bay[2:n.row, i] <- as.vector(unlist(x$ifitem$bay.tab[i]))
     }
     colnames(mat.ifitem.bay) <- x$estimates
-    colnames(mat.ifitem.freq) <- x$estimates
-    names <- 0
-    for(i in 1:p.length){
-      names[i] <- paste0("x",i)
+    names <- NULL
+    for(i in 1:(n.row-1)){
+      names[i] <- paste0("x", i)
     }
-    row.names(mat.ifitem.bay) <- names
-    row.names(mat.ifitem.freq) <- names
+    row.names(mat.ifitem.bay) <- c("original", names)
+
+    if (x$freq.true){
+      mat.ifitem.freq <- data.frame(matrix(0, n.row, n.col))
+      mat.ifitem.freq[1, ] <- as.vector(unlist(x$est)[(n.col+1):(n.col*2)])
+      for (i in 1:n.col){
+        mat.ifitem.freq[2:n.row, i] <- as.vector(unlist(x$ifitem$freq.tab[i]))
+      }
+      colnames(mat.ifitem.freq) <- x$estimates
+      row.names(mat.ifitem.freq) <- c("original", names)
+    }
 
     cat("\n")
     cat("Bayesian coefficient if item dropped: \n")

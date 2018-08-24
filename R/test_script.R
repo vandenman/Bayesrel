@@ -2,11 +2,13 @@
 # data <- MASS::mvrnorm(200, rep(0, 9), psych::sim.hierarchical())
 #
 # a <- Sys.time()
-# res <- bayesrel::brel(data, estimates = "lambda4")
+# x <- bayesrel::brel(data, estimates = "omega", item.dropped = T)
 # Sys.time() - a
 #
-# bayesrel:::MaxSplitExhaustive(cov(data))
+# summary(x)
 #
-# summary(res)
+# plotIfItem_all(x, "Omega", ordering = T)
+
+
 
 

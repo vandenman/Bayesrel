@@ -2,13 +2,13 @@
 % Please edit documentation in R/freq_output2.R
 \name{freqFun2}
 \alias{freqFun2}
-\title{this function calls on other functions in order to return the fuentist estimates
+\title{this function calls on other functions in order to return the frequentist estimates
 and bootstrapped confidence intervals, which can be of different types}
 \usage{
 freqFun2(data, boot.n, estimates, interval, omega.freq.method,
-  omega.conf.int.type, if.item.dropped)
+  omega.conf.int.type, if.item.dropped, alpha.int.analytic)
 }
 \description{
-this function calls on other functions in order to return the fuentist estimates
+this function calls on other functions in order to return the frequentist estimates
 and bootstrapped confidence intervals, which can be of different types
 }
