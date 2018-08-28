@@ -6,10 +6,10 @@
 \usage{
 brel(raw.data, boot.n = 200, interval = 0.95, jags = FALSE,
   n.iter = 2000, n.burnin = 50, estimates = c("alpha", "lambda2",
-  "lambda4", "lambda6", "glb", "omega"), supr.warnings = TRUE,
+  "lambda6", "glb", "omega"), supr.warnings = TRUE,
   omega.freq.method = "pa", omega.conf.int.type = "boot",
   omega.cov.samp = FALSE, return.cov.samples = FALSE,
-  prior.samp = FALSE, if.item.dropped = FALSE,
+  prior.samp = FALSE, item.dropped = FALSE,
   alpha.int.analytic = FALSE, bayes = TRUE, freq = TRUE,
   boot.interval.type = "basic")
 }

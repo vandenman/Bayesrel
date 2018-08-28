@@ -5,7 +5,7 @@
 #' @export
 brel <- function(raw.data, boot.n = 200, interval = .95,
                 jags = FALSE, n.iter = 2e3, n.burnin = 50,
-                estimates = c("alpha", "lambda2", "lambda4", "lambda6", "glb", "omega"), supr.warnings = TRUE,
+                estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"), supr.warnings = TRUE,
                 omega.freq.method = "pa", omega.conf.int.type = "boot", omega.cov.samp = FALSE,
                 return.cov.samples = FALSE, prior.samp = FALSE, item.dropped = FALSE, alpha.int.analytic = FALSE,
                 bayes = TRUE, freq = TRUE,
@@ -14,14 +14,16 @@ brel <- function(raw.data, boot.n = 200, interval = .95,
     options(warn = - 1)
   }
   estimates <- match.arg(estimates, several.ok = T)
-  default <- c("alpha", "lambda2", "lambda4", "lambda6", "glb", "omega")
+  default <- c("alpha", "lambda2", "lambda6", "glb", "omega")
   mat <- match(default, estimates)
   estimates <- estimates[mat]
   estimates <- estimates[!is.na(estimates)]
 
   sum.res <- list()
   sum.res$call <- match.call()
-
+  if (sum(is.na(raw.data)) > 0) {
+    return("missing values in data detected, please remove and run again")
+  }
   data <- scale(raw.data, scale = F)
 
   if("glb" %in% estimates){
