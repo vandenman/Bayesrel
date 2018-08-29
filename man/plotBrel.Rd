@@ -6,7 +6,7 @@
 input is the main reliability estimation object and the estimate to be plotted}
 \usage{
 plotBrel(x, estimate, top.align = FALSE, greek = FALSE,
-  blackwhite = FALSE, criteria = TRUE)
+  blackwhite = FALSE, criteria = TRUE, cuts = c(0.7, 0.8))
 }
 \description{
 plot function for a posterior sample, gives posterior and prior distribution and pie plots

@@ -5,7 +5,8 @@
 \title{plotting function of the posterior for the if-item-dropped statistics}
 \usage{
 plotIfItem_one(x, estimate, item.pos, criteria = TRUE,
-  blackwhite = FALSE, top.align = FALSE, greek = FALSE)
+  blackwhite = FALSE, top.align = FALSE, greek = FALSE,
+  cuts = c(0.7, 0.8))
 }
 \description{
 plotting function of the posterior for the if-item-dropped statistics

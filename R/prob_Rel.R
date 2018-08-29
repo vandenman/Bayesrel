@@ -7,11 +7,10 @@ probRel <- function(obj, low.bound){
   if (0 < low.bound && low.bound < 1){
     obj <- ecdf(obj)
     est.prob <- 1 - obj(low.bound)
-    # str <- ("probability that estimate is bigger than" , low.bound, ":\n")
     return(est.prob)
   }
   else{
-    print("please supply a value between 0 and 1")
+    return("please supply a value between 0 and 1")
   }
 
 }

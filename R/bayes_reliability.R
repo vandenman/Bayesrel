@@ -1,15 +1,14 @@
 #'
 #' function to calculate all the internal consitency estimates
-#'
+#' takes as input both datasets, either matrix or frame, and covariance matrices
+#' so far input of a covariance matrix is not supported
 #'
 #' @export
-brel <- function(raw.data, boot.n = 200, interval = .95,
-                jags = FALSE, n.iter = 2e3, n.burnin = 50,
+brel <- function(x, boot.n = 200, interval = .95, n.iter = 2e3, n.burnin = 50,
                 estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"), supr.warnings = TRUE,
-                omega.freq.method = "pa", omega.conf.int.type = "boot", omega.cov.samp = FALSE,
+                omega.freq.method = "pa", omega.conf.int.type = "boot", omega.bay.cov.samp = FALSE,
                 return.cov.samples = FALSE, prior.samp = FALSE, item.dropped = FALSE, alpha.int.analytic = FALSE,
-                bayes = TRUE, freq = TRUE,
-                boot.interval.type = "basic") {
+                bayes = TRUE, freq = TRUE, boot.interval.type = "basic", jags = FALSE) {
   if (supr.warnings) {
     options(warn = - 1)
   }
@@ -21,10 +20,23 @@ brel <- function(raw.data, boot.n = 200, interval = .95,
 
   sum.res <- list()
   sum.res$call <- match.call()
-  if (sum(is.na(raw.data)) > 0) {
+
+  if (sum(is.na(x)) > 0) {
     return("missing values in data detected, please remove and run again")
   }
-  data <- scale(raw.data, scale = F)
+  data <- NULL
+  sigma <- NULL
+  if (ncol(x) == nrow(x)){
+    return("so far input of a covariance matrix is not supported")
+    if (sum(v[lower.tri(v)] != t(v)[lower.tri(v)]) > 0) {return("input matrix is not symmetric")}
+    if (sum(eigen(x)$values < 0) > 0) {return("input matrix is not positive definite")}
+    if (freq) {return("bootstrap confidence interval estimation requires a dataset")}
+    if ("omega" %in% estimates) {return("omega can only be calculated with a dataset as input")}
+    sigma <- x
+  } else{
+    data <- scale(x, scale = F)
+    sigma <- cov(data)
+  }
 
   if("glb" %in% estimates){
     control <- Rcsdp:::csdp.control(printlevel = 0)
@@ -32,12 +44,12 @@ brel <- function(raw.data, boot.n = 200, interval = .95,
   }
   if (bayes){
     if (jags){
-      sum.res$bay <- jagsFun(data, n.iter, n.burnin, estimates, interval, omega.cov.samp, return.cov.samples)
-      sum.res$omega.pa <- omega.cov.samp
+      sum.res$bay <- jagsFun(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.samp, return.cov.samples)
+      sum.res$omega.pa <- omega.bay.cov.samp
     }
     else{
-      sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, omega.cov.samp, return.cov.samples, item.dropped)
-      sum.res$omega.pa <- omega.cov.samp
+      sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.samp, return.cov.samples, item.dropped)
+      sum.res$omega.pa <- omega.bay.cov.samp
     }
   }
   sum.res$freq.true <- FALSE

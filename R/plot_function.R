@@ -2,11 +2,9 @@
 #' input is the main reliability estimation object and the estimate to be plotted
 #'
 #' @export
-plotBrel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite = FALSE, criteria = TRUE){
+plotBrel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80)){
   options(warn = -1)
-  #estimate <- readline(prompt = "Enter the estimate you want to plot: ")
   posi <- grep(estimate, x$estimates, ignore.case = T)
-  #if (!is.null(name)) {estimate <- name}
   samp <- coda::as.mcmc(unlist(x$bay$samp[posi]))
   prior <- unlist(x$priors[posi])
   if (is.null(prior)) {
@@ -32,6 +30,7 @@ plotBrel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite =
 
   }
   if (med >= .35 && med <= .65) {top.align <- TRUE}
+  if (!criteria) {top.align <- F}
   if (top.align == TRUE) {
     pos.x <- med - .1
     pos.y <- peak * 1.35
@@ -39,60 +38,64 @@ plotBrel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite =
     rad <- .04
   }
 
-  cuts <- c(.70, .80, .90)
   main <- paste("Reliability Fit for Distribution Mass of", estimate)
   if (greek) {
-    estimate <- as.symbol(estimate)
-    main <- substitute(paste("Reliability Fit for Distribution Mass of ", estimate), list(estimate = estimate))
+    if (estimate == "lambda2"){
+      main <- substitute(paste("Posterior Plot for ", lambda [2]))
+    }
+    if (estimate == "lambda4"){
+      main <- substitute(paste("Posterior Plot for ", lambda [4]))
+    }
+    if (estimate == "lambda6"){
+      main <- substitute(paste("Posterior Plot for ", lambda [6]))
+    }
+    if (estimate == "alpha" || estimate == "omega" || estimate == "glb"){
+      estimate <- as.symbol(estimate)
+      main <- substitute(paste("Posterior Plot for ", estimate), list(estimate = estimate))
+    }
   }
-  colos <- c("firebrick", "cadetblue3", "cornflowerblue","navy")
+  colos <- c("firebrick", "cornflowerblue","navy")
   if (blackwhite){
-    colos <- c("gray100", "gray80", "gray50", "gray8")
+    colos <- c("gray100", "gray70", "gray10")
   }
 
   dens.prior <- density(prior, from = 0, to = 1, n = 2e3)
   xx0 <- min(which(dens.prior$x <= cuts[1]))
   xx1 <- max(which(dens.prior$x <= cuts[1]))
   xx2 <- max(which(dens.prior$x <= cuts[2]))
-  xx3 <- max(which(dens.prior$x <= cuts[3]))
-  xx4 <- max(which(dens.prior$x <= 1))
+  xx3 <- max(which(dens.prior$x <= 1))
 
   if (!is.integer(xx0)) xx0 <- 1
   if (!is.integer(xx1)) xx1 <- 1
   if (!is.integer(xx2)) xx2 <- 1
   if (!is.integer(xx3)) xx3 <- 1
-  if (!is.integer(xx4)) xx4 <- 1
 
   dens.post <- density(samp, adjust = 1.75, n = 2e3)
   x0 <- min(which(dens.post$x <= cuts[1]))
   x1 <- max(which(dens.post$x <= cuts[1]))
   x2 <- max(which(dens.post$x <= cuts[2]))
-  x3 <- max(which(dens.post$x <= cuts[3]))
-  x4 <- max(which(dens.post$x <= 1))
+  x3 <- max(which(dens.post$x <= 1))
 
   if (!is.integer(x0)) x0 <- 1
   if (!is.integer(x1)) x1 <- 1
   if (!is.integer(x2)) x2 <- 1
   if (!is.integer(x3)) x3 <- 1
-  if (!is.integer(x4)) x4 <- 1
 
   y1 <- sum(prior <= cuts[1])
   y2 <- sum(prior <= cuts[2])
-  y3 <- sum(prior <= cuts[3])
-  y4 <- sum(prior <= 1)
+  y3 <- sum(prior <= 1)
 
   z1 <- sum(samp <= cuts[1])
   z2 <- sum(samp <= cuts[2])
-  z3 <- sum(samp <= cuts[3])
-  z4 <- sum(samp <= 1)
+  z3 <- sum(samp <= 1)
 
-  pie.prior <- c(y1, y2-y1, y3-y2, y4-y3)
+  pie.prior <- c(y1, y2-y1, y3-y2)
   pie.prior[pie.prior == 0] <- 1e-20
   pie.prior.labels <- as.character(round(pie.prior/(length(prior)*1e-2), 1))
-  pie.post <- c(z1, z2-z1, z3-z2, z4-z3)
+  pie.post <- c(z1, z2-z1, z3-z2)
   pie.post[pie.post == 0] <- 1e-20
   pie.post.labels <- as.character(round(pie.post/(length(samp)*1e-2), 1))
-  for (i in 1:4){
+  for (i in 1:3){
     if (as.numeric(pie.prior.labels[i]) > 3) {
       pie.prior.labels[i] <- paste(pie.prior.labels[i], "%")
     } else{
@@ -111,8 +114,8 @@ plotBrel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite =
     plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = NA, ylab = NA,
          xlim = c(0, 1), ylim = c(0,  peak * 1.65),
          lwd = 3, main = "")
-    plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3, xx4), cols = colos, cutoffs = criteria, grey = blackwhite)
-    plotShadePost(dens.post, xx = c(x0, x1, x2, x3, x4), cols = colos, cutoffs = criteria, grey = blackwhite)
+    plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
+    plotShadePost(dens.post, xx = c(x0, x1, x2, x3), cols = colos, criteria = criteria, blackwhite = blackwhite)
 
     lines(density(prior, from = 0, to = 1), lty = 5, lwd = 3)
 
@@ -125,10 +128,9 @@ plotBrel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite =
     text(paste("median = ", round(med, 3), sep =""), x = sum(hdi)/2, y = peak*1.09, adj = .5, cex = 1.25)
     title(main, line = -1, cex.main = 2)
 
-    text("poor", x = cuts[1]/2, y = peak*-.025, adj = 0.5, cex = 1.25)
-    text("acceptable", x = (cuts[1] + cuts[2])/2, y = peak*-.025, adj = .5, cex = 1.25)
-    text("preferable", x = (cuts[2] + cuts[3])/2, y = peak*-.025, adj = .5, cex = 1.25)
-    text("desirable?", x = (cuts[3] + 1)/2, y = peak*-.025, adj = .5, cex = 1.25)
+    text("insufficient", x = cuts[1]/2, y = peak*-.025, adj = 0.5, cex = 1.25)
+    text("sufficient", x = (cuts[1] + cuts[2])/2, y = peak*-.025, adj = .5, cex = 1.25)
+    text("good", x = (cuts[2] + 1)/2, y = peak*-.025, adj = .5, cex = 1.25)
 
     f.prior <- plotrix::floating.pie(xpos = pos.x, ypos = pos.y, x = pie.prior, radius = rad,
                             col = colos, startpos = 0)
@@ -142,7 +144,7 @@ plotBrel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite =
     segments(x0 = pos.x + .15, y0 = pos.y * 1.105, x1 = pos.x + .25, y1 = pos.y * 1.105, lwd = 1.75, lty = 1)
     #text("Distribution", x = mid, y = pos.y * 1.18, cex = 1.75)
     legend(x = mid, y = pos.y *.92, inset=.02, xjust = 0.5, fill=colos, horiz=TRUE, cex=1.25, bty = "n",
-           c("poor","acceptable","preferable", "desirable?"))
+           c("insufficicent", "sufficient", "good"))
 
 
   } else {
@@ -150,8 +152,8 @@ plotBrel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite =
     plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = NA, ylab = NA,
          xlim = c(0, 1), ylim = c(0,  peak * 1.2),
          lwd = 3, main = "")
-    plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3, xx4), cols = colos, cutoffs = criteria, grey = blackwhite)
-    plotShadePost(dens.post, xx = c(x0, x1, x2, x3, x4), cols = colos, cutoffs = criteria, grey = blackwhite)
+    plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
+    plotShadePost(dens.post, xx = c(x0, x1, x2, x3), cols = colos, criteria = criteria, blackwhite = blackwhite)
 
     lines(density(prior, from = 0, to = 1), lty = 5, lwd = 3)
 
@@ -165,10 +167,9 @@ plotBrel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite =
     title(main, line = -1, cex.main = 2)
 
     if (criteria){
-      text("poor", x = cuts[1]/2, y = peak*-.025, adj = 0.5, cex = 1.25)
-      text("acceptable", x = (cuts[1] + cuts[2])/2, y = peak*-.025, adj = .5, cex = 1.25)
-      text("preferable", x = (cuts[2] + cuts[3])/2, y = peak*-.025, adj = .5, cex = 1.25)
-      text("desirable?", x = (cuts[3] + 1)/2, y = peak*-.025, adj = .5, cex = 1.25)
+      text("insufficient", x = cuts[1]/2, y = peak*-.025, adj = 0.5, cex = 1.25)
+      text("sufficient", x = (cuts[1] + cuts[2])/2, y = peak*-.025, adj = .5, cex = 1.25)
+      text("good", x = (cuts[2] + 1)/2, y = peak*-.025, adj = .5, cex = 1.25)
 
       f.prior <- plotrix::floating.pie(xpos = pos.x, ypos = pos.y, x = pie.prior, radius = rad,
                                        col = colos, startpos = 0)
@@ -181,8 +182,8 @@ plotBrel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite =
       segments(x0 = pos.x -.03, y0 = pos.y * 1.23, x1 = pos.x +.03, y1 = pos.y * 1.23, lwd = 1.75, lty = 5)
       segments(x0 = pos.x + .15, y0 = pos.y * 1.23, x1 = pos.x + .25, y1 = pos.y * 1.23, lwd = 1.75, lty = 1)
       #text("Distribution", x = mid, y = pos.y * 1.41, cex = 1.75)
-      legend(x = mid, y = pos.y * 0.77, inset=.02, xjust = 0.5, fill=colos, horiz=TRUE, cex=1.25, bty = "n",
-             c("poor","acceptable","preferable", "desirable?"))
+      legend(x = mid, y = pos.y * 0.77, inset=.02, xjust = 0.5, fill=colos, horiz=TRUE, cex=1.25, # bty = "n",
+             c("insufficient","sufficient", "good"))
     } else {
       legend(x = mid, y = pos.y*0.7, c("posterior", "prior"), lty = c(1, 5), lwd = 2, title = "Distribution", cex = 1.25, bty = "n")
     }
@@ -192,36 +193,34 @@ plotBrel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite =
 }
 
 
-plotShadePost <- function(dens, xx, cols, cutoffs, grey){
-  if (cutoffs){
+plotShadePost <- function(dens, xx, cols, criteria, blackwhite){
+  if (criteria){
     color_transp <- adjustcolor(cols, alpha.f = .7)
-    if (grey) {color_transp <- adjustcolor(cols, alpha.f = .8)}
+    if (blackwhite) {color_transp <- adjustcolor(cols, alpha.f = .8)}
     with(dens, polygon(x[c(xx[1],xx[1]:xx[2],xx[2])], c(0, y[xx[1]:xx[2]], 0), col = color_transp[1]))
     with(dens, polygon(x[c(xx[2],xx[2]:xx[3],xx[3])], c(0, y[xx[2]:xx[3]], 0), col = color_transp[2]))
     with(dens, polygon(x[c(xx[3],xx[3]:xx[4],xx[4])], c(0, y[xx[3]:xx[4]], 0), col = color_transp[3]))
-    with(dens, polygon(x[c(xx[4],xx[4]:xx[5],xx[5])], c(0, y[xx[4]:xx[5]], 0), col = color_transp[4]))
   }
   else {
     color_transp <- adjustcolor(cols[3], alpha.f = .7)
-    if (grey) {color_transp <- adjustcolor(cols[3], alpha.f = .8)}
-    with(dens, polygon(x[c(xx[1],xx[1]:xx[5],xx[5])], c(0, y[xx[1]:xx[5]], 0), col = color_transp))
+    if (blackwhite) {color_transp <- adjustcolor(cols[3], alpha.f = .8)}
+    with(dens, polygon(x[c(xx[1],xx[1]:xx[4],xx[4])], c(0, y[xx[1]:xx[4]], 0), col = color_transp))
   }
 
 }
 
-plotShadePrior <- function(dens, xx, cols, cutoffs, grey){
-  if (cutoffs){
+plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
+  if (criteria){
     color_transp <- adjustcolor(cols, alpha.f = .5)
-    if (grey){color_transp <- adjustcolor(cols, alpha.f = .7)}
+    if (blackwhite){color_transp <- adjustcolor(cols, alpha.f = .7)}
     with(dens, polygon(x[c(xx[1],xx[1]:xx[2],xx[2])], c(0, y[xx[1]:xx[2]], 0), col = color_transp[1]))
     with(dens, polygon(x[c(xx[2],xx[2]:xx[3],xx[3])], c(0, y[xx[2]:xx[3]], 0), col = color_transp[2]))
     with(dens, polygon(x[c(xx[3],xx[3]:xx[4],xx[4])], c(0, y[xx[3]:xx[4]], 0), col = color_transp[3]))
-    with(dens, polygon(x[c(xx[4],xx[4]:xx[5],xx[5])], c(0, y[xx[4]:xx[5]], 0), col = color_transp[4]))
   }
   else {
-    color_transp <- adjustcolor("grey", alpha.f = .5)
-    if (grey) {color_transp <- adjustcolor("grey75", alpha.f = .7)}
-    with(dens, polygon(x[c(xx[1],xx[1]:xx[5],xx[5])], c(0, y[xx[1]:xx[5]], 0), col = color_transp))
+    color_transp <- adjustcolor(cols[2], alpha.f = .5)
+    if (blackwhite) {color_transp <- adjustcolor(cols[2], alpha.f = .7)}
+    with(dens, polygon(x[c(xx[1],xx[1]:xx[4],xx[4])], c(0, y[xx[1]:xx[4]], 0), col = color_transp))
   }
 }
 
@@ -229,9 +228,8 @@ plotShadePrior <- function(dens, xx, cols, cutoffs, grey){
 #' plotting function of the posterior for the if-item-dropped statistics
 #'
 #' @export
-plotIfItem_one <- function(x, estimate, item.pos, criteria = TRUE, blackwhite = FALSE, top.align = FALSE, greek = FALSE){
+plotIfItem_one <- function(x, estimate, item.pos, criteria = TRUE, blackwhite = FALSE, top.align = FALSE, greek = FALSE, cuts = c(.70, .80)){
   options(warn = -1)
-  #estimate <- readline(prompt = "Enter the estimate you want to plot: ")
   posi <- grep(estimate, x$estimates, ignore.case = T)
 
   samp <- coda::as.mcmc(unlist(x$bay$samp[posi]))
@@ -267,6 +265,8 @@ plotIfItem_one <- function(x, estimate, item.pos, criteria = TRUE, blackwhite = 
 
   }
   if (midd >= .35 && midd <= .65) {top.align <- TRUE}
+  if (!criteria) {top.align <- F}
+
   if (top.align == TRUE) {
     pos.x <- (med + med2)/2 -.1
     pos.y <- peak * 1.35
@@ -274,7 +274,6 @@ plotIfItem_one <- function(x, estimate, item.pos, criteria = TRUE, blackwhite = 
     rad <- .04
   }
 
-  cuts <- c(.70, .80, .90)
   main <- paste("Posterior Plot for", estimate, "and If - Item =", item.pos, " - Dropped")
   if (greek) {
     if (estimate == "lambda2"){
@@ -291,56 +290,50 @@ plotIfItem_one <- function(x, estimate, item.pos, criteria = TRUE, blackwhite = 
       main <- substitute(paste("Posterior Plot for ", estimate, " and If - Item = ", item.pos, " - Dropped"), list(estimate = estimate, item.pos = item.pos))
     }
   }
-  colos <- c("firebrick", "cadetblue3", "cornflowerblue","navy")
+  colos <- c("firebrick", "cornflowerblue","navy")
   if (blackwhite){
-    colos <- c("gray100", "gray80", "gray50", "gray8")
+    colos <- c("gray100", "gray70", "gray10")
   }
 
   dens.post <- density(samp, adjust = 1.75, n = 2e3)
   x0 <- min(which(dens.post$x <= cuts[1]))
   x1 <- max(which(dens.post$x <= cuts[1]))
   x2 <- max(which(dens.post$x <= cuts[2]))
-  x3 <- max(which(dens.post$x <= cuts[3]))
-  x4 <- max(which(dens.post$x <= 1))
+  x3 <- max(which(dens.post$x <= 1))
 
   if (!is.integer(x0)) x0 <- 1
   if (!is.integer(x1)) x1 <- 1
   if (!is.integer(x2)) x2 <- 1
   if (!is.integer(x3)) x3 <- 1
-  if (!is.integer(x4)) x4 <- 1
 
   z1 <- sum(samp <= cuts[1])
   z2 <- sum(samp <= cuts[2])
-  z3 <- sum(samp <= cuts[3])
-  z4 <- sum(samp <= 1)
+  z3 <- sum(samp <= 1)
 
   dens.item <- density(item, adjust = 1.75, n = 2e3)
   xx0 <- min(which(dens.item$x <= cuts[1]))
   xx1 <- max(which(dens.item$x <= cuts[1]))
   xx2 <- max(which(dens.item$x <= cuts[2]))
-  xx3 <- max(which(dens.item$x <= cuts[3]))
-  xx4 <- max(which(dens.item$x <= 1))
+  xx3 <- max(which(dens.item$x <= 1))
 
   if (!is.integer(xx0)) xx0 <- 1
   if (!is.integer(xx1)) xx1 <- 1
   if (!is.integer(xx2)) xx2 <- 1
   if (!is.integer(xx3)) xx3 <- 1
-  if (!is.integer(xx4)) xx4 <- 1
 
   y1 <- sum(item <= cuts[1])
   y2 <- sum(item <= cuts[2])
-  y3 <- sum(item <= cuts[3])
-  y4 <- sum(item <= 1)
+  y3 <- sum(item <= 1)
 
 
-  pie.item <- c(y1, y2-y1, y3-y2, y4-y3)
+  pie.item <- c(y1, y2-y1, y3-y2)
   pie.item[pie.item == 0] <- 1e-20
   pie.item.labels <- as.character(round(pie.item/(length(item)*1e-2), 1))
-  pie.post <- c(z1, z2-z1, z3-z2, z4-z3)
+  pie.post <- c(z1, z2-z1, z3-z2)
   pie.post[pie.post == 0] <- 1e-20
   pie.post.labels <- as.character(round(pie.post/(length(samp)*1e-2), 1))
 
-  for (i in 1:4){
+  for (i in 1:3){
     if (as.numeric(pie.item.labels[i]) > 3) {
       pie.item.labels[i] <- paste(pie.item.labels[i], "%")
     } else{
@@ -355,23 +348,22 @@ plotIfItem_one <- function(x, estimate, item.pos, criteria = TRUE, blackwhite = 
 
   # ------------------------------- plotting --------------------------------------
 
-  if (top.align){
+  if (top.align && criteria){
     plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = NA, ylab = NA,
          xlim = c(0, 1), ylim = c(0,  peak * 1.64),
          lwd = 3, main = "")
-    bayesrel:::plotShadePrior(dens.post, xx = c(x0, x1, x2, x3, x4),
-                              cols = colos, cutoffs = criteria, grey = blackwhite)
-    bayesrel:::plotShadePost(dens.item, xx = c(xx0, xx1, xx2, xx3, xx4),
-                             cols = colos, cutoffs = criteria, grey = blackwhite)
+    plotShadePost(dens.post, xx = c(x0, x1, x2, x3),
+                              cols = colos, criteria = criteria, blackwhite = blackwhite)
+    plotShadePrior(dens.item, xx = c(xx0, xx1, xx2, xx3),
+                             cols = colos, criteria = criteria, blackwhite = blackwhite)
 
     lines(density(item, adjust = 1.75), lty = 4, lwd = 3)
 
     axis(side = 1, at = seq(0, 1, by = .2), labels = seq(0, 1, by = .2), cex.axis = 1.25, lwd = 1.5)
 
-    text("poor", x = cuts[1]/2, y = peak*-.025, adj = 0.5, cex = 1.25)
-    text("acceptable", x = (cuts[1] + cuts[2])/2, y = peak*-.025, adj = .5, cex = 1.25)
-    text("preferable", x = (cuts[2] + cuts[3])/2, y = peak*-.025, adj = .5, cex = 1.25)
-    text("desirable?", x = (cuts[3] + 1)/2, y = peak*-.025, adj = .5, cex = 1.25)
+    text("insufficient", x = cuts[1]/2, y = peak*-.025, adj = 0.5, cex = 1.25)
+    text("sufficient", x = (cuts[1] + cuts[2])/2, y = peak*-.025, adj = .5, cex = 1.25)
+    text("good", x = (cuts[2] + 1)/2, y = peak*-.025, adj = .5, cex = 1.25)
 
     arrows(x0 = hdi[1], y0 = peak, x1 = hdi[2], y1 = peak, angle = 90, length = 0.05,
            code = 3, lwd = 1.5)
@@ -400,26 +392,21 @@ plotIfItem_one <- function(x, estimate, item.pos, criteria = TRUE, blackwhite = 
     segments(x0 = pos.x + .16, y0 = pos.y * 1.105, x1 = pos.x + .24, y1 = pos.y * 1.105, lwd = 1.75, lty = 1)
     #text("Distribution", x = mid, y = pos.y * 1.18, cex = 1.75)
     legend(x = mid, y = pos.y *.92, inset=.02, xjust = 0.5, fill=colos, horiz=TRUE, cex=1.25, bty = "n",
-           c("poor","acceptable","preferable", "desirable?"))
+           c("insufficient","sufficient", "good"))
 
   } else {
 
     plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = NA, ylab = NA,
          xlim = c(0, 1), ylim = c(0,  peak * 1.2),
          lwd = 3, main = "")
-    bayesrel:::plotShadePrior(dens.post, xx = c(x0, x1, x2, x3, x4),
-                              cols = colos, cutoffs = criteria, grey = blackwhite)
-    bayesrel:::plotShadePost(dens.item, xx = c(xx0, xx1, xx2, xx3, xx4),
-                             cols = colos, cutoffs = criteria, grey = blackwhite)
+    plotShadePost(dens.post, xx = c(x0, x1, x2, x3),
+                              cols = colos, criteria = criteria, blackwhite = blackwhite)
+    plotShadePrior(dens.item, xx = c(xx0, xx1, xx2, xx3),
+                             cols = colos, criteria = criteria, blackwhite = blackwhite)
 
     lines(density(item, adjust = 1.75), lty = 4, lwd = 3)
 
     axis(side = 1, at = seq(0, 1, by = .2), labels = seq(0, 1, by = .2), cex.axis = 1.25, lwd = 1.5)
-
-    text("poor", x = cuts[1]/2, y = peak*-.025, adj = 0.5, cex = 1.25)
-    text("acceptable", x = (cuts[1] + cuts[2])/2, y = peak*-.025, adj = .5, cex = 1.25)
-    text("preferable", x = (cuts[2] + cuts[3])/2, y = peak*-.025, adj = .5, cex = 1.25)
-    text("desirable?", x = (cuts[3] + 1)/2, y = peak*-.025, adj = .5, cex = 1.25)
 
     arrows(x0 = hdi[1], y0 = peak, x1 = hdi[2], y1 = peak, angle = 90, length = 0.05,
            code = 3, lwd = 1.5)
@@ -433,21 +420,27 @@ plotIfItem_one <- function(x, estimate, item.pos, criteria = TRUE, blackwhite = 
          x = pos.x, y = peak*0.94, adj = 0)
     text(labels = substitute(paste("median" [ifitem], " = ", cc), list(cc = round(med2, 3))), x = pos.x, y = peak*.99, adj = 0)
     title(main, line = -1, cex.main = 1.75)
+    if (criteria){
+      text("insufficient", x = cuts[1]/2, y = peak*-.025, adj = 0.5, cex = 1.25)
+      text("sufficient", x = (cuts[1] + cuts[2])/2, y = peak*-.025, adj = .5, cex = 1.25)
+      text("good", x = (cuts[2] + 1)/2, y = peak*-.025, adj = .5, cex = 1.25)
+      f.post <- plotrix::floating.pie(xpos = pos.x, ypos = pos.y, x = pie.post, radius = rad,
+                                      col = colos, startpos = 0)
+      plotrix::pie.labels(pos.x, pos.y, radius = rad + 0.006, labels = pie.post.labels, f.post)
+      f.item <- plotrix::floating.pie(xpos = pos.x +.2, ypos = pos.y, x = pie.item, radius = rad,
+                                      col = colos, startpos = 0)
+      plotrix::pie.labels(pos.x +.2, pos.y, radius = rad + .006, labels = pie.item.labels, f.item)
 
-    f.post <- plotrix::floating.pie(xpos = pos.x, ypos = pos.y, x = pie.post, radius = rad,
-                                    col = colos, startpos = 0)
-    plotrix::pie.labels(pos.x, pos.y, radius = rad + 0.006, labels = pie.post.labels, f.post)
-    f.item <- plotrix::floating.pie(xpos = pos.x +.2, ypos = pos.y, x = pie.item, radius = rad,
-                                    col = colos, startpos = 0)
-    plotrix::pie.labels(pos.x +.2, pos.y, radius = rad + .006, labels = pie.item.labels, f.item)
-
-    text("original", x = pos.x, y = pos.y * 1.29, cex = 1.5)
-    text("if-item-dropped", x = pos.x + 0.2, y = pos.y * 1.29, cex = 1.5)
-    segments(x0 = pos.x -.04, y0 = pos.y * 1.245, x1 = pos.x +.04, y1 = pos.y * 1.245, lwd = 1.75, lty = 1)
-    segments(x0 = pos.x + .13, y0 = pos.y * 1.245, x1 = pos.x + .27, y1 = pos.y * 1.245, lwd = 1.75, lty = 4)
-    #text("Distribution", x = mid, y = pos.y * 1.41, cex = 1.75)
-    legend(x = mid, y = pos.y * 0.77, inset=.02, xjust = .5, fill=colos, horiz=TRUE, cex=1.25, bty = "n",
-           c("poor","acceptable","preferable", "desirable?"))
+      text("original", x = pos.x, y = pos.y * 1.29, cex = 1.5)
+      text("if-item-dropped", x = pos.x + 0.2, y = pos.y * 1.29, cex = 1.5)
+      segments(x0 = pos.x -.04, y0 = pos.y * 1.245, x1 = pos.x +.04, y1 = pos.y * 1.245, lwd = 1.75, lty = 1)
+      segments(x0 = pos.x + .13, y0 = pos.y * 1.245, x1 = pos.x + .27, y1 = pos.y * 1.245, lwd = 1.75, lty = 4)
+      #text("Distribution", x = mid, y = pos.y * 1.41, cex = 1.75)
+      legend(x = mid, y = pos.y * 0.77, inset=.02, xjust = .5, fill=colos, horiz=TRUE, cex=1.25, # bty = "n",
+             c("insufficient","sufficient", "good"))
+    } else {
+      legend(x = mid, y = pos.y*0.7, c("original", "if-item-dropped"), lty = c(1, 4), lwd = 2, title = "Distribution", cex = 1.25, bty = "n")
+    }
   }
   options(warn = 0)
 }
