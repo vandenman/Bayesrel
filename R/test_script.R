@@ -1,6 +1,6 @@
 
 
-
+#
 # data <- MASS::mvrnorm(100, rep(0, 9), psych::sim.hierarchical())
 #
 # a <- Sys.time()
@@ -8,6 +8,9 @@
 # Sys.time() - a
 #
 # summary(x)
+#
+# data <- bayesrel::cavalini
+# x <- bayesrel::brel(data, item.dropped = T)
 #
 # plotBrel(x, "lambda2", criteria = F, blackwhite = F, greek = T)
 # plotIfItem_one(x, "lambda6", 1, criteria = F, blackwhite = F, greek = T)

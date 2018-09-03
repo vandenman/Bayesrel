@@ -450,7 +450,7 @@ plotIfItem_one <- function(x, estimate, item.pos, criteria = TRUE, blackwhite = 
 plotIfItem_all <- function(x, estimate, ordering = FALSE){
   n.row <- length(unlist(x$bay$ifitem$est[1]))
   posi <- grep(estimate, x$estimates, ignore.case = T)
-  main <- paste("If - Item - Dropped Posterior Plot for", estimate)
+  main <- paste("If-Item-Dropped Posterior Plot for", estimate)
 
   dat <- as.data.frame(as.matrix(unlist(x$bay$samp[posi])))
   colnames(dat) <- "value"
@@ -482,14 +482,17 @@ plotIfItem_all <- function(x, estimate, ordering = FALSE){
   }
 
   ggplot2::ggplot(dat, ggplot2::aes(x = value, y = var, fill = colo)) +
-    ggridges::stat_density_ridges(quantile_lines = TRUE, quantiles = 2, show.legend = F) +
-    ggplot2::theme_linedraw(base_family = "LM Roman 10") +
+    ggridges::stat_density_ridges(quantile_lines = TRUE, quantiles = c(0.025, 0.5, 0.975), alpha = .85, show.legend = F) +
+    ggplot2::theme_linedraw() +
     ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white"),
                    strip.text = ggplot2::element_text(colour = "black")) +
-    ggplot2::xlab("Reliability") +
+    ggplot2::xlab("\n Reliability") +
     ggplot2::ylab("Item Dropped") +
     ggplot2::scale_y_discrete(expand = ggplot2::expand_scale(add = c(0.25, 1.5))) +
     ggplot2::ggtitle(main) +
-    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+    ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, vjust = 4, size = 20),
+                   axis.title = ggplot2::element_text(size = 16),
+                   axis.text = ggplot2::element_text(size = 12),
+                   plot.margin = ggplot2::unit(c(1,1,1,1), "cm"))
 
 }
