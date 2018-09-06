@@ -33,7 +33,7 @@ applyglb <- function(M){
   return(gl)
 }
 
-applyomega_boot_cfa <- function(data){
+applyomega_cfa <- function(data){
   lav.mod.file <- lavOneFile(data)
   colnames(data) <- lav.mod.file$names
   p <- ncol(data)
@@ -44,7 +44,7 @@ applyomega_boot_cfa <- function(data){
   return(om)
 }
 
-applyomega_boot_pa <- function(m){
+applyomega_pa <- function(m){
   f <- princFac(m)
   l.fa <- f$loadings
   er.fa <- f$err.var
@@ -73,12 +73,6 @@ omegaBasic <- function(l, e){
   o <- sum(l)^2 / (sum(l)^2 + sum(e))
   return(o)
 }
-
-quantiles <- function(samp){
-  q <- quantile(samp, probs = seq(0, 1, length.out = 2e3))
-  return(q)
-}
-
 
 #########   boot functions ##########
 
@@ -112,11 +106,11 @@ bootGlb <- function(data, indices){
 }
 
 bootOmega_cfa <- function(data, indices){
-  om <- applyomega_boot_cfa(data[indices, ])
+  om <- applyomega_cfa(data[indices, ])
   return(om)
 }
 bootOmega_pa <- function(data, indices){
-  om <- applyomega_boot_pa(cov(data[indices, ]))
+  om <- applyomega_pa(cov(data[indices, ]))
   return(om)
 }
 

@@ -30,3 +30,9 @@ ciAlpha <- function(palpha, n, V){
   out <- c(ll, ul)
   return(out)
 }
+
+#' does quantile averaging and returns 2000 datapoints
+quantiles <- function(samp){
+  q <- quantile(samp, probs = seq(0, 1, length.out = 2e3))
+  return(q)
+}

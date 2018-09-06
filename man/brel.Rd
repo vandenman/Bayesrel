@@ -12,7 +12,8 @@ brel(x, boot.n = 200, interval = 0.95, n.iter = 2000,
   omega.conf.int.type = "boot", omega.bay.cov.samp = FALSE,
   return.cov.samples = FALSE, prior.samp = FALSE,
   item.dropped = FALSE, alpha.int.analytic = FALSE, bayes = TRUE,
-  freq = TRUE, boot.interval.type = "basic", jags = FALSE)
+  freq = TRUE, para.boot = TRUE, boot.interval.type = "basic",
+  jags = FALSE)
 }
 \description{
 function to calculate all the internal consitency estimates

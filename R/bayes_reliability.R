@@ -8,7 +8,7 @@ brel <- function(x, boot.n = 200, interval = .95, n.iter = 2e3, n.burnin = 50,
                 estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"), supr.warnings = TRUE,
                 omega.freq.method = "pa", omega.conf.int.type = "boot", omega.bay.cov.samp = FALSE,
                 return.cov.samples = FALSE, prior.samp = FALSE, item.dropped = FALSE, alpha.int.analytic = FALSE,
-                bayes = TRUE, freq = TRUE, boot.interval.type = "basic", jags = FALSE) {
+                bayes = TRUE, freq = TRUE, para.boot = TRUE, boot.interval.type = "basic", jags = FALSE) {
   if (supr.warnings) {
     options(warn = - 1)
   }
@@ -54,10 +54,13 @@ brel <- function(x, boot.n = 200, interval = .95, n.iter = 2e3, n.burnin = 50,
   }
   sum.res$freq.true <- FALSE
   if(freq){
-    # sum.res$freq <- freqFun(data, boot.n, boot.interval.type, estimates, interval, omega.freq.method, omega.conf.type)
-    # #this was the command with the boot package
-    sum.res$freq <- freqFun2(data, boot.n, estimates, interval, omega.freq.method, omega.conf.int.type, item.dropped,
-                             alpha.int.analytic)
+    if (para.boot){
+      sum.res$freq <- freqFun_para(data, boot.n, estimates, interval, omega.freq.method, omega.conf.int.type, item.dropped,
+                                   alpha.int.analytic)
+    } else{
+    sum.res$freq <- freqFun_nonpara(data, boot.n, estimates, interval, omega.freq.method, omega.conf.int.type, item.dropped,
+                                    alpha.int.analytic)
+    }
     sum.res$freq.true <- TRUE
     sum.res$omega.freq.method <- omega.freq.method
     sum.res$omega.conf.int.type <- omega.conf.int.type

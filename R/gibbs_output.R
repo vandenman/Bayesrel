@@ -6,6 +6,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.
   p <- ncol(data)
   if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates || "glb" %in% estimates || omega.bay.cov.samp){
     C <- covSamp2(data, n.iter, n.burnin)
+    # Cmed <- apply(C, c(2, 3), median)
     if (item.dropped) {
       Ctmp <- array(0, c(p, n.iter - n.burnin, p - 1, p - 1))
       for (i in 1:p){
@@ -26,6 +27,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.
     res$cred$low$bayes.alpha <- int[1]
     res$cred$up$bayes.alpha <- int[2]
     res$est$bayes.alpha<- median(res$samp$bayes.alpha)
+    # res$est$bayes.alpha<- applyalpha(Cmed)
     if (item.dropped){
       res$ifitem$samp$alpha <- apply(Ctmp, c(1, 2), applyalpha)
       res$ifitem$est$alpha <- apply(res$ifitem$samp$alpha, 1, median)
@@ -38,6 +40,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.
     res$cred$low$bayes.l2 <- int[1]
     res$cred$up$bayes.l2 <- int[2]
     res$est$bayes.l2<- median(res$samp$bayes.l2)
+    # res$est$bayes.l2<- applyl2(Cmed)
     if (item.dropped){
       res$ifitem$samp$l2 <- apply(Ctmp, c(1, 2), applyl2)
       res$ifitem$est$l2 <- apply(res$ifitem$samp$l2, 1, median)
@@ -50,6 +53,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.
     res$cred$low$bayes.l4 <- int[1]
     res$cred$up$bayes.l4 <- int[2]
     res$est$bayes.l4<- median(res$samp$bayes.l4)
+    # res$est$bayes.l4<- applyl4(Cmed)
     if (item.dropped){
       res$ifitem$samp$l4 <- apply(Ctmp, c(1, 2), applyl4)
       res$ifitem$est$l4 <- apply(res$ifitem$samp$l4, 1, median)
@@ -62,6 +66,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.
     res$cred$low$bayes.l6 <- int[1]
     res$cred$up$bayes.l6 <- int[2]
     res$est$bayes.l6<- median(res$samp$bayes.l6)
+    # res$est$bayes.l6<- applyl6(Cmed)
     if (item.dropped){
       res$ifitem$samp$l6 <- apply(Ctmp, c(1, 2), applyl6)
       res$ifitem$est$l6 <- apply(res$ifitem$samp$l6, 1, median)
@@ -74,6 +79,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.
     res$cred$low$bayes.glb <- int[1]
     res$cred$up$bayes.glb <- int[2]
     res$est$bayes.glb<- median(res$samp$bayes.glb)
+    # res$est$bayes.glb<- applyglb(Cmed)
     if (item.dropped){
       res$ifitem$samp$glb <- apply(Ctmp, c(1, 2), applyglb)
       res$ifitem$est$glb <- apply(res$ifitem$samp$glb, 1, median)
@@ -83,13 +89,13 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.
   # special case omega -----------------------------------------------------------------
   if ("omega" %in% estimates){
     if (omega.bay.cov.samp){
-      res$samp$bayes.omega <- coda::as.mcmc(apply(C, MARGIN = 1, applyomega_boot_pa))
+      res$samp$bayes.omega <- coda::as.mcmc(apply(C, MARGIN = 1, applyomega_pa))
       int <- coda::HPDinterval(res$samp$bayes.omega, prob = interval)
       res$cred$low$bayes.omega <- int[1]
       res$cred$up$bayes.omega <- int[2]
       res$est$bayes.omega <- median(res$samp$bayes.omega)
       if (item.dropped){
-        res$ifitem$samp$omega <- apply(Ctmp, c(1, 2), applyomega_boot_pa)
+        res$ifitem$samp$omega <- apply(Ctmp, c(1, 2), applyomega_pa)
         res$ifitem$est$omega <- apply(res$ifitem$samp$omega, 1, median)
       }
     }

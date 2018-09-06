@@ -28,9 +28,9 @@ summary.bayesrel <- function(x, ...){
     out.matrix$est <- rbind(as.data.frame(as.matrix(x$bay$est)),
                             as.data.frame(as.matrix(x$freq$est)))
     out.matrix$int$low <- rbind(as.data.frame(as.matrix(x$bay$cred$low)),
-                                as.data.frame(as.matrix(x$freq$ci$low)))
+                                as.data.frame(as.matrix(x$freq$conf$low)))
     out.matrix$int$up <- rbind(as.data.frame(as.matrix(x$bay$cred$up)),
-                               as.data.frame(as.matrix(x$freq$ci$up)))
+                               as.data.frame(as.matrix(x$freq$conf$up)))
     out.matrix$omega.freq.method <- x$omega.freq.method
     out.matrix$omega.conf.int.type <- x$omega.conf.int.type
     out.matrix$alpha.int.analytic <- x$alpha.int.analytic
