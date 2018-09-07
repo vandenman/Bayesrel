@@ -7,7 +7,7 @@ and the credible intervals together with the posterior distribution objects
 to be passed on for forther analysis}
 \usage{
 gibbsFun(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.samp,
-  return.cov.samples, item.dropped)
+  item.dropped)
 }
 \description{
 this function calls on other functions in order to return the sampled estimates

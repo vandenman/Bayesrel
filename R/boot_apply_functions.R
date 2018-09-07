@@ -18,7 +18,8 @@ applyl2 <- function(M){
 }
 
 applyl4 <- function(M){
-  l4 <- MaxSplitExhaustive(M)
+  if (ncolM < 15) l4 <- MaxSplitExhaustive(M)
+  else l4 <- quant.lambda4(M)
   return(l4)
 }
 
@@ -74,43 +75,4 @@ omegaBasic <- function(l, e){
   return(o)
 }
 
-#########   boot functions ##########
-
-bootAlpha <- function(data, indices){
-  a <- applyalpha(cov(data[indices, ]))
-  return(a)
-}
-
-#freq conf intervall with bootstrapping
-bootL2 <- function(data, indices){
-  l2 <- applyl2(cov(data[indices, ]))
-  return(l2)
-}
-
-#freq conf intervall with bootstrapping
-bootL6 <- function(data, indices){
-  l6 <- applyl6(cov(data[indices, ]))
-  return(l6)
-}
-
-#freq conf intervall with bootstrapping
-bootL4 <- function(data, indices){
-  l4 <- applyl4(cov(data[indices, ]))
-  return(l4)
-}
-
-# define function for bootstrapping
-bootGlb <- function(data, indices){
-  gl <- glb.algebraic2(cov(data[indices, ]))$glb
-  return(gl)
-}
-
-bootOmega_cfa <- function(data, indices){
-  om <- applyomega_cfa(data[indices, ])
-  return(om)
-}
-bootOmega_pa <- function(data, indices){
-  om <- applyomega_pa(cov(data[indices, ]))
-  return(om)
-}
 

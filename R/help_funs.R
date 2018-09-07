@@ -36,3 +36,10 @@ quantiles <- function(samp){
   q <- quantile(samp, probs = seq(0, 1, length.out = 2e3))
   return(q)
 }
+
+
+se <- function(x) {
+  b <- length(x)
+  se <- sqrt(1/(b-1) * sum((x - mean(x))^2))
+  se
+}

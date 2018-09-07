@@ -7,7 +7,7 @@
 brel <- function(x, boot.n = 200, interval = .95, n.iter = 2e3, n.burnin = 50,
                 estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"), supr.warnings = TRUE,
                 omega.freq.method = "pa", omega.conf.int.type = "boot", omega.bay.cov.samp = FALSE,
-                return.cov.samples = FALSE, prior.samp = FALSE, item.dropped = FALSE, alpha.int.analytic = FALSE,
+                prior.samp = FALSE, item.dropped = FALSE, alpha.int.analytic = FALSE,
                 bayes = TRUE, freq = TRUE, para.boot = TRUE, boot.interval.type = "basic", jags = FALSE) {
   if (supr.warnings) {
     options(warn = - 1)
@@ -44,11 +44,11 @@ brel <- function(x, boot.n = 200, interval = .95, n.iter = 2e3, n.burnin = 50,
   }
   if (bayes){
     if (jags){
-      sum.res$bay <- jagsFun(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.samp, return.cov.samples)
+      sum.res$bay <- jagsFun(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.samp)
       sum.res$omega.pa <- omega.bay.cov.samp
     }
     else{
-      sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.samp, return.cov.samples, item.dropped)
+      sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.samp, item.dropped)
       sum.res$omega.pa <- omega.bay.cov.samp
     }
   }

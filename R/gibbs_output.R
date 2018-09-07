@@ -2,8 +2,9 @@
 #' and the credible intervals together with the posterior distribution objects
 #' to be passed on for forther analysis
 
-gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.samp, return.cov.samples, item.dropped){
+gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.samp, item.dropped){
   p <- ncol(data)
+  res <- list()
   if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates || "glb" %in% estimates || omega.bay.cov.samp){
     C <- covSamp2(data, n.iter, n.burnin)
     # Cmed <- apply(C, c(2, 3), median)
@@ -13,14 +14,11 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.
         Ctmp[i, , , ] <- C[, -i, -i]
       }
     }
-  }
-  else {
+  } else {
     C = NULL
   }
-  res <- list()
-  if (return.cov.samples){
-    res$samp$C <- C
-  }
+  res$samp$C <- C
+
   if ("alpha" %in% estimates){
     res$samp$bayes.alpha <- coda::as.mcmc(apply(C, MARGIN = 1, applyalpha))
     int <- coda::HPDinterval(res$samp$bayes.alpha, prob = interval)
