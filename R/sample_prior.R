@@ -36,7 +36,7 @@ priorSamp <- function(p, estimates, n.samp = 2e3){
     unlink("param.csdp")
   }
   if ("omega" %in% estimates){
-    prioromega <- apply(m, MARGIN = 1, bayesrel:::applyomega_boot_pa)
+    prioromega <- apply(m, MARGIN = 1, bayesrel:::applyomega_pa)
     out$priorOmega <- quantiles(prioromega[prioromega >= 0])
   }
 

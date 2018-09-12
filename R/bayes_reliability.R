@@ -4,11 +4,11 @@
 #' so far input of a covariance matrix is not supported
 #'
 #' @export
-brel <- function(x, boot.n = 200, interval = .95, n.iter = 2e3, n.burnin = 50,
+rel <- function(x, boot.n = 200, interval = .95, n.iter = 2e3, n.burnin = 50,
                 estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"), supr.warnings = TRUE,
                 omega.freq.method = "pa", omega.conf.int.type = "boot", omega.bay.cov.samp = FALSE,
                 prior.samp = FALSE, item.dropped = FALSE, alpha.int.analytic = FALSE,
-                bayes = TRUE, freq = TRUE, para.boot = TRUE, boot.interval.type = "basic", jags = FALSE) {
+                bayes = TRUE, freq = TRUE, para.boot = FALSE, boot.interval.type = "basic", jags = FALSE) {
   if (supr.warnings) {
     options(warn = - 1)
   }

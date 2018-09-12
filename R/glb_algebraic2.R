@@ -57,11 +57,11 @@ csdp2 <- function(C, A, b, K, control = csdp.control(printlevel = 0))
   # Rcsdp:::write.control.file(control)
   ret <- .Call("csdp", as.integer(sum(prob.info$block.sizes)),
                as.integer(prob.info$nconstraints), as.integer(prob.info$nblocks),
-               as.integer(c(0, prob.info$block.types)), as.integer(c(0,
-                                                                  prob.info$block.sizes)),
+               as.integer(c(0, prob.info$block.types)), as.integer(c(0, prob.info$block.sizes)),
                prob.data$C, prob.data$A, prob.data$b, PACKAGE = "Rcsdp")
   # unlink("param.csdp")
   ret[1:3] <- Rcsdp:::get.solution(ret[[1]], ret[[2]], ret[[3]], prob.info)
   structure(ret, names = c("X", "Z", "y", "pobj", "dobj",
                            "status"))
 }
+

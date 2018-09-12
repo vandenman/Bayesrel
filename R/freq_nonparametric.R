@@ -1,7 +1,7 @@
 
 
 #' this function calls on other functions in order to return the frequentist estimates
-#' and non-parametric bootstrapped confidence intervals
+#' and non-parametric bootstrapped confidence intervals, now calculated with SEs and z-values
 
 freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method,
                    omega.conf.int.type, item.dropped, alpha.int.analytic){
@@ -14,7 +14,7 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
     boot.data[i, , ] <- as.matrix(data[sample.int(nrow(data), size = n, replace = TRUE), ])
     boot.cov[i, , ] <- cov(boot.data[i, , ])
   }
-  res$boot$C <- boot.cov
+  res$covsamp$C <- boot.cov
   if (item.dropped){
     Ctmp <- array(0, c(p, p - 1, p - 1))
     Dtmp <- array(0, c(p, n, p - 1))
@@ -39,6 +39,8 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
       else{
         res$conf$low$freq.alpha <- quantile(alpha.obj, probs = (1 - interval)/2, na.rm = T)
         res$conf$up$freq.alpha <- quantile(alpha.obj, probs = interval + (1 - interval)/2, na.rm = T)
+        # res$conf$low$freq.alpha <- res$est$freq.alpha - qnorm(1 - (1 - interval)/2) * se(alpha.obj)
+        # res$conf$up$freq.alpha <- res$est$freq.alpha + qnorm(1 - (1 - interval)/2) * se(alpha.obj)
       }
       res$boot$alpha <- alpha.obj
     }
@@ -52,8 +54,7 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
     if (length(unique(round(l2.obj, 4))) == 1){
       res$conf$low$freq.l2 <- 1
       res$conf$up$freq.l2 <- 1
-    }
-    else{
+    } else{
       res$conf$low$freq.l2 <- quantile(l2.obj, probs = (1 - interval)/2, na.rm = T)
       res$conf$up$freq.l2 <- quantile(l2.obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
@@ -69,8 +70,7 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
     if (length(unique(round(l4.obj, 4))) == 1){
       res$conf$low$freq.l4 <- 1
       res$conf$up$freq.l4 <- 1
-    }
-    else{
+    } else{
       res$conf$low$freq.l4 <- quantile(l4.obj, probs = (1 - interval)/2, na.rm = T)
       res$conf$up$freq.l4 <- quantile(l4.obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
@@ -86,8 +86,7 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
     if (length(unique(round(l6.obj, 4))) == 1){
       res$conf$low$freq.l6 <- 1
       res$conf$up$freq.l6 <- 1
-    }
-    else{
+    } else{
       res$conf$low$freq.l6 <- quantile(l6.obj, probs = (1 - interval)/2, na.rm = T)
       res$conf$up$freq.l6 <- quantile(l6.obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
@@ -102,8 +101,7 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
     if (length(unique(round(glb.obj, 4))) == 1){
       res$conf$low$freq.glb <- 1
       res$conf$up$freq.glb <- 1
-    }
-    else{
+    } else{
       res$conf$low$freq.glb <- quantile(glb.obj, probs = (1 - interval)/2, na.rm = T)
       res$conf$up$freq.glb <- quantile(glb.obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
@@ -123,14 +121,12 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
         res$conf$low$freq.omega <- omega.alg[2]
         res$conf$up$freq.omega <- omega.alg[3]
         res$boot$omega <- NULL
-      }
-      else{
+      } else{
         omega.obj <- apply(boot.data, 1, applyomega_cfa)
         if (length(unique(round(omega.obj, 4))) == 1){
           res$conf$low$freq.omega <- 1
           res$conf$up$freq.omega <- 1
-        }
-        else{
+        } else{
           res$conf$low$freq.omega <- quantile(omega.obj, probs = (1 - interval)/2, na.rm = T)
           res$conf$up$freq.omega <- quantile(omega.obj, probs = interval + (1 - interval)/2, na.rm = T)
         }
@@ -141,6 +137,7 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
       }
     }
     if (omega.freq.method == "pa"){
+      res$est$freq.omega <- applyomega_pa(cov(data))
       omega.obj <- apply(boot.cov, 1, applyomega_pa)
       if (length(unique(round(omega.obj, 4))) == 1){
         res$conf$low$freq.omega <- 1
@@ -151,7 +148,6 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
         res$conf$up$freq.omega <- quantile(omega.obj, probs = interval + (1 - interval)/2, na.rm = T)
       }
       res$boot$omega <- omega.obj
-      res$est$freq.omega <- applyomega_pa(cov(data))
       if (item.dropped){
         res$ifitem$omega <- apply(Ctmp, 1, applyomega_pa)
       }

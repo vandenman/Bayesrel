@@ -15,7 +15,7 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
   # boot.data[i, , ] <- scale(boot.data[i, , ], scale = F)
     boot.cov[i, , ] <- cov(boot.data[i, , ])
   }
-  res$boot$C <- boot.cov
+  res$covsamp$C <- boot.cov
   if (item.dropped){
     Ctmp <- array(0, c(p, p - 1, p - 1))
     Dtmp <- array(0, c(p, n, p - 1))

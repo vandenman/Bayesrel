@@ -3,12 +3,12 @@
 \name{freqFun_nonpara}
 \alias{freqFun_nonpara}
 \title{this function calls on other functions in order to return the frequentist estimates
-and non-parametric bootstrapped confidence intervals}
+and non-parametric bootstrapped confidence intervals, now calculated with SEs and z-values}
 \usage{
 freqFun_nonpara(data, boot.n, estimates, interval, omega.freq.method,
   omega.conf.int.type, item.dropped, alpha.int.analytic)
 }
 \description{
 this function calls on other functions in order to return the frequentist estimates
-and non-parametric bootstrapped confidence intervals
+and non-parametric bootstrapped confidence intervals, now calculated with SEs and z-values
 }

@@ -17,7 +17,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.
   } else {
     C = NULL
   }
-  res$samp$C <- C
+  res$covsamp <- C
 
   if ("alpha" %in% estimates){
     res$samp$bayes.alpha <- coda::as.mcmc(apply(C, MARGIN = 1, applyalpha))

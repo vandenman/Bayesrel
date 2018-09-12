@@ -59,7 +59,7 @@ covSamp2 <- function(data, n.iter, n.burnin){
   T0 <- diag(k0, nrow = p, ncol = p) # matrix inversion of diagonal matrix
   mu0 <- rep(0, p) # prior means
   ym <- .colMeans(data, n, p)
-  # https://en.wikipedia.org/wiki/Normal-inverse-Wishart_distribution, murphy 2007
+  # https://en.wikipedia.org/wiki/Normal-inverse-Wishart_distribution, murphy 2007, gelman 2013
   mun <- (k0 * mu0 + n * ym) / (k0 + n)
   kn <- k0 + n
   vn <- v0 + n

@@ -2,7 +2,7 @@
 #' input is the main reliability estimation object and the estimate to be plotted
 #'
 #' @export
-plotBrel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80)){
+plotRel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80)){
   options(warn = -1)
   posi <- grep(estimate, x$estimates, ignore.case = T)
   samp <- coda::as.mcmc(unlist(x$bay$samp[posi]))
