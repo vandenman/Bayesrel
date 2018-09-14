@@ -4,17 +4,21 @@
 #' and non-parametric bootstrapped confidence intervals, now calculated with SEs and z-values
 
 freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method,
-                   omega.conf.int.type, item.dropped, alpha.int.analytic){
+                            item.dropped, alpha.int.analytic){
   p <- ncol(data)
   n <- nrow(data)
   res <- list()
-  boot.data <- array(0, c(boot.n, n, p))
-  boot.cov <- array(0, c(boot.n, p, p))
-  for (i in 1:boot.n){
-    boot.data[i, , ] <- as.matrix(data[sample.int(nrow(data), size = n, replace = TRUE), ])
-    boot.cov[i, , ] <- cov(boot.data[i, , ])
+  res$covsamp <- NULL
+  if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates ||
+      "glb" %in% estimates || omega.freq.method == "pa"){
+    boot.data <- array(0, c(boot.n, n, p))
+    boot.cov <- array(0, c(boot.n, p, p))
+    for (i in 1:boot.n){
+      boot.data[i, , ] <- as.matrix(data[sample.int(nrow(data), size = n, replace = TRUE), ])
+      boot.cov[i, , ] <- cov(boot.data[i, , ])
+    }
+    res$covsamp <- boot.cov
   }
-  res$covsamp$C <- boot.cov
   if (item.dropped){
     Ctmp <- array(0, c(p, p - 1, p - 1))
     Dtmp <- array(0, c(p, n, p - 1))
@@ -29,19 +33,17 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
       int <- ciAlpha(1 - interval, n, cov(data))
       res$conf$low$freq.alpha <- int[1]
       res$conf$up$freq.alpha <- int[2]
-
     } else{
       alpha.obj <- apply(boot.cov, 1, applyalpha)
       if (length(unique(round(alpha.obj, 4))) == 1){
         res$conf$low$freq.alpha <- 1
         res$conf$up$freq.alpha <- 1
-      }
-      else{
+      } else{
         res$conf$low$freq.alpha <- quantile(alpha.obj, probs = (1 - interval)/2, na.rm = T)
         res$conf$up$freq.alpha <- quantile(alpha.obj, probs = interval + (1 - interval)/2, na.rm = T)
         # res$conf$low$freq.alpha <- res$est$freq.alpha - qnorm(1 - (1 - interval)/2) * se(alpha.obj)
         # res$conf$up$freq.alpha <- res$est$freq.alpha + qnorm(1 - (1 - interval)/2) * se(alpha.obj)
-      }
+        }
       res$boot$alpha <- alpha.obj
     }
     if (item.dropped){
@@ -114,24 +116,11 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
   #omega --------------------------------------------------------------------------
   if ("omega" %in% estimates){
     if (omega.freq.method == "cfa"){
-      res$est$freq.omega <- applyomega_cfa(data)
-      if (omega.conf.int.type == "alg"){
-        omega.alg <- applyomega_alg(data, interval)
-        # res$est$freq.omega.alg <- omega.alg[1]
-        res$conf$low$freq.omega <- omega.alg[2]
-        res$conf$up$freq.omega <- omega.alg[3]
-        res$boot$omega <- NULL
-      } else{
-        omega.obj <- apply(boot.data, 1, applyomega_cfa)
-        if (length(unique(round(omega.obj, 4))) == 1){
-          res$conf$low$freq.omega <- 1
-          res$conf$up$freq.omega <- 1
-        } else{
-          res$conf$low$freq.omega <- quantile(omega.obj, probs = (1 - interval)/2, na.rm = T)
-          res$conf$up$freq.omega <- quantile(omega.obj, probs = interval + (1 - interval)/2, na.rm = T)
-        }
-        res$boot$omega <- omega.obj
-      }
+      out <- MBESS::ci.reliability(data)
+      res$est$freq.omega <- out$est
+      res$conf$low$freq.omega <- out$ci.lower
+      res$conf$up$freq.omega <- out$ci.upper
+      res$omega.int.type <- out$interval.type
       if (item.dropped){
         res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa)
       }

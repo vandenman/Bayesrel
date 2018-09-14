@@ -35,13 +35,8 @@ applyglb <- function(M){
 }
 
 applyomega_cfa <- function(data){
-  lav.mod.file <- lavOneFile(data)
-  colnames(data) <- lav.mod.file$names
-  p <- ncol(data)
-  fitdata <- lavaan::cfa(model = lav.mod.file$model, data = data, std.lv = T)
-  params <- lavaan::parameterestimates(fitdata)
-  om <- sum(params$est[1:p])^2 / (sum(params$est[1:p])^2 + sum(params$est[(p+1):(p+p)]))
-  if (om < 0 || om > 1 || is.na(om)) om <- NA
+  out <- MBESS::ci.reliability(data)
+  om <- out$est
   return(om)
 }
 
@@ -54,21 +49,6 @@ applyomega_pa <- function(m){
   return(om)
 }
 
-applyomega_alg <- function(data, interval){
-  lav.mod.file <- lavOneFile(data)
-  colnames(data) <- lav.mod.file$names
-  p <- ncol(data)
-  fitdata <- lavaan::cfa(model = lav.mod.file$model, data = data, std.lv = T)
-  params <- lavaan::parameterestimates(fitdata, ci = TRUE, level = interval)
-  om <- sum(params$est[1:p])^2 / (sum(params$est[1:p])^2 + sum(params$est[(p+1):(p+p)]))
-  if (om < 0 || om > 1 || is.na(om)) om <- NA
-  om.low <- sum(params$ci.lower[1:p])^2 / (sum(params$ci.lower[1:p])^2 + sum(params$ci.lower[(p+1):(p+p)]))
-  if (om.low < 0 || om.low > 1 || is.na(om.low)) om.low <- NA
-  om.up <- sum(params$ci.upper[1:p])^2 / (sum(params$ci.upper[1:p])^2 + sum(params$ci.upper[(p+1):(p+p)]))
-  if (om.up < 0 || om.up > 1 || is.na(om.up)) om.up <- NA
-  oms <- c(om, om.low, om.up)
-  return(oms)
-}
 
 omegaBasic <- function(l, e){
   o <- sum(l)^2 / (sum(l)^2 + sum(e))

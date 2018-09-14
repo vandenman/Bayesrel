@@ -8,11 +8,10 @@ so far input of a covariance matrix is not supported}
 \usage{
 rel(x, boot.n = 200, interval = 0.95, n.iter = 2000, n.burnin = 50,
   estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"),
-  supr.warnings = TRUE, omega.freq.method = "pa",
-  omega.conf.int.type = "boot", omega.bay.cov.samp = FALSE,
+  supr.warnings = TRUE, omega.freq.method = "cfa",
   prior.samp = FALSE, item.dropped = FALSE,
   alpha.int.analytic = FALSE, bayes = TRUE, freq = TRUE,
-  para.boot = FALSE, boot.interval.type = "basic", jags = FALSE)
+  para.boot = FALSE, jags = FALSE)
 }
 \description{
 function to calculate all the internal consitency estimates

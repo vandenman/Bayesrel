@@ -2,10 +2,11 @@
 #' and the credible intervals together with the posterior distribution objects
 #' to be passed on for forther analysis
 
-gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.samp, item.dropped){
+gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
   p <- ncol(data)
   res <- list()
-  if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates || "glb" %in% estimates || omega.bay.cov.samp){
+  if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates ||
+      "glb" %in% estimates){
     C <- covSamp2(data, n.iter, n.burnin)
     # Cmed <- apply(C, c(2, 3), median)
     if (item.dropped) {
@@ -86,33 +87,20 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, omega.bay.cov.
 
   # special case omega -----------------------------------------------------------------
   if ("omega" %in% estimates){
-    if (omega.bay.cov.samp){
-      res$samp$bayes.omega <- coda::as.mcmc(apply(C, MARGIN = 1, applyomega_pa))
-      int <- coda::HPDinterval(res$samp$bayes.omega, prob = interval)
-      res$cred$low$bayes.omega <- int[1]
-      res$cred$up$bayes.omega <- int[2]
-      res$est$bayes.omega <- median(res$samp$bayes.omega)
-      if (item.dropped){
-        res$ifitem$samp$omega <- apply(Ctmp, c(1, 2), applyomega_pa)
-        res$ifitem$est$omega <- apply(res$ifitem$samp$omega, 1, median)
+    om.samp <- omegaSampler(data, n.iter, n.burnin)
+    res$samp$bayes.omega <- coda::as.mcmc(om.samp)
+    int <- coda::HPDinterval(res$samp$bayes.omega, prob = interval)
+    res$cred$low$gibb.omega <- int[1]
+    res$cred$up$bayes.omega<- int[2]
+    res$est$bayes.omega <- median(res$samp$bayes.omega)
+    if (item.dropped){
+      om.samp.ifitem <- matrix(0, p, n.iter - n.burnin)
+      for (i in 1:p){
+        tmp <- data[-i, -i]
+        om.samp.ifitem[i, ] <- omegaSampler(tmp, n.iter, n.burnin)
       }
-    }
-    else{
-      om.samp <- omegaSampler(data, n.iter, n.burnin)
-      res$samp$bayes.omega <- coda::as.mcmc(om.samp)
-      int <- coda::HPDinterval(res$samp$bayes.omega, prob = interval)
-      res$cred$low$gibb.omega <- int[1]
-      res$cred$up$bayes.omega<- int[2]
-      res$est$bayes.omega <- median(res$samp$bayes.omega)
-      if (item.dropped){
-        om.samp.ifitem <- matrix(0, p, n.iter - n.burnin)
-        for (i in 1:p){
-          tmp <- data[-i, -i]
-          om.samp.ifitem[i, ] <- omegaSampler(tmp, n.iter, n.burnin)
-        }
-        res$ifitem$samp$omega <- om.samp.ifitem
-        res$ifitem$est$omega <- apply(om.samp.ifitem, 1, mean)
-      }
+      res$ifitem$samp$omega <- om.samp.ifitem
+      res$ifitem$est$omega <- apply(om.samp.ifitem, 1, mean)
     }
   }
 

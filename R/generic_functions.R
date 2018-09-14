@@ -48,7 +48,8 @@ summary.bayesrel <- function(x, ...){
   out.matrix$estimates <- x$estimates
   out.matrix$omega.pa <- x$omega.pa
   out.matrix$freq.true <- x$freq.true
-  out.matrix$ifitem$bool <- x$item.dropped
+  out.matrix$item.dropped <- x$item.dropped
+  out.matrix$cor.mat <- x$cor.mat
   if (x$item.dropped){
     out.matrix$ifitem$bay.tab <- x$bay$ifitem$est
     if (x$freq.true) {
@@ -81,12 +82,8 @@ print.summary.bayesrel <- function(x, ...){
   print.default(x$n.burnin)
   cat("uncertainty interval:")
   print.default(x$interval)
-  if (x$omega.pa){
-    cat("bayesian omega is calculated with posterior sampling from covariance matrices\n")
-  }
+
   if (x$freq.true){
-    cat("confidence intervals are estimated with bootstrapping interval type:")
-    print.default(x$boot.interval.type)
     if ("omega" %in% x$estimates){
       cat("frequentist omega method is:")
       print.default(x$omega.freq.method)
@@ -97,8 +94,11 @@ print.summary.bayesrel <- function(x, ...){
       cat("alpha confidence interval is analytically computed")
     }
   }
+  cat("\ncorrelation matrix: \n")
+  print.default(x$cor.mat)
 
-  if (x$ifitem$bool){
+
+  if (x$item.dropped){
     n.row <- length(unlist(x$ifitem$bay.tab[1])) + 1
     n.col <- length(x$ifitem$bay.tab)
     mat.ifitem.bay <- data.frame(matrix(0, n.row, n.col))

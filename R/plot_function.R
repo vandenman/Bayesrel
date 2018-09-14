@@ -2,7 +2,7 @@
 #' input is the main reliability estimation object and the estimate to be plotted
 #'
 #' @export
-plotRel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80)){
+plotrel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80)){
   options(warn = -1)
   posi <- grep(estimate, x$estimates, ignore.case = T)
   samp <- coda::as.mcmc(unlist(x$bay$samp[posi]))
@@ -228,7 +228,7 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 #' plotting function of the posterior for the if-item-dropped statistics
 #'
 #' @export
-plotIfItem_one <- function(x, estimate, item.pos, criteria = TRUE, blackwhite = FALSE, top.align = FALSE, greek = FALSE, cuts = c(.70, .80)){
+plotifitem_one <- function(x, estimate, item.pos, criteria = TRUE, blackwhite = FALSE, top.align = FALSE, greek = FALSE, cuts = c(.70, .80)){
   options(warn = -1)
   posi <- grep(estimate, x$estimates, ignore.case = T)
 
@@ -447,7 +447,7 @@ plotIfItem_one <- function(x, estimate, item.pos, criteria = TRUE, blackwhite = 
 
 #' plots posterior distributions of chosen estimate and the item-dropped cases in one plot
 #' @export
-plotIfItem_all <- function(x, estimate, ordering = FALSE){
+plotifitem_all <- function(x, estimate, ordering = FALSE){
   n.row <- length(unlist(x$bay$ifitem$est[1]))
   posi <- grep(estimate, x$estimates, ignore.case = T)
   main <- paste("If-Item-Dropped Posterior Plot for", estimate)
