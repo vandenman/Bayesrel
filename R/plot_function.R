@@ -2,7 +2,7 @@
 #' input is the main reliability estimation object and the estimate to be plotted
 #'
 #' @export
-plotrel <- function(x, estimate, top.align = FALSE, greek = FALSE, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80)){
+plotrel <- function(x, estimate, top.align = TRUE, greek = FALSE, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80)){
   options(warn = -1)
   posi <- grep(estimate, x$estimates, ignore.case = T)
   samp <- coda::as.mcmc(unlist(x$bay$samp[posi]))
@@ -227,7 +227,7 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 
 #' plotting function of the posterior for the if-item-dropped statistics
 #'
-#' @export
+#'
 plotifitem_one <- function(x, estimate, item.pos, criteria = TRUE, blackwhite = FALSE, top.align = FALSE, greek = FALSE, cuts = c(.70, .80)){
   options(warn = -1)
   posi <- grep(estimate, x$estimates, ignore.case = T)
@@ -482,7 +482,8 @@ plotifitem_all <- function(x, estimate, ordering = FALSE){
   }
 
   ggplot2::ggplot(dat, ggplot2::aes(x = value, y = var, fill = colo)) +
-    ggridges::stat_density_ridges(quantile_lines = TRUE, quantiles = c(0.025, 0.5, 0.975), alpha = .85, show.legend = F) +
+    ggridges::stat_density_ridges(quantile_lines = TRUE, quantiles = c(0.025, 0.5, 0.975),
+                                  alpha = .85, show.legend = F) +
     ggplot2::theme_linedraw() +
     ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white"),
                    strip.text = ggplot2::element_text(colour = "black")) +
@@ -496,3 +497,30 @@ plotifitem_all <- function(x, estimate, ordering = FALSE){
                    plot.margin = ggplot2::unit(c(1,1,1,1), "cm"))
 
 }
+
+
+#' graphical posterior predictive check for the 1-factor omega model, based on covariance matrix eigenvalues
+#'
+#'
+ppcOmega <- function(data, lambda, psi){
+  cimpl <- lambda %*% t(lambda) + diag(psi)
+  ymax <- max(eigen(cimpl)$values, eigen(cov(data))$values) * 1.3
+  # par(cex.main = 1.25, mgp = c(3.25, 1, 0), cex.lab = 1.25,
+  #     font.lab = 2, cex.axis = 1.25, bty = "n", las = 1, family = "LM Roman 10")
+  # par(mar = c(5, 5.5, 4.5, 1))
+  plot(eigen(cov(data))$values, axes = F, ylim = c(0, ymax), ylab = "Eigenvalue - Size", xlab = "Eigenvalue - No.")
+  axis(side = 1, at = seq(1:ncol(data)))
+  axis(side = 2)
+  title(main = "Posterior Predictive Check for Omega 1-Factor-Model based on Covariance Matrices")
+
+  for (i in 1:2e3) {
+    dtmp <- MASS::mvrnorm(nrow(data), rep(0, ncol(data)), cimpl)
+    lines(eigen(cov(dtmp))$values, type = "l", col = "gray")
+
+  }
+  lines(eigen(cov(data))$values, col = "black", type = "p")
+  lines(eigen(cov(data))$values, col = "black", lwd = 2)
+  legend(ncol(data)/3, ymax*(2/3), legend=c("Dataset Covariance Matrix", "Simulated Data from Model Implied Covariance Matrix"),
+         col=c("black", "gray"), lwd = c(2, 2), box.lwd = 0)
+}
+

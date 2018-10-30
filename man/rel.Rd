@@ -2,19 +2,19 @@
 % Please edit documentation in R/bayes_reliability.R
 \name{rel}
 \alias{rel}
-\title{function to calculate all the internal consitency estimates
+\title{calculate all the internal consistency estimates
 takes as input both datasets, either matrix or frame, and covariance matrices
 so far input of a covariance matrix is not supported}
 \usage{
-rel(x, boot.n = 200, interval = 0.95, n.iter = 2000, n.burnin = 50,
-  estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"),
-  supr.warnings = TRUE, omega.freq.method = "cfa",
-  prior.samp = FALSE, item.dropped = FALSE,
+rel(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"),
+  interval = 0.95, omega.freq.method = "pa", omega.fit = FALSE,
   alpha.int.analytic = FALSE, bayes = TRUE, freq = TRUE,
-  para.boot = FALSE, jags = FALSE)
+  cor.mat = TRUE, para.boot = FALSE, prior.samp = FALSE,
+  item.dropped = FALSE, n.iter = 2000, n.burnin = 50,
+  boot.n = 1000, supr.warnings = TRUE)
 }
 \description{
-function to calculate all the internal consitency estimates
+calculate all the internal consistency estimates
 takes as input both datasets, either matrix or frame, and covariance matrices
 so far input of a covariance matrix is not supported
 }

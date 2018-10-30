@@ -43,3 +43,5 @@ se <- function(x) {
   se <- sqrt(1/(b-1) * sum((x - mean(x))^2))
   se
 }
+
+

@@ -18,8 +18,8 @@ applyl2 <- function(M){
 }
 
 applyl4 <- function(M){
-  if (ncolM < 15) l4 <- MaxSplitExhaustive(M)
-  else l4 <- quant.lambda4(M)
+  if (ncol(M) < 15) {l4 <- MaxSplitExhaustive(M)}
+  else {l4 <- quant.lambda4(M)}
   return(l4)
 }
 
@@ -35,8 +35,8 @@ applyglb <- function(M){
 }
 
 applyomega_cfa <- function(data){
-  out <- MBESS::ci.reliability(data)
-  om <- out$est
+  out <- omegaFreq(data)
+  om <- out$relia
   return(om)
 }
 

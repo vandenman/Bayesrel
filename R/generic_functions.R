@@ -1,7 +1,7 @@
 
 #'@export
 print.bayesrel <- function(x, ...){
-  if (x$freq.true){
+  if (!is.null(x$freq)){
     est <- cbind(as.data.frame(as.matrix(x$bay$est)),
                  as.data.frame(as.matrix(x$freq$est)))
     colnames(est) <- c("bayes", "frequentist")
@@ -24,7 +24,7 @@ print.bayesrel <- function(x, ...){
 summary.bayesrel <- function(x, ...){
 
   out.matrix <- list()
-  if (x$freq.true){
+  if (!is.null(x$freq)){
     out.matrix$est <- rbind(as.data.frame(as.matrix(x$bay$est)),
                             as.data.frame(as.matrix(x$freq$est)))
     out.matrix$int$low <- rbind(as.data.frame(as.matrix(x$bay$cred$low)),
@@ -32,10 +32,7 @@ summary.bayesrel <- function(x, ...){
     out.matrix$int$up <- rbind(as.data.frame(as.matrix(x$bay$cred$up)),
                                as.data.frame(as.matrix(x$freq$conf$up)))
     out.matrix$omega.freq.method <- x$omega.freq.method
-    out.matrix$omega.conf.int.type <- x$omega.conf.int.type
-    out.matrix$alpha.int.analytic <- x$alpha.int.analytic
-  }
-  else{
+  } else{
     out.matrix$est <- as.data.frame(as.matrix(x$bay$est))
     out.matrix$int$low <- as.data.frame(as.matrix(x$bay$cred$low))
     out.matrix$int$up <- as.data.frame(as.matrix(x$bay$cred$up))
@@ -43,19 +40,13 @@ summary.bayesrel <- function(x, ...){
   out.matrix$call <- x$call
   out.matrix$n.iter <- x$n.iter
   out.matrix$n.burnin <- x$n.burnin
-  out.matrix$boot.interval.type <- x$boot.interval.type
   out.matrix$interval <- x$interval
   out.matrix$estimates <- x$estimates
-  out.matrix$omega.pa <- x$omega.pa
-  out.matrix$freq.true <- x$freq.true
-  out.matrix$item.dropped <- x$item.dropped
   out.matrix$cor.mat <- x$cor.mat
-  if (x$item.dropped){
-    out.matrix$ifitem$bay.tab <- x$bay$ifitem$est
-    if (x$freq.true) {
-      out.matrix$ifitem$freq.tab <- x$freq$ifitem
-      }
-  }
+  out.matrix$fit.indices <- x$freq$fit$omega
+  out.matrix$ifitem$bay.tab <- x$bay$ifitem$est
+  out.matrix$ifitem$freq.tab <- x$freq$ifitem
+
   class(out.matrix) <- "summary.bayesrel"
   out.matrix
 }
@@ -83,22 +74,27 @@ print.summary.bayesrel <- function(x, ...){
   cat("uncertainty interval:")
   print.default(x$interval)
 
-  if (x$freq.true){
+  if (length(grep("freq", x$est)) > 0){
     if ("omega" %in% x$estimates){
       cat("frequentist omega method is:")
       print.default(x$omega.freq.method)
       cat("omega confidence interval is estimated with:")
-      print.default(x$omega.conf.int.type)
+      if (x$omega.freq.method == "pa") {print.default("bootstrap")}
+      if (x$omega.freq.method == "cfa") {print.default("robust maximum likelihood (wald ci)")}
     }
-    if (x$alpha.int.analytic){
-      cat("alpha confidence interval is analytically computed")
+    if (!is.null(x$fit.indices)){
+      options(scipen = 999)
+      cat("\nFrequentist fit of 1-factor-model for omega is:\n")
+      print.default(as.matrix(x$fit.indices))
     }
   }
-  cat("\ncorrelation matrix: \n")
-  print.default(x$cor.mat)
+  if (!is.null(x$cor.mat)){
+    cat("\nindicators' correlation matrix: \n")
+    print.default(x$cor.mat)
+  }
 
 
-  if (x$item.dropped){
+  if (!is.null(x$ifitem$bay.tab)){
     n.row <- length(unlist(x$ifitem$bay.tab[1])) + 1
     n.col <- length(x$ifitem$bay.tab)
     mat.ifitem.bay <- data.frame(matrix(0, n.row, n.col))
@@ -113,7 +109,7 @@ print.summary.bayesrel <- function(x, ...){
     }
     row.names(mat.ifitem.bay) <- c("original", names)
 
-    if (x$freq.true){
+    if (length(grep("freq", x$est)) > 0){
       mat.ifitem.freq <- data.frame(matrix(0, n.row, n.col))
       mat.ifitem.freq[1, ] <- as.vector(unlist(x$est)[(n.col+1):(n.col*2)])
       for (i in 1:n.col){
@@ -126,7 +122,7 @@ print.summary.bayesrel <- function(x, ...){
     cat("\n")
     cat("Bayesian coefficient if item dropped: \n")
     print(mat.ifitem.bay)
-    if (x$freq.true){
+    if (length(grep("freq", x$est)) > 0){
       cat("\n")
       cat("Frequentist coefficient if item dropped: \n")
       print(mat.ifitem.freq)

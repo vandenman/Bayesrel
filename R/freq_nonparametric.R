@@ -4,7 +4,7 @@
 #' and non-parametric bootstrapped confidence intervals, now calculated with SEs and z-values
 
 freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method,
-                            item.dropped, alpha.int.analytic){
+                            item.dropped, alpha.int.analytic, omega.fit){
   p <- ncol(data)
   n <- nrow(data)
   res <- list()
@@ -116,11 +116,15 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
   #omega --------------------------------------------------------------------------
   if ("omega" %in% estimates){
     if (omega.freq.method == "cfa"){
-      out <- MBESS::ci.reliability(data)
-      res$est$freq.omega <- out$est
-      res$conf$low$freq.omega <- out$ci.lower
-      res$conf$up$freq.omega <- out$ci.upper
-      res$omega.int.type <- out$interval.type
+      out <- omegaFreq(data)
+      res$est$freq.omega <- out$relia
+      res$loadings <- out$load
+      res$resid.var <- out$err.var
+      crit <- qnorm(1 - (1 - interval)/2)
+      se <- out$se
+      res$conf$low$freq.omega <- out$relia - (crit * se)
+      res$conf$up$freq.omega <- out$relia + (crit * se)
+      if (omega.fit) {res$fit$omega <- out$indices}
       if (item.dropped){
         res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa)
       }
@@ -141,7 +145,6 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
         res$ifitem$omega <- apply(Ctmp, 1, applyomega_pa)
       }
     }
-    res$omega.freq.method <- omega.freq.method
   }
   return(res)
 }

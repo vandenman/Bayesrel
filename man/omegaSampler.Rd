@@ -6,7 +6,7 @@
 of a cfa one factor model
 it returns the posterior distribution sample of omegas calculated from those parameters}
 \usage{
-omegaSampler(data, n.iter, n.burnin)
+omegaSampler(data, n.iter = 2000, n.burnin = 50)
 }
 \description{
 this function uses gibbs sampling to estimate the loadings and error variances

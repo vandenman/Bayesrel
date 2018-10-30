@@ -6,7 +6,7 @@
 and parametric bootstrapped confidence intervals, sampling from a multivariate normal distribution}
 \usage{
 freqFun_para(data, boot.n, estimates, interval, omega.freq.method,
-  item.dropped, alpha.int.analytic)
+  item.dropped, alpha.int.analytic, omega.fit)
 }
 \description{
 this function calls on other functions in order to return the frequentist estimates

@@ -4,7 +4,7 @@
 #' and parametric bootstrapped confidence intervals, sampling from a multivariate normal distribution
 
 freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
-                         item.dropped, alpha.int.analytic){
+                         item.dropped, alpha.int.analytic, omega.fit){
   p <- ncol(data)
   n <- nrow(data)
   res <- list()
@@ -120,16 +120,19 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
   #omega --------------------------------------------------------------------------
   if ("omega" %in% estimates){
     if (omega.freq.method == "cfa"){
-      out <- MBESS::ci.reliability(data)
-      res$est$freq.omega <- out$est
-      res$conf$low$freq.omega <- out$ci.lower
-      res$conf$up$freq.omega <- out$ci.upper
-      res$omega.int.type <- out$interval.type
+      out <- omegaFreq(data)
+      res$est$freq.omega <- out$relia
+      crit <- qnorm(1 - (1 - interval)/2)
+      se <- out$se
+      res$conf$low$freq.omega <- out$relia - (crit * se)
+      res$conf$up$freq.omega <- out$relia + (crit * se)
+      if (omega.fit) {res$fit$omega <- out$indices}
       if (item.dropped){
         res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa)
       }
     }
     if (omega.freq.method == "pa"){
+      res$est$freq.omega <- applyomega_pa(cov(data))
       omega.obj <- apply(boot.cov, 1, applyomega_pa)
       if (length(unique(round(omega.obj, 4))) == 1){
         res$conf$low$freq.omega <- 1
@@ -140,7 +143,6 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
         res$conf$up$freq.omega <- quantile(omega.obj, probs = interval + (1 - interval)/2, na.rm = T)
       }
       res$boot$omega <- omega.obj
-      res$est$freq.omega <- applyomega_pa(cov(data))
       if (item.dropped){
         res$ifitem$omega <- apply(Ctmp, 1, applyomega_pa)
       }

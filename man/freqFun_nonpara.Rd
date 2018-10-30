@@ -6,7 +6,7 @@
 and non-parametric bootstrapped confidence intervals, now calculated with SEs and z-values}
 \usage{
 freqFun_nonpara(data, boot.n, estimates, interval, omega.freq.method,
-  item.dropped, alpha.int.analytic)
+  item.dropped, alpha.int.analytic, omega.fit)
 }
 \description{
 this function calls on other functions in order to return the frequentist estimates

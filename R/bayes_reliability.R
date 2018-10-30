@@ -1,18 +1,19 @@
 #'
-#' function to calculate all the internal consitency estimates
+#' calculate all the internal consistency estimates
 #' takes as input both datasets, either matrix or frame, and covariance matrices
 #' so far input of a covariance matrix is not supported
 #'
 #' @export
-rel <- function(x, boot.n = 200, interval = .95, n.iter = 2e3, n.burnin = 50,
-                estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"), supr.warnings = TRUE,
-                omega.freq.method = "cfa", prior.samp = FALSE, item.dropped = FALSE, alpha.int.analytic = FALSE,
-                bayes = TRUE, freq = TRUE, para.boot = FALSE, jags = FALSE) {
-  # if (supr.warnings) {
-  #   options(warn = - 1)
-  # }
+rel <- function(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"), interval = .95,
+                omega.freq.method = "pa", omega.fit = FALSE, alpha.int.analytic = FALSE,
+                bayes = TRUE, freq = TRUE, cor.mat = TRUE,
+                para.boot = FALSE, prior.samp = FALSE, item.dropped = FALSE,
+                n.iter = 2e3, n.burnin = 50, boot.n = 1000, supr.warnings = TRUE) {
+  if (supr.warnings) {
+    options(warn = - 1)
+  }
   estimates <- match.arg(estimates, several.ok = T)
-  default <- c("alpha", "lambda2", "lambda6", "glb", "omega")
+  default <- c("alpha", "lambda2", "lambda4", "lambda6", "glb", "omega")
   mat <- match(default, estimates)
   estimates <- estimates[mat]
   estimates <- estimates[!is.na(estimates)]
@@ -25,13 +26,15 @@ rel <- function(x, boot.n = 200, interval = .95, n.iter = 2e3, n.burnin = 50,
   }
   data <- NULL
   sigma <- NULL
+  cov.mat <- FALSE
   if (ncol(x) == nrow(x)){
     return("so far input of a covariance matrix is not supported")
-    if (sum(v[lower.tri(v)] != t(v)[lower.tri(v)]) > 0) {return("input matrix is not symmetric")}
-    if (sum(eigen(x)$values < 0) > 0) {return("input matrix is not positive definite")}
-    if (freq) {return("bootstrap confidence interval estimation requires a dataset")}
-    if ("omega" %in% estimates) {return("omega can only be calculated with a dataset as input")}
-    sigma <- x
+    # if (sum(v[lower.tri(v)] != t(v)[lower.tri(v)]) > 0) {return("input matrix is not symmetric")}
+    # if (sum(eigen(x)$values < 0) > 0) {return("input matrix is not positive definite")}
+    # if (freq) {return("bootstrap confidence interval estimation requires a dataset")}
+    # if ("omega" %in% estimates) {return("omega can only be calculated with a dataset as input")}
+    # sigma <- x
+    # cov.mat <- TRUE
   } else{
     data <- scale(x, scale = F)
     sigma <- cov(data)
@@ -42,33 +45,20 @@ rel <- function(x, boot.n = 200, interval = .95, n.iter = 2e3, n.burnin = 50,
     Rcsdp:::write.control.file(control)
   }
   if (bayes){
-    if (jags){
-      sum.res$bay <- jagsFun(data, n.iter, n.burnin, estimates, interval)
-    }
-    else{
-      sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, item.dropped)
-    }
+    sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, item.dropped, omega.fit)
   }
-  sum.res$freq.true <- FALSE
+  if (omega.fit) {omega.freq.method <- "cfa"}
   if(freq){
     if (para.boot){
       sum.res$freq <- freqFun_para(data, boot.n, estimates, interval, omega.freq.method, item.dropped,
-                                   alpha.int.analytic)
+                                   alpha.int.analytic, omega.fit)
     } else{
       sum.res$freq <- freqFun_nonpara(data, boot.n, estimates, interval, omega.freq.method, item.dropped,
-                                    alpha.int.analytic)
+                                    alpha.int.analytic, omega.fit)
     }
-    sum.res$freq.true <- TRUE
     sum.res$omega.freq.method <- omega.freq.method
-    sum.res$alpha.int.analytic <- alpha.int.analytic
-    if (omega.freq.method == "cfa"){
-      sum.res$omega.conf.int.type <- sum.res$freq$omega.int.type
-    } else {
-      sum.res$omega.conf.int.type <- "bootstrap"
-      }
-
   }
-  sum.res$item.dropped <- item.dropped
+
   if("glb" %in% estimates)
     unlink("param.csdp")
 
@@ -76,12 +66,13 @@ rel <- function(x, boot.n = 200, interval = .95, n.iter = 2e3, n.burnin = 50,
     sum.res$priors <- priorSamp(ncol(data), estimates)
   }
 
-
   sum.res$estimates <- estimates
   sum.res$n.iter <- n.iter
   sum.res$n.burnin <- n.burnin
   sum.res$interval <- interval
-  sum.res$cor.mat <- cor(data)
+  if (cor.mat) {
+    sum.res$cor.mat <- cor(data)
+  }
 
   class(sum.res) = 'bayesrel'
   options(warn = 0)
