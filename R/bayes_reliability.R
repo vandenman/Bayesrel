@@ -5,8 +5,9 @@
 #'
 #' @export
 rel <- function(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"), interval = .95,
-                omega.freq.method = "pa", omega.fit = FALSE, alpha.int.analytic = FALSE,
-                bayes = TRUE, freq = TRUE, cor.mat = TRUE,
+                omega.freq.method = "pa", omega.fit = FALSE,
+                alpha.int.analytic = FALSE, n.obs = NULL,
+                bayes = TRUE, freq = TRUE, cor.mat.out = TRUE,
                 para.boot = FALSE, prior.samp = FALSE, item.dropped = FALSE,
                 n.iter = 2e3, n.burnin = 50, boot.n = 1000, supr.warnings = TRUE) {
   if (supr.warnings) {
@@ -26,15 +27,13 @@ rel <- function(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"),
   }
   data <- NULL
   sigma <- NULL
-  cov.mat <- FALSE
   if (ncol(x) == nrow(x)){
-    return("so far input of a covariance matrix is not supported")
-    # if (sum(v[lower.tri(v)] != t(v)[lower.tri(v)]) > 0) {return("input matrix is not symmetric")}
-    # if (sum(eigen(x)$values < 0) > 0) {return("input matrix is not positive definite")}
-    # if (freq) {return("bootstrap confidence interval estimation requires a dataset")}
-    # if ("omega" %in% estimates) {return("omega can only be calculated with a dataset as input")}
-    # sigma <- x
-    # cov.mat <- TRUE
+    if (is.null(n.obs)) {return("number of observations needs to be specified when entering a covariance matrix")}
+    # return("so far input of a covariance matrix is not supported")
+    if (sum(x[lower.tri(x)] != t(x)[lower.tri(x)]) > 0) {return("input matrix is not symmetric")}
+    if (sum(eigen(x)$values < 0) > 0) {return("input matrix is not positive definite")}
+    sigma <- x
+    data <- MASS::mvrnorm(n.obs, rep(0, p), sigma, empirical = TRUE)
   } else{
     data <- scale(x, scale = F)
     sigma <- cov(data)
@@ -70,8 +69,8 @@ rel <- function(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"),
   sum.res$n.iter <- n.iter
   sum.res$n.burnin <- n.burnin
   sum.res$interval <- interval
-  if (cor.mat) {
-    sum.res$cor.mat <- cor(data)
+  if (cor.mat.out) {
+    sum.res$cor.mat.out <- cor(data)
   }
 
   class(sum.res) = 'bayesrel'

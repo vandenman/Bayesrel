@@ -8,10 +8,10 @@ so far input of a covariance matrix is not supported}
 \usage{
 rel(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"),
   interval = 0.95, omega.freq.method = "pa", omega.fit = FALSE,
-  alpha.int.analytic = FALSE, bayes = TRUE, freq = TRUE,
-  cor.mat = TRUE, para.boot = FALSE, prior.samp = FALSE,
-  item.dropped = FALSE, n.iter = 2000, n.burnin = 50,
-  boot.n = 1000, supr.warnings = TRUE)
+  alpha.int.analytic = FALSE, n.obs = NULL, bayes = TRUE,
+  freq = TRUE, cor.mat.out = TRUE, para.boot = FALSE,
+  prior.samp = FALSE, item.dropped = FALSE, n.iter = 2000,
+  n.burnin = 50, boot.n = 1000, supr.warnings = TRUE)
 }
 \description{
 calculate all the internal consistency estimates

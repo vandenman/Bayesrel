@@ -42,7 +42,7 @@ summary.bayesrel <- function(x, ...){
   out.matrix$n.burnin <- x$n.burnin
   out.matrix$interval <- x$interval
   out.matrix$estimates <- x$estimates
-  out.matrix$cor.mat <- x$cor.mat
+  out.matrix$cor.mat.out <- x$cor.mat.out
   out.matrix$fit.indices <- x$freq$fit$omega
   out.matrix$ifitem$bay.tab <- x$bay$ifitem$est
   out.matrix$ifitem$freq.tab <- x$freq$ifitem
@@ -88,9 +88,9 @@ print.summary.bayesrel <- function(x, ...){
       print.default(as.matrix(x$fit.indices))
     }
   }
-  if (!is.null(x$cor.mat)){
+  if (!is.null(x$cor.mat.out)){
     cat("\nindicators' correlation matrix: \n")
-    print.default(x$cor.mat)
+    print.default(x$cor.mat.out)
   }
 
 
