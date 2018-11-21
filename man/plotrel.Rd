@@ -5,8 +5,8 @@
 \title{plot function for a posterior sample, gives posterior and prior distribution and pie plots
 input is the main reliability estimation object and the estimate to be plotted}
 \usage{
-plotrel(x, estimate, top.align = TRUE, greek = FALSE,
-  blackwhite = FALSE, criteria = TRUE, cuts = c(0.7, 0.8))
+plotrel(x, estimate, blackwhite = FALSE, criteria = TRUE,
+  cuts = c(0.7, 0.8), twopie = FALSE)
 }
 \description{
 plot function for a posterior sample, gives posterior and prior distribution and pie plots

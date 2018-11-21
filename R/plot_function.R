@@ -2,7 +2,7 @@
 #' input is the main reliability estimation object and the estimate to be plotted
 #'
 #' @export
-plotrel <- function(x, estimate, top.align = TRUE, greek = FALSE, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80)){
+plotrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80), twopie = FALSE){
   options(warn = -1)
   posi <- grep(estimate, x$estimates, ignore.case = T)
   samp <- coda::as.mcmc(unlist(x$bay$samp[posi]))
@@ -10,50 +10,14 @@ plotrel <- function(x, estimate, top.align = TRUE, greek = FALSE, blackwhite = F
   if (is.null(prior)) {
     return("You need to rerun the reliability estimation with ‘prior.samp = TRUE‘ for the plot")
   }
-  par(cex.main = 1.5, mar = c(4, 1,  3, 1), mgp = c(3.5, 1, 0), cex.lab = 1.5,
+  par(cex.main = 1.5, mar = c(4, 4,  1, 1), mgp = c(2, .6, 0), cex.lab = 1.5,
       font.lab = 2, cex.axis = 1.8, bty = "n", las = 1)
 
   hdi <- coda::HPDinterval(samp)
-  med <- median(samp) # main alignment variable
-  rad <- .05 # radius of pie plots
+  med <- median(samp)
   peak <- max(density(samp)$y)
+  rad <- .04
 
-  if (med > .65){
-    mid <-  med/2
-    pos.x <- mid - .1
-    pos.y <- peak * .6
-  }
-  if (med < .35) {
-    mid <-  1 - (1 - med)/2
-    pos.x <- mid - .1
-    pos.y <- peak * .6
-
-  }
-  if (med >= .35 && med <= .65) {top.align <- TRUE}
-  if (!criteria) {top.align <- F}
-  if (top.align == TRUE) {
-    pos.x <- med - .1
-    pos.y <- peak * 1.35
-    mid <- med #(pos.x + pos.x +.2)/2
-    rad <- .04
-  }
-
-  main <- paste("Reliability Fit for Distribution Mass of", estimate)
-  if (greek) {
-    if (estimate == "lambda2"){
-      main <- substitute(paste("Posterior Plot for ", lambda [2]))
-    }
-    if (estimate == "lambda4"){
-      main <- substitute(paste("Posterior Plot for ", lambda [4]))
-    }
-    if (estimate == "lambda6"){
-      main <- substitute(paste("Posterior Plot for ", lambda [6]))
-    }
-    if (estimate == "alpha" || estimate == "omega" || estimate == "glb"){
-      estimate <- as.symbol(estimate)
-      main <- substitute(paste("Posterior Plot for ", estimate), list(estimate = estimate))
-    }
-  }
   colos <- c("firebrick", "cornflowerblue","navy")
   if (blackwhite){
     colos <- c("gray100", "gray70", "gray10")
@@ -92,106 +56,120 @@ plotrel <- function(x, estimate, top.align = TRUE, greek = FALSE, blackwhite = F
   pie.prior <- c(y1, y2-y1, y3-y2)
   pie.prior[pie.prior == 0] <- 1e-20
   pie.prior.labels <- as.character(round(pie.prior/(length(prior)*1e-2), 1))
+
   pie.post <- c(z1, z2-z1, z3-z2)
   pie.post[pie.post == 0] <- 1e-20
   pie.post.labels <- as.character(round(pie.post/(length(samp)*1e-2), 1))
+
   for (i in 1:3){
-    if (as.numeric(pie.prior.labels[i]) > 3) {
-      pie.prior.labels[i] <- paste(pie.prior.labels[i], "%")
-    } else{
-      pie.prior.labels[i] <- ""
-    }
-    if (as.numeric(pie.post.labels[i]) > 3) {
-      pie.post.labels[i] <- paste(pie.post.labels[i], "%")
-    } else{
-      pie.post.labels[i] <- ""
-    }
+    pie.prior.labels[i] <- paste(pie.prior.labels[i], "%")
+    pie.post.labels[i] <- paste(pie.post.labels[i], "%")
   }
 
   # ------------------------------- plotting --------------------------------------
 
-  if (top.align && criteria){
-    plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = NA, ylab = NA,
-         xlim = c(0, 1), ylim = c(0,  peak * 1.65),
-         lwd = 3, main = "")
-    plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
-    plotShadePost(dens.post, xx = c(x0, x1, x2, x3), cols = colos, criteria = criteria, blackwhite = blackwhite)
 
-    lines(density(prior, from = 0, to = 1), lty = 5, lwd = 3)
+  if (criteria){
+    if (twopie){
+      plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = "Reliability", ylab = NA,
+           xlim = c(0, 1), ylim = c(-.1,  peak * 1.55),
+           lwd = 3, main = "")
+      bayesrel:::plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
+      bayesrel:::plotShadePost(dens.post, xx = c(x0, x1, x2, x3), cols = colos, criteria = criteria, blackwhite = blackwhite)
 
-    axis(side = 1, at = seq(0, 1, by = .2), labels = seq(0, 1, by = .2), cex.axis = 1.25, lwd = 1.5)
+      lines(density(prior, from = 0, to = 1), lty = 3, lwd = 3)
+      axis(side = 1, at = seq(0, 1, by = .2), labels = seq(0, 1, by = .2), cex.axis = 1.2, lwd = 1.5)
+      axis(side = 2, at = seq(0, peak, by = peak/5), labels = NA, cex.axis = 1.2, lwd = 1.5)
+      title(ylab = "Density", mgp = c(1, 1, 0), adj = 0.31)
+      arrows(x0 = hdi[1], y0 = peak, x1 = hdi[2], y1 = peak, angle = 90, length = 0.05,
+             code = 3, lwd = 2)
 
+      t1 <- legend(x = .95, y = peak*1.33, legend=c("", "", ""), cex = 1.2, bty ="n", xjust = 0, yjust = 1)
+      text(t1$rect$left + t1$rect$w, t1$text$y*.99,
+           c("", paste("median = ", round(med, 3), sep =""),
+             paste("95% HDI: [", round(hdi[1], 3), ", ", round(hdi[2], 3),"]", sep ="")),
+           cex = 1.2, pos = 2)
 
-    arrows(x0 = hdi[1], y0 = peak, x1 = hdi[2], y1 = peak, angle = 90, length = 0.05,
-           code = 3, lwd = 2)
-    text(paste("95% HDI: [", round(hdi[1], 3), ", ", round(hdi[2], 3),"]", sep =""), x = sum(hdi)/2, y = peak*1.04, adj = .5, cex = 1.25)
-    text(paste("median = ", round(med, 3), sep =""), x = sum(hdi)/2, y = peak*1.09, adj = .5, cex = 1.25)
-    title(main, line = -1, cex.main = 2)
+      legend(x = 0, y = peak, lty = c(1, 3), lwd = 2, c("Posterior", "Prior"), bty = "n", cex = 1.2)
 
-    text("insufficient", x = cuts[1]/2, y = peak*-.025, adj = 0.5, cex = 1.25)
-    text("sufficient", x = (cuts[1] + cuts[2])/2, y = peak*-.025, adj = .5, cex = 1.25)
-    text("good", x = (cuts[2] + 1)/2, y = peak*-.025, adj = .5, cex = 1.25)
+      text("insufficient", x = cuts[1]/2, y = peak*-.03, adj = 0.5, cex = 1.2)
+      text("sufficient", x = (cuts[1] + cuts[2])/2, y = peak*-.03, adj = .5, cex = 1.2)
+      text("good", x = (cuts[2] + 1)/2, y = peak*-.03, adj = .5, cex = 1.2)
+      legend(x = 0, y = peak*1.33,  fill=colos, horiz=F, cex=1.2, bty = "n",
+             c("insufficient:", "sufficient:", "good:"))
 
-    f.prior <- plotrix::floating.pie(xpos = pos.x, ypos = pos.y, x = pie.prior, radius = rad,
-                            col = colos, startpos = 0)
-    plotrix::pie.labels(pos.x, pos.y, radius = rad + .006, labels = pie.prior.labels, f.prior)
-    f.post <- plotrix::floating.pie(xpos = pos.x +.2, ypos = pos.y, x = pie.post, radius = rad,
-                           col = colos, startpos = 0)
-    plotrix::pie.labels(pos.x +.2, pos.y, radius = rad + .006, labels = pie.post.labels, f.post)
-    text("prior", x = pos.x, y = pos.y * 1.125, cex = 1.5)
-    text("posterior", x = pos.x + 0.2, y = pos.y * 1.125, cex = 1.5)
-    segments(x0 = pos.x -.03, y0 = pos.y * 1.105, x1 = pos.x +.03, y1 = pos.y * 1.105, lwd = 1.75, lty = 5)
-    segments(x0 = pos.x + .15, y0 = pos.y * 1.105, x1 = pos.x + .25, y1 = pos.y * 1.105, lwd = 1.75, lty = 1)
-    #text("Distribution", x = mid, y = pos.y * 1.18, cex = 1.75)
-    legend(x = mid, y = pos.y *.92, inset=.02, xjust = 0.5, fill=colos, horiz=TRUE, cex=1.25, bty = "n",
-           c("insufficicent", "sufficient", "good"))
-
-
-  } else {
-
-    plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = NA, ylab = NA,
-         xlim = c(0, 1), ylim = c(0,  peak * 1.2),
-         lwd = 3, main = "")
-    plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
-    plotShadePost(dens.post, xx = c(x0, x1, x2, x3), cols = colos, criteria = criteria, blackwhite = blackwhite)
-
-    lines(density(prior, from = 0, to = 1), lty = 5, lwd = 3)
-
-    axis(side = 1, at = seq(0, 1, by = .2), labels = seq(0, 1, by = .2), cex.axis = 1.25, lwd = 1.5)
-
-
-    arrows(x0 = hdi[1], y0 = peak, x1 = hdi[2], y1 = peak, angle = 90, length = 0.05,
-           code = 3, lwd = 2)
-    text(paste("95% HDI: [", round(hdi[1], 3), ", ", round(hdi[2], 3),"]", sep =""), x = sum(hdi)/2, y = peak*1.04, adj = .5, cex = 1.25)
-    text(paste("median = ", round(med, 3), sep =""), x = sum(hdi)/2, y = peak*1.09, adj = .5, cex = 1.25)
-    title(main, line = -1, cex.main = 2)
-
-    if (criteria){
-      text("insufficient", x = cuts[1]/2, y = peak*-.025, adj = 0.5, cex = 1.25)
-      text("sufficient", x = (cuts[1] + cuts[2])/2, y = peak*-.025, adj = .5, cex = 1.25)
-      text("good", x = (cuts[2] + 1)/2, y = peak*-.025, adj = .5, cex = 1.25)
-
-      f.prior <- plotrix::floating.pie(xpos = pos.x, ypos = pos.y, x = pie.prior, radius = rad,
+      f.prior <- plotrix::floating.pie(xpos = .3, ypos = peak*1.4, x = pie.prior, radius = rad,
                                        col = colos, startpos = 0)
-      plotrix::pie.labels(pos.x, pos.y, radius = rad + .006, labels = pie.prior.labels, f.prior)
-      f.post <- plotrix::floating.pie(xpos = pos.x +.2, ypos = pos.y, x = pie.post, radius = rad,
+      f.post <- plotrix::floating.pie(xpos = .45, ypos = peak*1.4, x = pie.post, radius = rad,
                                       col = colos, startpos = 0)
-      plotrix::pie.labels(pos.x +.2, pos.y, radius = rad + .006, labels = pie.post.labels, f.post)
-      text("prior", x = pos.x, y = pos.y * 1.27, cex = 1.5)
-      text("posterior", x = pos.x + 0.2, y = pos.y * 1.27, cex = 1.5)
-      segments(x0 = pos.x -.03, y0 = pos.y * 1.23, x1 = pos.x +.03, y1 = pos.y * 1.23, lwd = 1.75, lty = 5)
-      segments(x0 = pos.x + .15, y0 = pos.y * 1.23, x1 = pos.x + .25, y1 = pos.y * 1.23, lwd = 1.75, lty = 1)
-      #text("Distribution", x = mid, y = pos.y * 1.41, cex = 1.75)
-      legend(x = mid, y = pos.y * 0.77, inset=.02, xjust = 0.5, fill=colos, horiz=TRUE, cex=1.25, # bty = "n",
-             c("insufficient","sufficient", "good"))
+      text("prior", x = .3, y = peak*1.53, cex = 1.2)
+      text("posterior", x = .45, y = peak*1.53, cex = 1.2)
+
+      l1 <- legend(x = .29, y = peak*1.33, legend=c("", "", ""), cex = 1.2, bty ="n", xjust = 0, yjust = 1)
+      l2 <- legend(x = .44, y = peak*1.33, legend=c("", "", ""), cex = 1.2, bty ="n", xjust = 0, yjust = 1)
+      text(l1$rect$left + l1$rect$w, l1$text$y*.99, c(pie.prior.labels), pos = 2, cex = 1.2)
+      text(l2$rect$left + l2$rect$w, l2$text$y*.99, c(pie.post.labels), pos = 2, cex = 1.2)
+
     } else {
-      legend(x = mid, y = pos.y*0.7, c("posterior", "prior"), lty = c(1, 5), lwd = 2, title = "Distribution", cex = 1.25, bty = "n")
+      plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = "Reliability", ylab = NA,
+           xlim = c(0, 1), ylim = c(-.1,  peak * 1.33),
+           lwd = 3, main = "")
+      bayesrel:::plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
+      bayesrel:::plotShadePost(dens.post, xx = c(x0, x1, x2, x3), cols = colos, criteria = criteria, blackwhite = blackwhite)
+
+      lines(density(prior, from = 0, to = 1), lty = 3, lwd = 3)
+      axis(side = 1, at = seq(0, 1, by = .2), labels = seq(0, 1, by = .2), cex.axis = 1.2, lwd = 1.5)
+      axis(side = 2, at = seq(0, peak, by = peak/5), labels = NA, cex.axis = 1.2, lwd = 1.5)
+      title(ylab = "Density", mgp = c(1, 1, 0), adj = 0.31)
+      arrows(x0 = hdi[1], y0 = peak, x1 = hdi[2], y1 = peak, angle = 90, length = 0.05,
+             code = 3, lwd = 2)
+
+      t1 <- legend(x = .95, y = peak*1.33, legend=c("", "", ""), cex = 1.2, bty ="n", xjust = 0, yjust = 1)
+      text(t1$rect$left + t1$rect$w, t1$text$y*.99,
+           c("", paste("median = ", round(med, 3), sep =""),
+             paste("95% HDI: [", round(hdi[1], 3), ", ", round(hdi[2], 3),"]", sep ="")),
+           cex = 1.2, pos = 2)
+
+      legend(x = 0, y = peak, lty = c(1, 3), lwd = 2, c("Posterior", "Prior"), bty = "n", cex = 1.2)
+
+      text("insufficient", x = cuts[1]/2, y = peak*-.03, adj = 0.5, cex = 1.2)
+      text("sufficient", x = (cuts[1] + cuts[2])/2, y = peak*-.03, adj = .5, cex = 1.2)
+      text("good", x = (cuts[2] + 1)/2, y = peak*-.03, adj = .5, cex = 1.2)
+      legend(x = 0, y = peak*1.33,  fill=colos, horiz=F, cex=1.2, bty = "n",
+             c("insufficient:", "sufficient:", "good:"))
+      f.post <- plotrix::floating.pie(xpos = .42, ypos = peak*1.2, x = pie.post, radius = rad+.02,
+                                      col = colos, startpos = 0)
+      l2 <- legend(x = .275, y = peak*1.33, legend=c("", "", ""), cex = 1.2, bty ="n", xjust = 0, yjust = 1)
+      text(l2$rect$left + l2$rect$w, l2$text$y*.993, c(pie.post.labels), pos = 2, cex = 1.2)
     }
 
+  } else {
+    plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = "Reliability", ylab = NA,
+         xlim = c(0, 1), ylim = c(0,  peak * 1.25),
+         lwd = 3, main = "")
+    bayesrel:::plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
+    bayesrel:::plotShadePost(dens.post, xx = c(x0, x1, x2, x3), cols = colos, criteria = criteria, blackwhite = blackwhite)
+
+    lines(density(prior, from = 0, to = 1), lty = 3, lwd = 3)
+
+    axis(side = 1, at = seq(0, 1, by = .2), labels = seq(0, 1, by = .2), cex.axis = 1.2, lwd = 1.5)
+    axis(side = 2, at = seq(0, peak, by = peak/5), labels = NA, cex.axis = 1.2, lwd = 1.5)
+    title(ylab = "Density", mgp = c(1, 1, 0), adj = 0.31)
+    arrows(x0 = hdi[1], y0 = peak, x1 = hdi[2], y1 = peak, angle = 90, length = 0.05,
+           code = 3, lwd = 2)
+
+    t1 <- legend(x = .95, y = peak*1.33, legend=c("", "", ""), cex = 1.2, bty ="n", xjust = 0, yjust = 1)
+    text(t1$rect$left + t1$rect$w, t1$text$y*.99,
+         c("", paste("median = ", round(med, 3), sep =""),
+           paste("95% HDI: [", round(hdi[1], 3), ", ", round(hdi[2], 3),"]", sep ="")),
+         cex = 1.2, pos = 2)
+
+    legend(x = 0, y = peak, lty = c(1, 3), lwd = 2, c("Posterior", "Prior"), bty = "n", cex = 1.2)
+
   }
+
   options(warn = 0)
 }
-
 
 plotShadePost <- function(dens, xx, cols, criteria, blackwhite){
   if (criteria){

@@ -6,7 +6,7 @@
 and calculates any given probability of the estimate being bigger
 or smaller than an arbitrary value}
 \usage{
-probrel(x, estimate, low.bound)
+probrel(x, low.bound)
 }
 \description{
 takes a mcmc posterior sample of any of the internal consistency estimates

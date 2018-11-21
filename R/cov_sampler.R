@@ -1,6 +1,6 @@
 #' this function uses gibbs sampling to estimate the posterior distribution
 #' of a sample's covariance matrix
-covSamp2 <- function(data, n.iter, n.burnin){
+covSamp <- function(data, n.iter, n.burnin){
   n <- nrow(data)
   p <- ncol(data)
   # posterior covariance matrix ---------------------------------------------------

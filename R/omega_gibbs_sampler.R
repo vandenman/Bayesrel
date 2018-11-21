@@ -9,7 +9,7 @@ omegaSampler <- function(data, n.iter = 2e3, n.burnin = 50){
 
   l0k <- rep(0, p) # prior lambdas
   a0k <- 1 # prior gamma function for psis
-  b0k <- 1e-1 # prior gamma for psi
+  b0k <- .05 # prior gamma for psi
 
   # draw starting values for sampling from prior distributions:
   invpsi <- rgamma(p, a0k, b0k)
@@ -59,65 +59,3 @@ omegaSampler <- function(data, n.iter = 2e3, n.burnin = 50){
   return(list(omega = gibbs.o.obj, lambda = La, psi = Ps))
 }
 
-
-
-omegaSampler_old <- function(data, n.iter = 2e3, n.burnin = 50){
-  n <- nrow(data)
-  p <- ncol(data)
-  H0 <- rep(2.5, p) # prior multiplier matrix for lambdas variance
-  R0 <- 1 # prior mean matrix for phi
-  p0 <- 1 # prior variance factor for phi
-  l0k <- rep(0, p) # prior lambdas
-  a0k <- rep(1, p) # prior gamma function for psis
-  b0k <- rep(1e-1, p) # prior gamma for psi
-  # draw starting values for sampling from prior distributions:
-  invpsi <- rgamma(p, a0k, b0k)
-  invPsi <- diag(invpsi)
-  psi <- 1/invpsi
-  lambda <- rnorm(p, l0k, sqrt(psi * H0))
-  # lambda <- runif(p, 0, 1)
-  Phi <- 1
-  invPhi <- 1/Phi
-  wi <- rnorm(n, 0, sqrt(Phi))
-  wi <- wi/sd(wi) # fix variance to 1
-  # prepare matrices for saving lambda and psi:
-  La <- matrix(0, n.iter, p)
-  Ps <- matrix(0, n.iter, p)
-
-  for (i in 1:n.iter){
-    # hyperparameters for posteriors
-    ak <- rep(0, p)
-    Ak <- rep(0, p)
-    bek <- rep(0, p)
-    for(j in 1:p){
-      Ak[j] <- 1/((1/H0[j]) + t(wi) %*% wi)
-      ak[j] <- Ak[j] * ((1/H0[j]) * l0k[j] + t(wi) %*% data[,j])
-      bek[j] <- b0k[j] + 0.5 * (t(data[,j]) %*% data[,j] - ak[j] * (1/Ak[j]) * ak[j]
-                               + l0k[j] * (1/H0[j]) * l0k[j])
-    }
-    #  sample psi and lambda
-    invpsi <- rgamma(p, n/2 + a0k, bek)
-    invPsi <- diag(invpsi)
-    psi <- 1/invpsi
-    lambda <- rnorm(p, ak, sqrt(psi * Ak))
-
-    # sample wi posterior:
-    m <- solve(invPhi + t(lambda) %*% invPsi %*% lambda) %*% t(lambda) %*% invPsi %*% t(data)
-    V <- solve(invPhi + t(lambda) %*% invPsi %*% lambda)
-    wi <- rnorm(n, m, sqrt(V))
-    wi <- wi/sd(wi)
-    # dont sample phi
-    # save the parameters
-    La[i, ] <- lambda
-    Ps[i, ] <- psi
-  }
-  # n.burnin
-  La <- La[(n.burnin + 1):n.iter, ]
-  Ps <- Ps[(n.burnin + 1):n.iter, ]
-
-  gibbs.o.obj <- numeric(nrow(La))
-  for (i in 1:(nrow(La))){
-    gibbs.o.obj[i] <- sum(La[i,])^2 / (sum(La[i,])^2 + sum(Ps[i,]))
-  }
-  return(list(omega = gibbs.o.obj, lambda = La, psi = Ps))
-}

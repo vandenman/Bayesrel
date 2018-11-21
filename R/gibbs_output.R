@@ -7,7 +7,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped, 
   res <- list()
   if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates ||
       "glb" %in% estimates){
-    C <- covSamp2(data, n.iter, n.burnin)
+    C <- covSamp(data, n.iter, n.burnin)
     # Cmed <- apply(C, c(2, 3), median)
     if (item.dropped) {
       Ctmp <- array(0, c(p, n.iter - n.burnin, p - 1, p - 1))

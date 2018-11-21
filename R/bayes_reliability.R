@@ -7,7 +7,7 @@
 rel <- function(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"), interval = .95,
                 omega.freq.method = "pa", omega.fit = FALSE,
                 alpha.int.analytic = FALSE, n.obs = NULL,
-                bayes = TRUE, freq = TRUE, cor.mat.out = TRUE,
+                bayes = TRUE, freq = TRUE,
                 para.boot = FALSE, prior.samp = FALSE, item.dropped = FALSE,
                 n.iter = 2e3, n.burnin = 50, boot.n = 1000, supr.warnings = TRUE) {
   if (supr.warnings) {
@@ -69,9 +69,6 @@ rel <- function(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"),
   sum.res$n.iter <- n.iter
   sum.res$n.burnin <- n.burnin
   sum.res$interval <- interval
-  if (cor.mat.out) {
-    sum.res$cor.mat.out <- cor(data)
-  }
 
   class(sum.res) = 'bayesrel'
   options(warn = 0)

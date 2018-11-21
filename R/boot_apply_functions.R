@@ -25,7 +25,9 @@ applyl4 <- function(M){
 
 
 applyl6 <- function(M){
-  l6 <- 1 - (sum(1 - (1 - (1 / diag(solve(M))))) / sum(M))
+  M <- cov2cor(M)
+  smc <- 1 - (1 / diag(solve(M)))
+  l6 <- 1 - (sum(1 - (smc)) / sum(M))
   return(l6)
 }
 
