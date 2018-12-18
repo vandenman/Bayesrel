@@ -1,4 +1,4 @@
-#' this function samples priors for the estimates and the number of indicators
+# this function samples priors for the estimates and the number of indicators
 
 priorSamp <- function(p, estimates, n.samp = 2e3){
   if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates ||

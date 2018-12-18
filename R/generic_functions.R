@@ -1,6 +1,6 @@
 
 #'@export
-print.bayesrel <- function(x, ...){
+print.ic <- function(x, ...){
   if (!is.null(x$freq)){
     est <- cbind(as.data.frame(as.matrix(x$bay$est)),
                  as.data.frame(as.matrix(x$freq$est)))
@@ -21,7 +21,7 @@ print.bayesrel <- function(x, ...){
 }
 
 #'@export
-summary.bayesrel <- function(object, ...){
+summary.ic <- function(object, ...){
 
   out.matrix <- list()
   if (!is.null(object$freq)){
@@ -46,12 +46,12 @@ summary.bayesrel <- function(object, ...){
   out.matrix$object$ifitem$bay.tab <- object$bay$ifitem$est
   out.matrix$object$ifitem$freq.tab <- object$freq$ifitem
 
-  class(out.matrix) <- "summary.bayesrel"
+  class(out.matrix) <- "summary.ic"
   out.matrix
 }
 
 #'@export
-print.summary.bayesrel <- function(x, ...){
+print.summary.ic <- function(x, ...){
   n.row <- length(x$est$V1)
   mat <- data.frame(matrix(0, n.row, 0))
   mat[, 1] <- x$est

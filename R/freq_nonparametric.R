@@ -1,7 +1,7 @@
 
 
-#' this function calls on other functions in order to return the frequentist estimates
-#' and non-parametric bootstrapped confidence intervals, now calculated with SEs and z-values
+# this function calls on other functions in order to return the frequentist estimates
+# and non-parametric bootstrapped confidence intervals, now calculated with SEs and z-values
 
 freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method,
                             item.dropped, alpha.int.analytic, omega.fit){

@@ -1,10 +1,10 @@
-#' this function uses either an exhaustive search to determine the best possible splithalf reliability
-#' or uses a 12x12 hadamard matrix for possible starting points for 12 splits,
-#' the latter is much faster when the number of items increases e.g. 10 and up
-#' ref: Benton 2013
-#'
+# this function uses an exhaustive search
+# the latter is much faster when the number of items increases e.g. 10 and up
+# source:
+# Benton, T. (2015). An empirical assessment of Guttman’s Lambda 4 reliability coefficient.
+# In Quantitative Psychology Research (pp. 301-310). Springer, Cham.
+#
 
-#' max split half by exhaustive search
 MaxSplitExhaustive <- function(M){
   #data – matrix of items scores (row=candidates,column=items)
   cov1 <- M
@@ -34,9 +34,11 @@ bin.combs2 <- function (p) {
 }
 
 
-#' finds split reliability coefficients, produces sample of lambda4s,
-#' default return is max lambda4, but other quantiles can also be extracted
-#' ref.: Hunt & Bentler 2015
+# finds split reliability coefficients, produces sample of lambda4s,
+# default return is max lambda4, but other quantiles can also be extracted
+# source:
+# Hunt, T. D., & Bentler, P. M. (2015). Quantile lower bounds to reliability based on locally optimal splits.
+# Psychometrika, 80(1), 182-195.
 quant.lambda4 <- function(x, starts = 1000, quantile = 1){
   l4.vect <- rep(NA, starts)
   #Determines if x is a covariance or data matrix and establishes a covariance matrix for estimation.

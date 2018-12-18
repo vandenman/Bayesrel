@@ -1,6 +1,6 @@
-#' this function calls on other functions in order to return the sampled estimates
-#' and the credible intervals together with the posterior distribution objects
-#' to be passed on for forther analysis
+# this function calls on other functions in order to return the sampled estimates
+# and the credible intervals together with the posterior distribution objects
+# to be passed on for forther analysis
 
 gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped, omega.fit){
   p <- ncol(data)

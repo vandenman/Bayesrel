@@ -2,19 +2,55 @@
 % Please edit documentation in R/bayes_internal_consistency.R
 \name{ic}
 \alias{ic}
-\title{calculate all the internal consistency estimates
-takes as input both datasets, either matrix or frame, and covariance matrices
-so far input of a covariance matrix is not supported}
+\title{calculate internal consistency estimates}
 \usage{
 ic(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"),
-  interval = 0.95, omega.freq.method = "cfa", omega.fit = FALSE,
-  alpha.int.analytic = FALSE, n.obs = NULL, bayes = TRUE,
-  freq = TRUE, para.boot = FALSE, prior.samp = FALSE,
-  item.dropped = FALSE, n.iter = 2000, n.burnin = 50,
-  boot.n = 1000, supr.warnings = TRUE)
+  interval = 0.95, n.iter = 2000, n.burnin = 50, boot.n = 1000,
+  omega.freq.method = "cfa", omega.fit = FALSE, n.obs = NULL,
+  alpha.int.analytic = FALSE, bayes = TRUE, freq = TRUE,
+  para.boot = FALSE, prior.samp = FALSE, item.dropped = FALSE,
+  supr.warnings = FALSE)
+}
+\arguments{
+\item{x}{A dataset or covariance matrix}
+
+\item{estimates}{A character vector containing the estimands}
+
+\item{interval}{A number specifying the uncertainty interval}
+
+\item{n.iter}{A number for the iterations of the Gibbs Sampler}
+
+\item{n.burnin}{A number for the burnin in the Gibbs Sampler}
+
+\item{boot.n}{A number for the bootstrap samples}
+
+\item{omega.freq.method}{A character string for the method of frequentist omega}
+
+\item{omega.fit}{A logical for calculating the fit of the single factor model}
+
+\item{n.obs}{A number for the sample observations when a covariance matrix is supplied and the factor model is calculated}
+
+\item{alpha.int.analytic}{A logical for calculating the alpha confidence interval analytical}
+
+\item{bayes}{A logical for calculating the Bayesian estimates}
+
+\item{freq}{A logical for calculating the frequentist estimates}
+
+\item{para.boot}{A logical for calculating the parametric bootstrap}
+
+\item{prior.samp}{A logical for calculating the prior distributions (necessary for plot functions)}
+
+\item{item.dropped}{A logical for calculating the if-item-dropped statistics}
+
+\item{supr.warnings}{A logical for suppressing warnings that arise in the frequentist omega calculation}
 }
 \description{
-calculate all the internal consistency estimates
-takes as input both datasets, either matrix or frame, and covariance matrices
-so far input of a covariance matrix is not supported
+calculate Bayesian and frequentist internal consistency measures.
+Bayesian credibel intervals are HDI, frequentist confidence intervals are non parametric bootstrap
+}
+\examples{
+\dontrun{
+ic(cavalini, estimates = "omega")
+ic(cavalini, estimates = c("lambda2", "alpha"))
+}
 }

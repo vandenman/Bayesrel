@@ -1,7 +1,7 @@
 
 
-#' this function calls on other functions in order to return the frequentist estimates
-#' and parametric bootstrapped confidence intervals, sampling from a multivariate normal distribution
+# this function calls on other functions in order to return the frequentist estimates
+# and parametric bootstrapped confidence intervals, sampling from a multivariate normal distribution
 
 freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
                          item.dropped, alpha.int.analytic, omega.fit){

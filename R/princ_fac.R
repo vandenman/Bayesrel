@@ -1,6 +1,6 @@
-#' function to do a principal factor analysis, also principal axis method
-#' source:
-#' http://www.aaronschlegel.com/iterated-principal-factor-method-factor-analysis-r/
+# function to do a principal factor analysis, also principal axis method
+# source:
+# http://www.aaronschlegel.com/iterated-principal-factor-method-factor-analysis-r/
 
 princFac <- function(m, max.iter = 50){
   r <- cov2cor(m)
@@ -44,6 +44,10 @@ princFac <- function(m, max.iter = 50){
   return(list(loadings = lambda, err.var = e))
 }
 
+# source:
+# from the psych package:
+# Revelle, W. (2018) psych: Procedures for Personality and Psychological Research, Northwestern University, Evanston,
+# Illinois, USA, https://CRAN.R-project.org/package=psych Version = 1.8.4.
 corSmooth2 <- function (x, eig.tol = 10^-12) {
   eigens <- try(eigen(x), TRUE)
   if (inherits(eigens, "try-error")) {

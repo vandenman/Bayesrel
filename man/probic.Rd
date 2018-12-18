@@ -2,14 +2,22 @@
 % Please edit documentation in R/prob_IC.R
 \name{probic}
 \alias{probic}
-\title{takes a mcmc posterior sample of any of the internal consistency estimates
-and calculates any given probability of the estimate being bigger
-or smaller than an arbitrary value}
+\title{probability of estimate being bigger than threshold}
 \usage{
 probic(x, estimate, low.bound)
+}
+\arguments{
+\item{x}{A ic output object (list)}
+
+\item{estimate}{A character string indicating what estimate to plot from the ic output object}
+
+\item{low.bound}{A number for the threshold to be tested against}
 }
 \description{
 takes a mcmc posterior sample of any of the internal consistency estimates
 and calculates any given probability of the estimate being bigger
 or smaller than an arbitrary value
+}
+\examples{
+probic(ic(cavalini, "omega"), "omega", .80)
 }

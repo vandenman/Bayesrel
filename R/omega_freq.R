@@ -1,5 +1,5 @@
-#' gives freq omega, and loadings and errors
-#'
+# gives freq omega, and loadings and errors
+#
 
 
 omegaFreqCov <- function(C){

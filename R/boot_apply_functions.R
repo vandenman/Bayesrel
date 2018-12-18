@@ -1,5 +1,4 @@
-#' the basic functions for calculating and bootstrapping the internal consistency estimates
-
+# the basic functions for calculating and bootstrapping the internal consistency estimates
 
 #######  measures functions ##########
 

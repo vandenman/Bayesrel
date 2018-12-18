@@ -1,15 +1,36 @@
 #'
-#' calculate all the internal consistency estimates
-#' takes as input both datasets, either matrix or frame, and covariance matrices
-#' so far input of a covariance matrix is not supported
+#' calculate internal consistency estimates
+#' @description calculate Bayesian and frequentist internal consistency measures.
+#' Bayesian credibel intervals are HDI, frequentist confidence intervals are non parametric bootstrap
+#' @param x A dataset or covariance matrix
+#' @param estimates A character vector containing the estimands
+#' @param interval A number specifying the uncertainty interval
+#' @param n.iter A number for the iterations of the Gibbs Sampler
+#' @param n.burnin A number for the burnin in the Gibbs Sampler
+#' @param boot.n A number for the bootstrap samples
+#' @param omega.freq.method A character string for the method of frequentist omega
+#' @param omega.fit A logical for calculating the fit of the single factor model
+#' @param n.obs A number for the sample observations when a covariance matrix is supplied and the factor model is calculated
+#' @param alpha.int.analytic A logical for calculating the alpha confidence interval analytical
+#' @param bayes A logical for calculating the Bayesian estimates
+#' @param freq A logical for calculating the frequentist estimates
+#' @param para.boot A logical for calculating the parametric bootstrap
+#' @param prior.samp A logical for calculating the prior distributions (necessary for plot functions)
+#' @param item.dropped A logical for calculating the if-item-dropped statistics
+#' @param supr.warnings A logical for suppressing warnings that arise in the frequentist omega calculation
 #'
+#' @examples
+#' \dontrun{
+#' ic(cavalini, estimates = "omega")
+#' ic(cavalini, estimates = c("lambda2", "alpha"))
+#' }
 #' @export
-ic <- function(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"), interval = .95,
-                omega.freq.method = "cfa", omega.fit = FALSE,
-                alpha.int.analytic = FALSE, n.obs = NULL,
-                bayes = TRUE, freq = TRUE,
-                para.boot = FALSE, prior.samp = FALSE, item.dropped = FALSE,
-                n.iter = 2e3, n.burnin = 50, boot.n = 1000, supr.warnings = TRUE) {
+ic <- function(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"),
+               interval = .95, n.iter = 2e3, n.burnin = 50, boot.n = 1000,
+               omega.freq.method = "cfa", omega.fit = FALSE,
+               n.obs = NULL, alpha.int.analytic = FALSE,
+               bayes = TRUE, freq = TRUE, para.boot = FALSE, prior.samp = FALSE,
+               item.dropped = FALSE, supr.warnings = FALSE) {
   if (supr.warnings) {
     options(warn = - 1)
   }
@@ -69,8 +90,9 @@ ic <- function(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"), 
   sum.res$n.iter <- n.iter
   sum.res$n.burnin <- n.burnin
   sum.res$interval <- interval
+  sum.res$n.item <- ncol(data)
 
-  class(sum.res) = 'bayesrel'
+  class(sum.res) = 'ic'
   options(warn = 0)
   return(sum.res)
 }

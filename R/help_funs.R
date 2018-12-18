@@ -1,7 +1,7 @@
-#' forces a quadratic matrix to be symmetrical
-#' source:
-#' R package fifer from Dustin fifer
-#' https://www.rdocumentation.org/packages/fifer
+# forces a quadratic matrix to be symmetrical
+# source:
+# R package fifer from Dustin fifer
+# https://www.rdocumentation.org/packages/fifer
 make.symmetric <- function(a, lower.tri=TRUE){
   if (lower.tri){
     ind <- upper.tri(a)
@@ -13,11 +13,11 @@ make.symmetric <- function(a, lower.tri=TRUE){
   a
 }
 
-#' computes alpha analytical interval with given bounds
-#' source:
-#' Bonett, D. G., & Wright, T. A. (2015). Cronbach’s alpha reliability:
-#' Interval estimation, hypothesis testing, and sample size planning. Journal of Organizational Behavior,36(1), 3–15.
-#'
+# computes alpha analytical interval with given bounds
+# source:
+# Bonett, D. G., & Wright, T. A. (2015). Cronbach’s alpha reliability:
+# Interval estimation, hypothesis testing, and sample size planning. Journal of Organizational Behavior,36(1), 3–15.
+#
 ciAlpha <- function(palpha, n, V){
   p <- ncol(V)
   z <- qnorm(1 - palpha/2)
@@ -38,7 +38,7 @@ ciAlpha <- function(palpha, n, V){
   return(out)
 }
 
-#' does quantile averaging and returns 2000 datapoints
+# does quantile averaging and returns 2000 datapoints
 quantiles <- function(samp){
   q <- quantile(samp, probs = seq(0, 1, length.out = 2e3))
   return(q)
@@ -52,7 +52,7 @@ se <- function(x) {
 }
 
 
-#' create lavaan cfa one factor model file from data
+# create lavaan cfa one factor model file from data
 
 lavOneFile <- function(data){
   p <- ncol(data)
@@ -72,10 +72,10 @@ lavOneFile <- function(data){
 }
 
 
-#' create multivariate sample with mu and sigma given
-#' source: MASS package
-#' Venables, W. N. & Ripley, B. D. (2002) Modern Applied Statistics with S. Fourth Edition. Springer, New York. ISBN 0-387-95457-0
-#'
+# create multivariate sample with mu and sigma given
+# source: MASS package
+# Venables, W. N. & Ripley, B. D. (2002) Modern Applied Statistics with S. Fourth Edition. Springer, New York. ISBN 0-387-95457-0
+#
 mvrnorm2 <- function(n = 1, mu, Sigma, tol = 1e-06, empirical = TRUE){
   p <- length(mu)
   if (!all(dim(Sigma) == c(p, p)))
