@@ -1,7 +1,8 @@
 #' this function uses gibbs sampling to estimate the loadings and error variances
 #' of a cfa one factor model
 #' it returns the posterior distribution sample of omegas calculated from those parameters
-#'
+#' source: Lee, S.-Y. (2007).Structural equation modeling: A bayesian approach(Vol. 711). JohnWiley & Sons.
+#' p. 81 ff.
 omegaSampler <- function(data, n.iter = 2e3, n.burnin = 50){
   n <- nrow(data)
   p <- ncol(data)

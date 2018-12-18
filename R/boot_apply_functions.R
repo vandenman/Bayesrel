@@ -36,11 +36,18 @@ applyglb <- function(M){
   return(gl)
 }
 
-applyomega_cfa <- function(data){
-  out <- omegaFreq(data)
-  om <- out$relia
+applyomega_cfa_cov <- function(C){
+  out <- omegaFreqCov(C)
+  om <- out$omega
   return(om)
 }
+
+applyomega_cfa_data <- function(data){
+  out <- omegaFreqData(data)
+  om <- out$omega
+  return(om)
+}
+
 
 applyomega_pa <- function(m){
   f <- princFac(m)

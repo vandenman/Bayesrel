@@ -92,7 +92,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped, 
     res$loadings <- apply(om.samp$lambda, 2, median)
     res$resid.var <- apply(om.samp$psi, 2, median)
     int <- coda::HPDinterval(res$samp$bayes.omega, prob = interval)
-    res$cred$low$gibbs.omega <- int[1]
+    res$cred$low$bayes.omega <- int[1]
     res$cred$up$bayes.omega<- int[2]
     res$est$bayes.omega <- median(res$samp$bayes.omega)
     if (omega.fit){

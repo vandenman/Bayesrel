@@ -14,25 +14,25 @@ priorSamp <- function(p, estimates, n.samp = 2e3){
   }
   out <- list()
   if ("alpha" %in% estimates){
-    priora <- apply(m, MARGIN = 1, bayesrel:::applyalpha)
+    priora <- apply(m, MARGIN = 1, applyalpha)
     out$prioralpha <- quantiles(priora[priora >= 0])
   }
   if ("lambda2" %in% estimates){
-    priorl2 <- apply(m, MARGIN = 1, bayesrel:::applyl2)
+    priorl2 <- apply(m, MARGIN = 1, applyl2)
     out$priorlambda2 <- quantiles(priorl2[priorl2 >= 0])
   }
   if ("lambda4" %in% estimates){
-    priorl4 <- apply(m, MARGIN = 1, bayesrel:::applyl4)
+    priorl4 <- apply(m, MARGIN = 1, applyl4)
     out$priorlambda4 <- quantiles(priorl4[priorl4 >= 0])
   }
   if ("lambda6" %in% estimates){
-    priorl6 <- apply(m, MARGIN = 1, bayesrel:::applyl6)
+    priorl6 <- apply(m, MARGIN = 1, applyl6)
     out$priorlambda6 <- quantiles(priorl6[priorl6 >= 0])
   }
   if ("glb" %in% estimates){
-    control <- Rcsdp:::csdp.control(printlevel = 0)
+    control <- Rcsdp::csdp.control(printlevel = 0)
     Rcsdp:::write.control.file(control)
-    priorglb <- apply(m, MARGIN = 1, bayesrel:::applyglb)
+    priorglb <- apply(m, MARGIN = 1, applyglb)
     out$priorglb <- quantiles(priorglb[priorglb >= 0])
     unlink("param.csdp")
   }

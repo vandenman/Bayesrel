@@ -5,7 +5,7 @@
 #'
 #' @export
 ic <- function(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"), interval = .95,
-                omega.freq.method = "pa", omega.fit = FALSE,
+                omega.freq.method = "cfa", omega.fit = FALSE,
                 alpha.int.analytic = FALSE, n.obs = NULL,
                 bayes = TRUE, freq = TRUE,
                 para.boot = FALSE, prior.samp = FALSE, item.dropped = FALSE,
@@ -33,14 +33,14 @@ ic <- function(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"), 
     if (sum(x[lower.tri(x)] != t(x)[lower.tri(x)]) > 0) {return("input matrix is not symmetric")}
     if (sum(eigen(x)$values < 0) > 0) {return("input matrix is not positive definite")}
     sigma <- x
-    data <- MASS::mvrnorm(n.obs, rep(0, p), sigma, empirical = TRUE)
+    data <- mvrnorm2(n.obs, rep(0, p), sigma, empirical = TRUE)
   } else{
     data <- scale(x, scale = F)
     sigma <- cov(data)
   }
 
   if("glb" %in% estimates){
-    control <- Rcsdp:::csdp.control(printlevel = 0)
+    control <- Rcsdp::csdp.control(printlevel = 0)
     Rcsdp:::write.control.file(control)
   }
   if (bayes){

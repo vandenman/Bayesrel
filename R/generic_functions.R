@@ -21,30 +21,30 @@ print.bayesrel <- function(x, ...){
 }
 
 #'@export
-summary.bayesrel <- function(x, ...){
+summary.bayesrel <- function(object, ...){
 
   out.matrix <- list()
-  if (!is.null(x$freq)){
-    out.matrix$est <- rbind(as.data.frame(as.matrix(x$bay$est)),
-                            as.data.frame(as.matrix(x$freq$est)))
-    out.matrix$int$low <- rbind(as.data.frame(as.matrix(x$bay$cred$low)),
-                                as.data.frame(as.matrix(x$freq$conf$low)))
-    out.matrix$int$up <- rbind(as.data.frame(as.matrix(x$bay$cred$up)),
-                               as.data.frame(as.matrix(x$freq$conf$up)))
-    out.matrix$omega.freq.method <- x$omega.freq.method
+  if (!is.null(object$freq)){
+    out.matrix$object$est <- rbind(as.data.frame(as.matrix(object$bay$est)),
+                            as.data.frame(as.matrix(object$freq$est)))
+    out.matrix$object$int$low <- rbind(as.data.frame(as.matrix(object$bay$cred$low)),
+                                as.data.frame(as.matrix(object$freq$conf$low)))
+    out.matrix$object$int$up <- rbind(as.data.frame(as.matrix(object$bay$cred$up)),
+                               as.data.frame(as.matrix(object$freq$conf$up)))
+    out.matrix$object$omega.freq.method <- object$omega.freq.method
   } else{
-    out.matrix$est <- as.data.frame(as.matrix(x$bay$est))
-    out.matrix$int$low <- as.data.frame(as.matrix(x$bay$cred$low))
-    out.matrix$int$up <- as.data.frame(as.matrix(x$bay$cred$up))
+    out.matrix$object$est <- as.data.frame(as.matrix(object$bay$est))
+    out.matrix$object$int$low <- as.data.frame(as.matrix(object$bay$cred$low))
+    out.matrix$object$int$up <- as.data.frame(as.matrix(object$bay$cred$up))
   }
-  out.matrix$call <- x$call
-  out.matrix$n.iter <- x$n.iter
-  out.matrix$n.burnin <- x$n.burnin
-  out.matrix$interval <- x$interval
-  out.matrix$estimates <- x$estimates
-  out.matrix$fit.indices <- x$freq$fit$omega
-  out.matrix$ifitem$bay.tab <- x$bay$ifitem$est
-  out.matrix$ifitem$freq.tab <- x$freq$ifitem
+  out.matrix$object$call <- object$call
+  out.matrix$object$n.iter <- object$n.iter
+  out.matrix$object$n.burnin <- object$n.burnin
+  out.matrix$object$interval <- object$interval
+  out.matrix$object$estimates <- object$estimates
+  out.matrix$object$fit.indices <- object$freq$fit$omega
+  out.matrix$object$ifitem$bay.tab <- object$bay$ifitem$est
+  out.matrix$object$ifitem$freq.tab <- object$freq$ifitem
 
   class(out.matrix) <- "summary.bayesrel"
   out.matrix
@@ -79,7 +79,7 @@ print.summary.bayesrel <- function(x, ...){
       print.default(x$omega.freq.method)
       cat("omega confidence interval is estimated with:")
       if (x$omega.freq.method == "pa") {print.default("bootstrap")}
-      if (x$omega.freq.method == "cfa") {print.default("robust maximum likelihood (wald ci)")}
+      if (x$omega.freq.method == "cfa") {print.default("maximum likelihood z-value")}
     }
     if (!is.null(x$fit.indices)){
       options(scipen = 999)

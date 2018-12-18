@@ -1,4 +1,5 @@
 #' function to do a principal factor analysis, also principal axis method
+#' source:
 #' http://www.aaronschlegel.com/iterated-principal-factor-method-factor-analysis-r/
 
 princFac <- function(m, max.iter = 50){

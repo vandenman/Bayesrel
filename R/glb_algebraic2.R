@@ -1,4 +1,6 @@
-
+#' code from psych Package:
+#' Revelle, W. (2018) psych: Procedures for Personality and Psychological Research,
+#' Northwestern University, Evanston, Illinois, USA, https://CRAN.R-project.org/package=psych Version = 1.8.4.
 glb.algebraic2 <- function (Cov, LoBounds = NULL, UpBounds = NULL)
 {
   if (!requireNamespace("Rcsdp")) {
@@ -49,6 +51,10 @@ glb.algebraic2 <- function (Cov, LoBounds = NULL, UpBounds = NULL)
   return(lb)
 }
 
+
+#' code from the Rcsdp package:
+#' Hector Corrada Bravo (2016). Rcsdp: R Interface to the CSDP Semidefinite Programming Library.
+#' R package version 0.1.55. https://CRAN.R-project.org/package=Rcsdp
 csdp2 <- function(C, A, b, K, control = csdp.control(printlevel = 0))
 {
   prob.info <- Rcsdp:::get.prob.info(K, length(b))
@@ -64,4 +70,5 @@ csdp2 <- function(C, A, b, K, control = csdp.control(printlevel = 0))
   structure(ret, names = c("X", "Z", "y", "pobj", "dobj",
                            "status"))
 }
+
 

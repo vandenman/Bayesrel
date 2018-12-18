@@ -2,10 +2,16 @@
 % Please edit documentation in R/help_funs.R
 \name{ciAlpha}
 \alias{ciAlpha}
-\title{computes alpha analytical interval with given bounds}
+\title{computes alpha analytical interval with given bounds
+source:
+Bonett, D. G., & Wright, T. A. (2015). Cronbach’s alpha reliability:
+Interval estimation, hypothesis testing, and sample size planning. Journal of Organizational Behavior,36(1), 3–15.}
 \usage{
 ciAlpha(palpha, n, V)
 }
 \description{
 computes alpha analytical interval with given bounds
+source:
+Bonett, D. G., & Wright, T. A. (2015). Cronbach’s alpha reliability:
+Interval estimation, hypothesis testing, and sample size planning. Journal of Organizational Behavior,36(1), 3–15.
 }

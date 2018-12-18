@@ -1,8 +1,54 @@
 #' gives freq omega, and loadings and errors
+#'
 
-omegaFreq <- function(data, estimator = "mlr", se = "default",
+
+omegaFreqCov <- function(C){
+  p <- ncol(C)
+  file <- lavOneFile(C)
+  colnames(C) <- file$names
+  mod <- file$model
+  fit <- try(lavaan::cfa(mod, sample.cov = C, sample.nobs = 1e3))
+  params <- lavaan::standardizedsolution(fit)
+  load <- params$est.std[1:p]
+  resid <- params$est.std[(1+p) : (p*2)]
+  omega <- omegaBasic(load, resid)
+  return(list(omega = omega, loadings = load, errors = resid))
+}
+
+omegaFreqData <- function(data){
+  p <- ncol(data)
+  file <- lavOneFile(data)
+  colnames(data) <- file$names
+  mod <- file$model
+  fit <- try(lavaan::cfa(mod, data))
+
+  params <- lavaan::standardizedsolution(fit)
+  load <- params$est.std[1:p]
+  resid <- params$est.std[(1+p) : (p*2)]
+  omega <- omegaBasic(load, resid)
+
+  load.low <- params$ci.lower[1:p]
+  resid.low <- params$ci.lower[(1+p) : (p*2)]
+  om.low <- omegaBasic(load.low, resid.low)
+  load.up <- params$ci.upper[1:p]
+  resid.up <- params$ci.upper[(1+p) : (p*2)]
+  om.up <- omegaBasic(load.up, resid.up)
+
+  fit.tmp <- lavaan::fitMeasures(fit)
+  indic <- c(fit.tmp["chisq"], fit.tmp["df"], fit.tmp["pvalue"],
+               fit.tmp["rmsea"], fit.tmp["rmsea.ci.lower"], fit.tmp["rmsea.ci.upper"],
+               fit.tmp["srmr"])
+
+  return(list(omega = omega, loadings = load, errors = resid,
+              omega.lower = om.low, omega.upper = om.up, indices = indic))
+}
+
+
+
+
+omegaFreq_MBESS <- function(data, estimator = "mlr", se = "default",
                        missing = "ml", equal.loading = FALSE, equal.error = FALSE) {
-  colnames(data) <- bayesrel:::lavOneFile(data)$names
+  colnames(data) <- lavOneFile(data)$names
   varnames <- colnames(data)
   q <- length(varnames)
   N <- nrow(data)
@@ -86,3 +132,6 @@ omegaFreq <- function(data, estimator = "mlr", se = "default",
                  effn = ceiling(N), indices = indic)
   return(result)
 }
+
+
+

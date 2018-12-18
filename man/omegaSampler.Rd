@@ -4,7 +4,9 @@
 \alias{omegaSampler}
 \title{this function uses gibbs sampling to estimate the loadings and error variances
 of a cfa one factor model
-it returns the posterior distribution sample of omegas calculated from those parameters}
+it returns the posterior distribution sample of omegas calculated from those parameters
+source: Lee, S.-Y. (2007).Structural equation modeling: A bayesian approach(Vol. 711). JohnWiley & Sons.
+p. 81 ff.}
 \usage{
 omegaSampler(data, n.iter = 2000, n.burnin = 50)
 }
@@ -12,4 +14,6 @@ omegaSampler(data, n.iter = 2000, n.burnin = 50)
 this function uses gibbs sampling to estimate the loadings and error variances
 of a cfa one factor model
 it returns the posterior distribution sample of omegas calculated from those parameters
+source: Lee, S.-Y. (2007).Structural equation modeling: A bayesian approach(Vol. 711). JohnWiley & Sons.
+p. 81 ff.
 }

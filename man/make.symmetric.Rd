@@ -2,10 +2,16 @@
 % Please edit documentation in R/help_funs.R
 \name{make.symmetric}
 \alias{make.symmetric}
-\title{forces a quadratic matrix to be symmetrical}
+\title{forces a quadratic matrix to be symmetrical
+source:
+R package fifer from Dustin fifer
+https://www.rdocumentation.org/packages/fifer}
 \usage{
 make.symmetric(a, lower.tri = TRUE)
 }
 \description{
 forces a quadratic matrix to be symmetrical
+source:
+R package fifer from Dustin fifer
+https://www.rdocumentation.org/packages/fifer
 }

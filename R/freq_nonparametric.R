@@ -116,17 +116,16 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
   #omega --------------------------------------------------------------------------
   if ("omega" %in% estimates){
     if (omega.freq.method == "cfa"){
-      out <- omegaFreq(data)
-      res$est$freq.omega <- out$relia
-      res$loadings <- out$load
-      res$resid.var <- out$err.var
-      crit <- qnorm(1 - (1 - interval)/2)
-      se <- out$se
-      res$conf$low$freq.omega <- out$relia - (crit * se)
-      res$conf$up$freq.omega <- out$relia + (crit * se)
+      out <- omegaFreqData(data)
+      res$est$freq.omega <- out$omega
+      res$loadings <- out$loadings
+      res$resid.var <- out$errors
+      res$conf$low$freq.omega <- out$omega.low
+      res$conf$up$freq.omega <- out$omega.up
+
       if (omega.fit) {res$fit$omega <- out$indices}
       if (item.dropped){
-        res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa)
+        res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data)
       }
     }
     if (omega.freq.method == "pa"){
