@@ -33,7 +33,7 @@ glb.algebraic2 <- function (Cov, LoBounds = NULL, UpBounds = NULL)
     A[[i]] <- list(diag(b), -b, b)
   }
   K <- list(type = c("s", "l", "l"), size = rep(p, 3))
-  result <- csdp2(C, A, opt, K, control = Rcsdp::csdp.control(printlevel = 0))
+  result <- Rcsdp::csdp(C, A, opt, K, control = Rcsdp::csdp.control(printlevel = 0))
   if (result$status >= 4 || result$status == 2) {
     warning("Failure of csdp, status of solution=", result$status)
     lb <- list(glb = NA, solution = NA, status = result$status,
@@ -52,23 +52,28 @@ glb.algebraic2 <- function (Cov, LoBounds = NULL, UpBounds = NULL)
 }
 
 
-# code from the Rcsdp package:
-# Hector Corrada Bravo (2016). Rcsdp: R Interface to the CSDP Semidefinite Programming Library.
-# R package version 0.1.55. https://CRAN.R-project.org/package=Rcsdp
-csdp2 <- function(C, A, b, K, control = Rcsdp::csdp.control(printlevel = 0))
-{
-  prob.info <- Rcsdp:::get.prob.info(K, length(b))
-  Rcsdp:::validate.data(C, A, b, prob.info)
-  prob.data <- Rcsdp:::prepare.data(C, A, b, prob.info)
-  # Rcsdp:::write.control.file(control)
-  ret <- .Call("csdp", as.integer(sum(prob.info$block.sizes)),
-               as.integer(prob.info$nconstraints), as.integer(prob.info$nblocks),
-               as.integer(c(0, prob.info$block.types)), as.integer(c(0, prob.info$block.sizes)),
-               prob.data$C, prob.data$A, prob.data$b, PACKAGE = "Rcsdp")
-  # unlink("param.csdp")
-  ret[1:3] <- Rcsdp:::get.solution(ret[[1]], ret[[2]], ret[[3]], prob.info)
-  structure(ret, names = c("X", "Z", "y", "pobj", "dobj",
-                           "status"))
-}
+
+
+
+# # code from the Rcsdp package:
+# # Hector Corrada Bravo (2016). Rcsdp: R Interface to the CSDP Semidefinite Programming Library.
+# # R package version 0.1.55. https://CRAN.R-project.org/package=Rcsdp
+# # with Rcsdp Imports:
+# csdp2 <- function(C, A, b, K, control = Rcsdp::csdp.control(printlevel = 0))
+# {
+#   prob.info <- get.prob.info(K, length(b))
+#   validate.data(C, A, b, prob.info)
+#   prob.data <- prepare.data(C, A, b, prob.info)
+#   ret <- .Call("csdp",
+#                as.integer(sum(prob.info$block.sizes)),
+#                as.integer(prob.info$nconstraints),
+#                as.integer(prob.info$nblocks),
+#                as.integer(c(0, prob.info$block.types)),
+#                as.integer(c(0, prob.info$block.sizes)),
+#                prob.data$C, prob.data$A, prob.data$b, PACKAGE = "Rcsdp")
+#   ret[1:3] <- get.solution(ret[[1]], ret[[2]], ret[[3]], prob.info)
+#   structure(ret, names = c("X", "Z", "y", "pobj", "dobj",
+#                            "status"))
+# }
 
 

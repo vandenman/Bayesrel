@@ -9,17 +9,18 @@
 #' @param cuts A two element vector indicating what the cutoffs should be
 #' @param twopie A logical indicating if an additional pie plot with the prior should be drawn
 #'
-#' @examples \dontrun{plotic(ic(cavalini), "omega")}
+#' @examples \dontrun{plotic(ic(cavalini, "glb"), "glb")}
+#'
 #'
 #' @export
 plotic <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80), twopie = FALSE){
-  options(warn = -1)
+
   posi <- grep(estimate, x$estimates, ignore.case = T)
   samp <- coda::as.mcmc(unlist(x$bay$samp[posi]))
-  p <- x$n.item
+  n.item <- x$n.item
   prior <- unlist(x$priors[posi])
   if (is.null(prior)) {
-    prior <- unlist(priorSamp(p, estimate))
+    prior <- unlist(priorSamp(n.item, estimate))
   }
   par(cex.main = 1.5, mar = c(4, 4,  1, 1), mgp = c(2, .6, 0), cex.lab = 1.5,
       font.lab = 2, cex.axis = 1.8, bty = "n", las = 1)
@@ -35,6 +36,7 @@ plotic <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c(.7
   }
 
   dens.prior <- density(prior, from = 0, to = 1, n = 2e3)
+  options(warn = -1)
   xx0 <- min(which(dens.prior$x <= cuts[1]))
   xx1 <- max(which(dens.prior$x <= cuts[1]))
   xx2 <- max(which(dens.prior$x <= cuts[2]))
@@ -50,7 +52,7 @@ plotic <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c(.7
   x1 <- max(which(dens.post$x <= cuts[1]))
   x2 <- max(which(dens.post$x <= cuts[2]))
   x3 <- max(which(dens.post$x <= 1))
-
+  options(warn=0)
   if (!is.integer(x0)) x0 <- 1
   if (!is.integer(x1)) x1 <- 1
   if (!is.integer(x2)) x2 <- 1
@@ -232,12 +234,15 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 plotic_ifitem <- function(x, estimate, ordering = FALSE){
   n.row <- length(unlist(x$bay$ifitem$est[1]))
   posi <- grep(estimate, x$estimates, ignore.case = T)
-  main <- paste("If-Item-Dropped Posterior Plot for", estimate)
 
-  dat <- as.data.frame(as.matrix(unlist(x$bay$samp[posi])))
-  colnames(dat) <- "value"
+# needs to look like this to pass the check for CRAN
+  value <- NULL
+  dat <- data.frame(as.matrix(unlist(x$bay$samp[posi])), row.names =  NULL)
+  names(dat) <- "value"
+  colos <- NULL
+  dat$colos <- "1"
   dat$var <- "original"
-  dat$colo <- "1"
+
 
   dat.del <- t(as.matrix(as.data.frame(x$bay$ifitem$samp[posi])))
 
@@ -250,7 +255,7 @@ plotic_ifitem <- function(x, estimate, ordering = FALSE){
     tmp <- as.data.frame(dat.del[, i])
     colnames(tmp) <- "value"
     tmp$var <- names[i]
-    tmp$colo <- "2"
+    tmp$colos <- "2"
     dat <- rbind(dat, tmp)
   }
   dat$var <- factor(dat$var, levels = unique(dat$var))
@@ -263,7 +268,7 @@ plotic_ifitem <- function(x, estimate, ordering = FALSE){
     dat$var <- factor(dat$var, levels = c(est$name))
   }
 
-  ggplot2::ggplot(dat, ggplot2::aes(x = value, y = var, fill = colo)) +
+  ggplot2::ggplot(dat, ggplot2::aes(x = value, y = var, fill = colos)) +
     ggridges::stat_density_ridges(quantile_lines = TRUE, quantiles = c(0.025, 0.5, 0.975),
                                   alpha = .85, show.legend = F) +
     ggplot2::theme_linedraw() +
@@ -272,7 +277,6 @@ plotic_ifitem <- function(x, estimate, ordering = FALSE){
     ggplot2::xlab("\n Internal Consistency") +
     ggplot2::ylab("Item Dropped") +
     ggplot2::scale_y_discrete(expand = ggplot2::expand_scale(add = c(0.25, 1.5))) +
-    ggplot2::ggtitle(main) +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, vjust = 4, size = 20),
                    axis.title = ggplot2::element_text(size = 16),
                    axis.text = ggplot2::element_text(size = 12),

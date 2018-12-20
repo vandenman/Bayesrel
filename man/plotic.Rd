@@ -25,6 +25,7 @@ gives posterior and prior distribution and pie plots
 input is the main reliability estimation object and the estimate to be plotted
 }
 \examples{
-\dontrun{plotic(ic(cavalini), "omega")}
+\dontrun{plotic(ic(cavalini, "glb"), "glb")}
+
 
 }

@@ -19,5 +19,5 @@ and calculates any given probability of the estimate being bigger
 or smaller than an arbitrary value
 }
 \examples{
-probic(ic(cavalini, "omega"), "omega", .80)
+\dontrun{probic(ic(cavalini, "omega"), "omega", .80)}
 }

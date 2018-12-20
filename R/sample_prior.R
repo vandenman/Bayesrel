@@ -31,7 +31,7 @@ priorSamp <- function(p, estimates, n.samp = 2e3){
   }
   if ("glb" %in% estimates){
     control <- Rcsdp::csdp.control(printlevel = 0)
-    Rcsdp:::write.control.file(control)
+    write.control.file(control)
     priorglb <- apply(m, MARGIN = 1, applyglb)
     out$priorglb <- quantiles(priorglb[priorglb >= 0])
     unlink("param.csdp")
