@@ -29,7 +29,7 @@ covSamp <- function(data, n.iter, n.burnin){
   dfChisq <- vn:(vn-p+1)
   utz <- upper.tri(matrix(0, p, p))
   for ( i in 1:n.iter){
-    c.post[i, , ] <- rinvwishart2(vn, Tn, p, dfChisq, utz) # sample from inverse wishart
+    c.post[i, , ] <- rinvwishart2(vn, Tn, p, dfChisq, utz) # sample from inverse Wishart
   }
   c.post <- c.post[(n.burnin + 1):n.iter, , ]
 

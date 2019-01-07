@@ -10,7 +10,7 @@
 #' @param twopie A logical indicating if an additional pie plot with the prior should be drawn
 #'
 #' @examples
-#' plotstrel(strel(cavalini, "omega"), "omega")
+#' plotstrel(strel(cavalini, "lambda2"), "lambda2")
 #'
 #' @export
 plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80), twopie = FALSE){
@@ -228,7 +228,7 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 #' @param estimate A character string indicating what estimate to plot from the strel output object
 #' @param ordering A logical indicating if the densities in the plot should be ordered
 #'
-#' @examples plotstrel.id(strel(cavalini, "omega", item.dropped = TRUE), "omega")
+#' @examples plotstrel.id(strel(cavalini, "lambda2", item.dropped = TRUE), "lambda2")
 #'
 #' @export
 plotstrel.id<- function(x, estimate, ordering = FALSE){

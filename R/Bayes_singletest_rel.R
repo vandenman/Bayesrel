@@ -21,7 +21,7 @@
 #' @param item.dropped A logical for calculating the if-item-dropped statistics
 #'
 #' @examples
-#' summary(strel(cavalini, estimates = "omega"))
+#' summary(strel(cavalini, estimates = "lambda2"))
 #' summary(strel(cavalini, estimates = "lambda2", item.dropped = TRUE))
 #'
 #' @references{

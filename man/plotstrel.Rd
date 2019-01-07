@@ -25,6 +25,6 @@ gives posterior and prior distribution and pie plots
 input is the main reliability estimation object and the estimate to be plotted
 }
 \examples{
-plotstrel(strel(cavalini, "omega"), "omega")
+plotstrel(strel(cavalini, "lambda2"), "lambda2")
 
 }
