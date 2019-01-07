@@ -47,8 +47,8 @@ Reported are Bayesian credible intervals (HDI) and frequentist confidence interv
 The estimates supported are Cronbach alpha, lambda2/4/6, the glb, and Mcdonald omega.
 }
 \examples{
-strel(cavalini, estimates = "omega")
-strel(cavalini, estimates = "lambda2", prior.samp = TRUE, item.dropped = TRUE)
+summary(strel(cavalini, estimates = "omega"))
+summary(strel(cavalini, estimates = "lambda2", item.dropped = TRUE))
 
 }
 \references{

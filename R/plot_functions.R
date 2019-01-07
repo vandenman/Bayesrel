@@ -84,7 +84,7 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
 
   if (criteria){
     if (twopie){
-      plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = "Internal Consistency", ylab = NA,
+      plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = "Reliability", ylab = NA,
            xlim = c(0, 1), ylim = c(-.1,  peak * 1.55),
            lwd = 3, main = "")
       plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
@@ -125,7 +125,7 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
       text(l2$rect$left + l2$rect$w, l2$text$y*.99, c(pie.post.labels), pos = 2, cex = 1.2)
 
     } else {
-      plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = "Internal Consistency", ylab = NA,
+      plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = "Reliability", ylab = NA,
            xlim = c(0, 1), ylim = c(-.1,  peak * 1.33),
            lwd = 3, main = "")
       plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
@@ -158,7 +158,7 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
     }
 
   } else {
-    plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = "Internal Consistency", ylab = NA,
+    plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = "Reliability", ylab = NA,
          xlim = c(0, 1), ylim = c(0,  peak * 1.25),
          lwd = 3, main = "")
     plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
@@ -274,7 +274,7 @@ plotstrel.id<- function(x, estimate, ordering = FALSE){
     ggplot2::theme_linedraw() +
     ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white"),
                    strip.text = ggplot2::element_text(colour = "black")) +
-    ggplot2::xlab("\n Internal Consistency") +
+    ggplot2::xlab("\n Reliability") +
     ggplot2::ylab("Item Dropped") +
     ggplot2::scale_y_discrete(expand = ggplot2::expand_scale(add = c(0.25, 1.5))) +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, vjust = 4, size = 20),
