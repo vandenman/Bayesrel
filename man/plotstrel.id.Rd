@@ -7,9 +7,9 @@
 plotstrel.id(x, estimate, ordering = FALSE)
 }
 \arguments{
-\item{x}{A ic output object (list)}
+\item{x}{A strel output object (list)}
 
-\item{estimate}{A character string indicating what estimate to plot from the ic output object}
+\item{estimate}{A character string indicating what estimate to plot from the strel output object}
 
 \item{ordering}{A logical indicating if the densities in the plot should be ordered}
 }

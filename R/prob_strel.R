@@ -4,8 +4,8 @@
 #' and calculates any given probability of the estimate being bigger
 #' or smaller than an arbitrary value
 #'
-#' @param x A ic output object (list)
-#' @param estimate A character string indicating what estimate to plot from the ic output object
+#' @param x A strel output object (list)
+#' @param estimate A character string indicating what estimate to plot from the strel output object
 #' @param low.bound A number for the threshold to be tested against
 #'
 #' @examples

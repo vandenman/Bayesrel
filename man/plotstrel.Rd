@@ -8,9 +8,9 @@ plotstrel(x, estimate, blackwhite = FALSE, criteria = TRUE,
   cuts = c(0.7, 0.8), twopie = FALSE)
 }
 \arguments{
-\item{x}{A ic output object (list)}
+\item{x}{A strel output object (list)}
 
-\item{estimate}{A character string indicating what estimate to plot from the ic output object}
+\item{estimate}{A character string indicating what estimate to plot from the strel output object}
 
 \item{blackwhite}{A logical indicating if the plot should be in black and white}
 

@@ -2,8 +2,8 @@
 #' @description
 #' gives posterior and prior distribution and pie plots
 #' input is the main reliability estimation object and the estimate to be plotted
-#' @param x A ic output object (list)
-#' @param estimate A character string indicating what estimate to plot from the ic output object
+#' @param x A strel output object (list)
+#' @param estimate A character string indicating what estimate to plot from the strel output object
 #' @param blackwhite A logical indicating if the plot should be in black and white
 #' @param criteria A logical indicating if cutoff criteria should be drawn
 #' @param cuts A two element vector indicating what the cutoffs should be
@@ -224,8 +224,8 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 #' gives posterior densities of original dataset together with the the posteriors of datasets with
 #' items deleted. Can be ordered for the change item deleting brings about
 #'
-#' @param x A ic output object (list)
-#' @param estimate A character string indicating what estimate to plot from the ic output object
+#' @param x A strel output object (list)
+#' @param estimate A character string indicating what estimate to plot from the strel output object
 #' @param ordering A logical indicating if the densities in the plot should be ordered
 #'
 #' @examples plotstrel.id(strel(cavalini, "omega", item.dropped = TRUE), "omega")
