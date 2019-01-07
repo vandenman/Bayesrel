@@ -1,7 +1,7 @@
 # Bayesrel
 R-Package "Bayesrel" provides both Bayesian and frequentist internal consistency estimates
 
-So far, it provides the most common internal consistency estimates, being: 
+So far, it provides the most common single test reliability, being: 
     Coefficient Alpha, Guttman's lambda-2/-4/-6, greatest lower bound and Mcdonald's Omega. 
     The Bayesian estimates are provided with credible intervals. 
     The method for the Bayesian estimates is sampling from the posterior inverse wishart for the covariance matrix based measures.
