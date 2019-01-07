@@ -1,4 +1,4 @@
-#' plot function for an internal consistency estimate's posterior sample
+#' plot function for an single test reliability estimate's posterior sample
 #' @description
 #' gives posterior and prior distribution and pie plots
 #' input is the main reliability estimation object and the estimate to be plotted
@@ -9,11 +9,11 @@
 #' @param cuts A two element vector indicating what the cutoffs should be
 #' @param twopie A logical indicating if an additional pie plot with the prior should be drawn
 #'
-#' @examples \dontrun{plotic(ic(cavalini, "glb"), "glb")}
-#'
+#' @examples
+#' plotstrel(strel(cavalini, "omega"), "omega")
 #'
 #' @export
-plotic <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80), twopie = FALSE){
+plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80), twopie = FALSE){
 
   posi <- grep(estimate, x$estimates, ignore.case = T)
   samp <- coda::as.mcmc(unlist(x$bay$samp[posi]))
@@ -228,10 +228,10 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 #' @param estimate A character string indicating what estimate to plot from the ic output object
 #' @param ordering A logical indicating if the densities in the plot should be ordered
 #'
-#' @examples \dontrun{plotic_ifitem(ic(cavalini, "omega", item.dropped = TRUE), "omega")}
+#' @examples plotstrel.id(strel(cavalini, "omega", item.dropped = TRUE), "omega")
 #'
 #' @export
-plotic_ifitem <- function(x, estimate, ordering = FALSE){
+plotstrel.id<- function(x, estimate, ordering = FALSE){
   n.row <- length(unlist(x$bay$ifitem$est[1]))
   posi <- grep(estimate, x$estimates, ignore.case = T)
 

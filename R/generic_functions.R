@@ -1,6 +1,6 @@
 
 #'@export
-print.ic <- function(x, ...){
+print.strel <- function(x, ...){
   if (!is.null(x$freq)){
     est <- cbind(as.data.frame(as.matrix(x$bay$est)),
                  as.data.frame(as.matrix(x$freq$est)))
@@ -21,7 +21,7 @@ print.ic <- function(x, ...){
 }
 
 #'@export
-summary.ic <- function(object, ...){
+summary.strel <- function(object, ...){
 
   out.matrix <- list()
   if (!is.null(object$freq)){
@@ -46,12 +46,12 @@ summary.ic <- function(object, ...){
   out.matrix$object$ifitem$bay.tab <- object$bay$ifitem$est
   out.matrix$object$ifitem$freq.tab <- object$freq$ifitem
 
-  class(out.matrix) <- "summary.ic"
+  class(out.matrix) <- "summary.strel"
   out.matrix
 }
 
 #'@export
-print.summary.ic <- function(x, ...){
+print.summary.strel <- function(x, ...){
   n.row <- length(x$est$V1)
   mat <- data.frame(matrix(0, n.row, 0))
   mat[, 1] <- x$est
