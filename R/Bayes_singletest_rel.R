@@ -5,7 +5,7 @@
 #' The estimates supported are Cronbach alpha, lambda2/4/6, the glb, and Mcdonald omega.
 #'
 #' @param x A dataset or covariance matrix
-#' @param estimates A character vector containing the estimands
+#' @param estimates A character vector containing the estimands, we recommend using lambda4 with only a few items due to the computation time
 #' @param interval A number specifying the uncertainty interval
 #' @param n.iter A number for the iterations of the Gibbs Sampler
 #' @param n.burnin A number for the burnin in the Gibbs Sampler
@@ -35,7 +35,7 @@
 #' @importFrom Rdpack reprompt
 #'
 #' @export
-strel <- function(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"),
+strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
                interval = .95, n.iter = 2e3, n.burnin = 50, boot.n = 1000,
                omega.freq.method = "cfa", omega.fit = FALSE,
                n.obs = NULL, alpha.int.analytic = FALSE,

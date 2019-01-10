@@ -4,7 +4,7 @@
 \alias{strel}
 \title{calculate single test reliability estimates}
 \usage{
-strel(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"),
+strel(x, estimates = c("alpha", "lambda2", "glb", "omega"),
   interval = 0.95, n.iter = 2000, n.burnin = 50, boot.n = 1000,
   omega.freq.method = "cfa", omega.fit = FALSE, n.obs = NULL,
   alpha.int.analytic = FALSE, bayes = TRUE, freq = TRUE,
@@ -13,7 +13,7 @@ strel(x, estimates = c("alpha", "lambda2", "lambda6", "glb", "omega"),
 \arguments{
 \item{x}{A dataset or covariance matrix}
 
-\item{estimates}{A character vector containing the estimands}
+\item{estimates}{A character vector containing the estimands, we recommend using lambda4 with only a few items due to the computation time}
 
 \item{interval}{A number specifying the uncertainty interval}
 
