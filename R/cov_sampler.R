@@ -2,7 +2,6 @@
 # of a sample's covariance matrix
 # sources: https://en.wikipedia.org/wiki/Normal-inverse-Wishart_distribution,
 # Murphy, K. P. (2007). Conjugate bayesian analysis of the gaussian distribution(Tech. Rep.). University of British Columbia.
-# Gelman, A., Stern, H. S., Carlin, J. B., Dunson, D. B., Vehtari, A., & Rubin, D. B. (2013). Bayesian data analysis. Chapman and Hall/CRC.
 
 covSamp <- function(data, n.iter, n.burnin){
   n <- nrow(data)

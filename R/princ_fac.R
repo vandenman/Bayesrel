@@ -1,6 +1,6 @@
 # function to do a principal factor analysis, also principal axis method
 # source:
-# http://www.aaronschlegel.com/iterated-principal-factor-method-factor-analysis-r/
+# https://www.r-bloggers.com/iterated-principal-factor-method-of-factor-analysis-with-r/
 
 princFac <- function(m, max.iter = 50){
   r <- cov2cor(m)

@@ -300,7 +300,7 @@ ppcOmega <- function(data, lambda, psi){
   title(main = "Posterior Predictive Check for Omega 1-Factor-Model")
 
   for (i in 1:2e3) {
-    dtmp <- mvrnorm2(nrow(data), rep(0, ncol(data)), cimpl)
+    dtmp <- MASS::mvrnorm(nrow(data), rep(0, ncol(data)), cimpl)
     lines(eigen(cov(dtmp))$values, type = "l", col = "gray")
 
   }

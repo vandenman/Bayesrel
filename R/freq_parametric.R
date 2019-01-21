@@ -14,7 +14,7 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
     boot.data <- array(0, c(boot.n, n, p))
     boot.cov <- array(0, c(boot.n, p, p))
     for (i in 1:boot.n){
-      boot.data[i, , ] <- mvrnorm2(n, colMeans(data), cov(data))
+      boot.data[i, , ] <- MASS::mvrnorm(n, colMeans(data), cov(data))
       boot.cov[i, , ] <- cov(boot.data[i, , ])
     }
     res$covsamp <- boot.cov

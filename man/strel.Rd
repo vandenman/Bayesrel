@@ -44,11 +44,13 @@ strel(x, estimates = c("alpha", "lambda2", "glb", "omega"),
 \description{
 calculate Bayesian and frequentist single test reliability measures.
 Reported are Bayesian credible intervals (HDI) and frequentist confidence intervals (non parametric or parametric bootstrap).
-The estimates supported are Cronbach alpha, lambda2/4/6, the glb, and Mcdonald omega.
+The estimates supported are Cronbach alpha, lambda2/4/6, the glb, and Mcdonald omega. Beware of lambda4 with many indicators,
+the computational effort is considerable
 }
 \examples{
 summary(strel(cavalini, estimates = "lambda2"))
 summary(strel(cavalini, estimates = "lambda2", item.dropped = TRUE))
+
 
 }
 \references{

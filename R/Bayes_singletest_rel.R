@@ -2,7 +2,8 @@
 #' calculate single test reliability estimates
 #' @description calculate Bayesian and frequentist single test reliability measures.
 #' Reported are Bayesian credible intervals (HDI) and frequentist confidence intervals (non parametric or parametric bootstrap).
-#' The estimates supported are Cronbach alpha, lambda2/4/6, the glb, and Mcdonald omega.
+#' The estimates supported are Cronbach alpha, lambda2/4/6, the glb, and Mcdonald omega. Beware of lambda4 with many indicators,
+#' the computational effort is considerable
 #'
 #' @param x A dataset or covariance matrix
 #' @param estimates A character vector containing the estimands, we recommend using lambda4 with only a few items due to the computation time
@@ -23,6 +24,7 @@
 #' @examples
 #' summary(strel(cavalini, estimates = "lambda2"))
 #' summary(strel(cavalini, estimates = "lambda2", item.dropped = TRUE))
+#'
 #'
 #' @references{
 #'   \insertRef{murphy2007}{Bayesrel}
@@ -58,20 +60,19 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
   sigma <- NULL
   if (ncol(x) == nrow(x)){
     if (is.null(n.obs)) {return("number of observations needs to be specified when entering a covariance matrix")}
-    # return("so far input of a covariance matrix is not supported")
     if (sum(x[lower.tri(x)] != t(x)[lower.tri(x)]) > 0) {return("input matrix is not symmetric")}
     if (sum(eigen(x)$values < 0) > 0) {return("input matrix is not positive definite")}
     sigma <- x
-    data <- mvrnorm2(n.obs, rep(0, p), sigma, empirical = TRUE)
+    data <- MASS::mvrnorm(n.obs, rep(0, ncol(sigma)), sigma, empirical = TRUE)
   } else{
     data <- scale(x, scale = F)
     sigma <- cov(data)
   }
 
-  if("glb" %in% estimates){
-    control <- Rcsdp::csdp.control(printlevel = 0)
-    write.control.file(control)
-  }
+  # if("glb" %in% estimates){
+  #   control <- Rcsdp::csdp.control(printlevel = 0)
+  #   write.control.file(control)
+  # }
   if (bayes){
     sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, item.dropped, omega.fit)
   }
@@ -87,8 +88,8 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
     sum.res$omega.freq.method <- omega.freq.method
   }
 
-  if("glb" %in% estimates)
-    unlink("param.csdp")
+  # if("glb" %in% estimates)
+  #   unlink("param.csdp")
 
   if (prior.samp) {
     sum.res$priors <- priorSamp(ncol(data), estimates)
