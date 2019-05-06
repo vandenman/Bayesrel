@@ -10,7 +10,7 @@
 #' @param interval A number specifying the uncertainty interval
 #' @param n.iter A number for the iterations of the Gibbs Sampler
 #' @param n.burnin A number for the burnin in the Gibbs Sampler
-#' @param boot.n A number for the bootstrap samples
+#' @param n.boot A number for the bootstrap samples
 #' @param omega.freq.method A character string for the method of frequentist omega, either pfa or cfa
 #' @param omega.fit A logical for calculating the fit of the single factor model
 #' @param n.obs A number for the sample observations when a covariance matrix is supplied and the factor model is calculated
@@ -38,7 +38,7 @@
 #'
 #' @export
 strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
-               interval = .95, n.iter = 2e3, n.burnin = 50, boot.n = 1000,
+               interval = .95, n.iter = 2e3, n.burnin = 50, n.boot = 1000,
                omega.freq.method = "cfa", omega.fit = FALSE,
                n.obs = NULL, alpha.int.analytic = FALSE,
                bayes = TRUE, freq = TRUE, para.boot = FALSE, prior.samp = FALSE,
@@ -54,14 +54,14 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
   sum.res$call <- match.call()
 
   if (sum(is.na(x)) > 0) {
-    return("missing values in data detected, please remove and run again")
+    print("missing values in data detected, please remove and run again"); return()
   }
   data <- NULL
   sigma <- NULL
   if (ncol(x) == nrow(x)){
-    if (is.null(n.obs)) {return("number of observations needs to be specified when entering a covariance matrix")}
-    if (sum(x[lower.tri(x)] != t(x)[lower.tri(x)]) > 0) {return("input matrix is not symmetric")}
-    if (sum(eigen(x)$values < 0) > 0) {return("input matrix is not positive definite")}
+    if (is.null(n.obs)) {print("number of observations (n.obs) needs to be specified when entering a covariance matrix"); return()}
+    if (sum(x[lower.tri(x)] != t(x)[lower.tri(x)]) > 0) {print("input matrix is not symmetric"); return()}
+    if (sum(eigen(x)$values < 0) > 0) {print("input matrix is not positive definite"); return()}
     sigma <- x
     data <- MASS::mvrnorm(n.obs, rep(0, ncol(sigma)), sigma, empirical = TRUE)
   } else{
@@ -79,10 +79,10 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
   if (omega.fit) {omega.freq.method <- "cfa"}
   if(freq){
     if (para.boot){
-      sum.res$freq <- freqFun_para(data, boot.n, estimates, interval, omega.freq.method, item.dropped,
+      sum.res$freq <- freqFun_para(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
                                    alpha.int.analytic, omega.fit)
     } else{
-      sum.res$freq <- freqFun_nonpara(data, boot.n, estimates, interval, omega.freq.method, item.dropped,
+      sum.res$freq <- freqFun_nonpara(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
                                     alpha.int.analytic, omega.fit)
     }
     sum.res$omega.freq.method <- omega.freq.method

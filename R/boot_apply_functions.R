@@ -31,15 +31,13 @@ applyl6 <- function(M){
 }
 
 applyglb <- function(M){
-  gl <- glb.algebraic2(M)$glb
+  gl <- glbOnArray(M)
   return(gl)
 }
-
-applyomega_cfa_cov <- function(C){
-  out <- omegaFreqCov(C)
-  om <- out$omega
-  return(om)
-}
+# applyglb <- function(M){
+#   gl <- glb.algebraic2(M)
+#   return(gl)
+# }
 
 applyomega_cfa_data <- function(data){
   out <- omegaFreqData(data)

@@ -5,7 +5,7 @@
 \title{calculate single test reliability estimates}
 \usage{
 strel(x, estimates = c("alpha", "lambda2", "glb", "omega"),
-  interval = 0.95, n.iter = 2000, n.burnin = 50, boot.n = 1000,
+  interval = 0.95, n.iter = 2000, n.burnin = 50, n.boot = 1000,
   omega.freq.method = "cfa", omega.fit = FALSE, n.obs = NULL,
   alpha.int.analytic = FALSE, bayes = TRUE, freq = TRUE,
   para.boot = FALSE, prior.samp = FALSE, item.dropped = FALSE)
@@ -21,7 +21,7 @@ strel(x, estimates = c("alpha", "lambda2", "glb", "omega"),
 
 \item{n.burnin}{A number for the burnin in the Gibbs Sampler}
 
-\item{boot.n}{A number for the bootstrap samples}
+\item{n.boot}{A number for the bootstrap samples}
 
 \item{omega.freq.method}{A character string for the method of frequentist omega, either pfa or cfa}
 

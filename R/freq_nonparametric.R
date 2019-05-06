@@ -54,8 +54,8 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
     res$est$freq.l2 <- applyl2(cov(data))
     l2.obj <- apply(boot.cov, 1, applyl2)
     if (length(unique(round(l2.obj, 4))) == 1){
-      res$conf$low$freq.l2 <- 1
-      res$conf$up$freq.l2 <- 1
+      res$conf$low$freq.l2 <- NA
+      res$conf$up$freq.l2 <- NA
     } else{
       res$conf$low$freq.l2 <- quantile(l2.obj, probs = (1 - interval)/2, na.rm = T)
       res$conf$up$freq.l2 <- quantile(l2.obj, probs = interval + (1 - interval)/2, na.rm = T)
@@ -70,8 +70,8 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
     res$est$freq.l4 <- applyl4(cov(data))
     l4.obj <- apply(boot.cov, 1, applyl4)
     if (length(unique(round(l4.obj, 4))) == 1){
-      res$conf$low$freq.l4 <- 1
-      res$conf$up$freq.l4 <- 1
+      res$conf$low$freq.l4 <- NA
+      res$conf$up$freq.l4 <- NA
     } else{
       res$conf$low$freq.l4 <- quantile(l4.obj, probs = (1 - interval)/2, na.rm = T)
       res$conf$up$freq.l4 <- quantile(l4.obj, probs = interval + (1 - interval)/2, na.rm = T)
@@ -86,8 +86,8 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
     res$est$freq.l6 <- applyl6(cov(data))
     l6.obj <- apply(boot.cov, 1, applyl6)
     if (length(unique(round(l6.obj, 4))) == 1){
-      res$conf$low$freq.l6 <- 1
-      res$conf$up$freq.l6 <- 1
+      res$conf$low$freq.l6 <- NA
+      res$conf$up$freq.l6 <- NA
     } else{
       res$conf$low$freq.l6 <- quantile(l6.obj, probs = (1 - interval)/2, na.rm = T)
       res$conf$up$freq.l6 <- quantile(l6.obj, probs = interval + (1 - interval)/2, na.rm = T)
@@ -98,23 +98,39 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
     }
   }
   if ("glb" %in% estimates){
-    res$est$freq.glb <- applyglb(cov(data))
-    glb.obj <- apply(boot.cov, 1, applyglb)
+    res$est$freq.glb <- glbOnArray(cov(data))
+    glb.obj <- glbOnArray(boot.cov)
     if (length(unique(round(glb.obj, 4))) == 1){
-      res$conf$low$freq.glb <- 1
-      res$conf$up$freq.glb <- 1
+      res$conf$low$freq.glb <- NA
+      res$conf$up$freq.glb <- NA
     } else{
       res$conf$low$freq.glb <- quantile(glb.obj, probs = (1 - interval)/2, na.rm = T)
       res$conf$up$freq.glb <- quantile(glb.obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
     res$boot$glb <- glb.obj
     if (item.dropped){
-      res$ifitem$glb <- apply(Ctmp, 1, applyglb)
+      res$ifitem$glb <- glbOnArray(Ctmp)
     }
   }
 
   #omega --------------------------------------------------------------------------
   if ("omega" %in% estimates){
+    if (omega.freq.method == "pa"){
+      res$est$freq.omega <- applyomega_pa(cov(data))
+      omega.obj <- apply(boot.cov, 1, applyomega_pa)
+      if (length(unique(round(omega.obj, 4))) == 1){
+        res$conf$low$freq.omega <- NA
+        res$conf$up$freq.omega <- NA
+      }
+      else{
+        res$conf$low$freq.omega <- quantile(omega.obj, probs = (1 - interval)/2, na.rm = T)
+        res$conf$up$freq.omega <- quantile(omega.obj, probs = interval + (1 - interval)/2, na.rm = T)
+      }
+      res$boot$omega <- omega.obj
+      if (item.dropped){
+        res$ifitem$omega <- apply(Ctmp, 1, applyomega_pa)
+      }
+    }
     if (omega.freq.method == "cfa"){
       out <- omegaFreqData(data)
       res$est$freq.omega <- out$omega
@@ -126,22 +142,6 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
       if (omega.fit) {res$fit$omega <- out$indices}
       if (item.dropped){
         res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data)
-      }
-    }
-    if (omega.freq.method == "pa"){
-      res$est$freq.omega <- applyomega_pa(cov(data))
-      omega.obj <- apply(boot.cov, 1, applyomega_pa)
-      if (length(unique(round(omega.obj, 4))) == 1){
-        res$conf$low$freq.omega <- 1
-        res$conf$up$freq.omega <- 1
-      }
-      else{
-        res$conf$low$freq.omega <- quantile(omega.obj, probs = (1 - interval)/2, na.rm = T)
-        res$conf$up$freq.omega <- quantile(omega.obj, probs = interval + (1 - interval)/2, na.rm = T)
-      }
-      res$boot$omega <- omega.obj
-      if (item.dropped){
-        res$ifitem$omega <- apply(Ctmp, 1, applyomega_pa)
       }
     }
   }
