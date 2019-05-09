@@ -1,4 +1,4 @@
 library(testthat)
-library(BayesRel)
+library(Bayesrel)
 
-test_check("BayesRel")
+test_check("Bayesrel")

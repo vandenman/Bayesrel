@@ -27,8 +27,8 @@
 #'
 #'
 #' @references{
-#'   \insertRef{murphy2007}{BayesRel}
-#'   \insertRef{lee2007}{BayesRel}
+#'   \insertRef{murphy2007}{Bayesrel}
+#'   \insertRef{lee2007}{Bayesrel}
 #' }
 #' @importFrom grDevices adjustcolor recordPlot
 #' @importFrom graphics arrows axis legend lines par plot text title

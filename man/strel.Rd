@@ -55,7 +55,7 @@ summary(strel(cavalini, estimates = "lambda2", item.dropped = TRUE))
 }
 \references{
 {
-  \insertRef{murphy2007}{BayesRel}
-  \insertRef{lee2007}{BayesRel}
+  \insertRef{murphy2007}{Bayesrel}
+  \insertRef{lee2007}{Bayesrel}
 }
 }
