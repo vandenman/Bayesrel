@@ -27,8 +27,8 @@
 #'
 #'
 #' @references{
-#'   \insertRef{murphy2007}{Bayesrel}
-#'   \insertRef{lee2007}{Bayesrel}
+#'   \insertRef{murphy2007}{BayesRel}
+#'   \insertRef{lee2007}{BayesRel}
 #' }
 #' @importFrom grDevices adjustcolor recordPlot
 #' @importFrom graphics arrows axis legend lines par plot text title
@@ -69,10 +69,6 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
     sigma <- cov(data)
   }
 
-  # if("glb" %in% estimates){
-  #   control <- Rcsdp::csdp.control(printlevel = 0)
-  #   write.control.file(control)
-  # }
   if (bayes){
     sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, item.dropped, omega.fit)
   }
@@ -87,9 +83,6 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
     }
     sum.res$omega.freq.method <- omega.freq.method
   }
-
-  # if("glb" %in% estimates)
-  #   unlink("param.csdp")
 
   if (prior.samp) {
     sum.res$priors <- priorSamp(ncol(data), estimates)
