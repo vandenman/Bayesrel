@@ -4,13 +4,13 @@
 # and non-parametric bootstrapped confidence intervals, now calculated with SEs and z-values
 
 freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method,
-                            item.dropped, alpha.int.analytic, omega.fit){
+                            item.dropped, alpha.int.analytic){
   p <- ncol(data)
   n <- nrow(data)
   res <- list()
   res$covsamp <- NULL
   if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates ||
-      "glb" %in% estimates || omega.freq.method == "pa"){
+      "glb" %in% estimates || omega.freq.method == "pfa"){
     boot.data <- array(0, c(boot.n, n, p))
     boot.cov <- array(0, c(boot.n, p, p))
     for (i in 1:boot.n){
@@ -115,7 +115,19 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
 
   #omega --------------------------------------------------------------------------
   if ("omega" %in% estimates){
-    if (omega.freq.method == "pa"){
+    if (omega.freq.method == "cfa"){
+      out <- omegaFreqData(data)
+      res$est$freq.omega <- out$omega
+      res$loadings <- out$loadings
+      res$resid.var <- out$errors
+      res$conf$low$freq.omega <- out$omega.low
+      res$conf$up$freq.omega <- out$omega.up
+      res$fit.omega <- out$indices
+
+      if (item.dropped){
+        res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data)
+      }
+    } else if (omega.freq.method == "pfa"){
       res$est$freq.omega <- applyomega_pa(cov(data))
       omega.obj <- apply(boot.cov, 1, applyomega_pa)
       if (length(unique(round(omega.obj, 4))) == 1){
@@ -129,19 +141,6 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
       res$boot$omega <- omega.obj
       if (item.dropped){
         res$ifitem$omega <- apply(Ctmp, 1, applyomega_pa)
-      }
-    }
-    if (omega.freq.method == "cfa"){
-      out <- omegaFreqData(data)
-      res$est$freq.omega <- out$omega
-      res$loadings <- out$loadings
-      res$resid.var <- out$errors
-      res$conf$low$freq.omega <- out$omega.low
-      res$conf$up$freq.omega <- out$omega.up
-
-      if (omega.fit) {res$fit$omega <- out$indices}
-      if (item.dropped){
-        res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data)
       }
     }
   }

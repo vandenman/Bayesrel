@@ -2,7 +2,7 @@
 # and the credible intervals together with the posterior distribution objects
 # to be passed on for forther analysis
 
-gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped, omega.fit){
+gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
   p <- ncol(data)
   res <- list()
   if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates ||
@@ -93,11 +93,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped, 
     res$cred$low$bayes.omega <- int[1]
     res$cred$up$bayes.omega<- int[2]
     res$est$bayes.omega <- median(res$samp$bayes.omega)
-    if (omega.fit){
-      ppcOmega(data, res$loadings, res$resid.va)
-      res$fit$omega <- recordPlot()
-      # plot.new()
-    }
+
     if (item.dropped){
       om.samp.ifitem <- matrix(0, p, n.iter - n.burnin)
       for (i in 1:p){

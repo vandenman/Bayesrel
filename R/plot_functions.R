@@ -10,7 +10,7 @@
 #' @param twopie A logical indicating if an additional pie plot with the prior should be drawn
 #'
 #' @examples
-#' plotstrel(strel(cavalini, "lambda2"), "lambda2")
+#' plotstrel(strel(cavalini[1:200, ], "lambda2"), "lambda2")
 #'
 #' @export
 plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80), twopie = FALSE){
@@ -228,7 +228,7 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 #' @param estimate A character string indicating what estimate to plot from the strel output object
 #' @param ordering A logical indicating if the densities in the plot should be ordered
 #'
-#' @examples plotstrel.id(strel(cavalini, "lambda2", item.dropped = TRUE), "lambda2")
+#' @examples plotstrel.id(strel(cavalini[1:200, ], "lambda2", item.dropped = TRUE), "lambda2")
 #'
 #' @export
 plotstrel.id<- function(x, estimate, ordering = FALSE){
@@ -285,28 +285,4 @@ plotstrel.id<- function(x, estimate, ordering = FALSE){
 }
 
 
-# graphical posterior predictive check for the 1-factor omega model, based on covariance matrix eigenvalues
-#
-#
-ppcOmega <- function(data, lambda, psi){
-  cimpl <- lambda %*% t(lambda) + diag(psi)
-  ymax <- max(eigen(cimpl)$values, eigen(cov(data))$values) * 1.3
-  # par(cex.main = 1.25, mgp = c(3.25, 1, 0), cex.lab = 1.25,
-  #     font.lab = 2, cex.axis = 1.25, bty = "n", las = 1, family = "LM Roman 10")
-  # par(mar = c(5, 5.5, 4.5, 1))
-  plot(eigen(cov(data))$values, axes = F, ylim = c(0, ymax), ylab = "Eigenvalue - Size", xlab = "Eigenvalue - No.")
-  axis(side = 1, at = seq(1:ncol(data)))
-  axis(side = 2)
-  title(main = "Posterior Predictive Check for Omega 1-Factor-Model")
-
-  for (i in 1:2e3) {
-    dtmp <- MASS::mvrnorm(nrow(data), rep(0, ncol(data)), cimpl)
-    lines(eigen(cov(dtmp))$values, type = "l", col = "gray")
-
-  }
-  lines(eigen(cov(data))$values, col = "black", type = "p")
-  lines(eigen(cov(data))$values, col = "black", lwd = 2)
-  legend(ncol(data)/3, ymax*(2/3), legend=c("Dataset Covariance Matrix", "Simulated Data from Model Implied Covariance Matrix"),
-         col=c("black", "gray"), lwd = c(2, 2), box.lwd = 0)
-}
 

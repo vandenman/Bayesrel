@@ -11,8 +11,7 @@
 #' @param n.iter A number for the iterations of the Gibbs Sampler
 #' @param n.burnin A number for the burnin in the Gibbs Sampler
 #' @param n.boot A number for the bootstrap samples
-#' @param omega.freq.method A character string for the method of frequentist omega, either pfa or cfa
-#' @param omega.fit A logical for calculating the fit of the single factor model
+#' @param omega.freq.method A character string for the method of frequentist omega, either "pfa" or "cfa"
 #' @param n.obs A number for the sample observations when a covariance matrix is supplied and the factor model is calculated
 #' @param alpha.int.analytic A logical for calculating the alpha confidence interval analytically
 #' @param bayes A logical for calculating the Bayesian estimates
@@ -22,8 +21,8 @@
 #' @param item.dropped A logical for calculating the if-item-dropped statistics
 #'
 #' @examples
-#' summary(strel(cavalini, estimates = "lambda2"))
-#' summary(strel(cavalini, estimates = "lambda2", item.dropped = TRUE))
+#' summary(strel(cavalini[1:200, ], estimates = "lambda2"))
+#' summary(strel(cavalini[1:200, ], estimates = "lambda2", item.dropped = TRUE))
 #'
 #'
 #' @references{
@@ -39,7 +38,7 @@
 #' @export
 strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
                interval = .95, n.iter = 2e3, n.burnin = 50, n.boot = 1000,
-               omega.freq.method = "cfa", omega.fit = FALSE,
+               omega.freq.method = "cfa",
                n.obs = NULL, alpha.int.analytic = FALSE,
                bayes = TRUE, freq = TRUE, para.boot = FALSE, prior.samp = FALSE,
                item.dropped = FALSE) {
@@ -54,14 +53,15 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
   sum.res$call <- match.call()
 
   if (sum(is.na(x)) > 0) {
-    print("missing values in data detected, please remove and run again"); return()
+    return("missing values in data detected, please remove and run again")
   }
   data <- NULL
   sigma <- NULL
   if (ncol(x) == nrow(x)){
-    if (is.null(n.obs)) {print("number of observations (n.obs) needs to be specified when entering a covariance matrix"); return()}
-    if (sum(x[lower.tri(x)] != t(x)[lower.tri(x)]) > 0) {print("input matrix is not symmetric"); return()}
-    if (sum(eigen(x)$values < 0) > 0) {print("input matrix is not positive definite"); return()}
+    if (is.null(n.obs) & "omega" %in% estimates) {
+      return("number of observations (n.obs) needs to be specified when entering a covariance matrix")}
+    if (sum(x[lower.tri(x)] != t(x)[lower.tri(x)]) > 0) {return("input matrix is not symmetric")}
+    if (sum(eigen(x)$values < 0) > 0) {return("input matrix is not positive definite")}
     sigma <- x
     data <- MASS::mvrnorm(n.obs, rep(0, ncol(sigma)), sigma, empirical = TRUE)
   } else{
@@ -69,17 +69,20 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
     sigma <- cov(data)
   }
 
+  if (omega.freq.method != "cfa" & omega.freq.method != "pfa") {
+    return("enter a valid omega method, either 'cfa' or 'pfa'")}
+
   if (bayes){
-    sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, item.dropped, omega.fit)
+    sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, item.dropped)
   }
-  if (omega.fit) {omega.freq.method <- "cfa"}
+
   if(freq){
     if (para.boot){
       sum.res$freq <- freqFun_para(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
-                                   alpha.int.analytic, omega.fit)
+                                   alpha.int.analytic)
     } else{
       sum.res$freq <- freqFun_nonpara(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
-                                    alpha.int.analytic, omega.fit)
+                                    alpha.int.analytic)
     }
     sum.res$omega.freq.method <- omega.freq.method
   }
@@ -93,6 +96,7 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
   sum.res$n.burnin <- n.burnin
   sum.res$interval <- interval
   sum.res$n.item <- ncol(data)
+  sum.res$data <- data
 
   class(sum.res) = 'strel'
   return(sum.res)

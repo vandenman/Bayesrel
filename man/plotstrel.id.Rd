@@ -18,6 +18,6 @@ gives posterior densities of original dataset together with the the posteriors o
 items deleted. Can be ordered for the change item deleting brings about
 }
 \examples{
-plotstrel.id(strel(cavalini, "lambda2", item.dropped = TRUE), "lambda2")
+plotstrel.id(strel(cavalini[1:200, ], "lambda2", item.dropped = TRUE), "lambda2")
 
 }

@@ -19,5 +19,5 @@ and calculates any given probability of the estimate being bigger
 or smaller than an arbitrary value
 }
 \examples{
-pstrel(strel(cavalini, "lambda2"), "lambda2", .80)
+pstrel(strel(cavalini[1:200, ], "lambda2"), "lambda2", .80)
 }

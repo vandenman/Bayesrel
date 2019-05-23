@@ -6,7 +6,7 @@
 \usage{
 strel(x, estimates = c("alpha", "lambda2", "glb", "omega"),
   interval = 0.95, n.iter = 2000, n.burnin = 50, n.boot = 1000,
-  omega.freq.method = "cfa", omega.fit = FALSE, n.obs = NULL,
+  omega.freq.method = "cfa", n.obs = NULL,
   alpha.int.analytic = FALSE, bayes = TRUE, freq = TRUE,
   para.boot = FALSE, prior.samp = FALSE, item.dropped = FALSE)
 }
@@ -23,9 +23,7 @@ strel(x, estimates = c("alpha", "lambda2", "glb", "omega"),
 
 \item{n.boot}{A number for the bootstrap samples}
 
-\item{omega.freq.method}{A character string for the method of frequentist omega, either pfa or cfa}
-
-\item{omega.fit}{A logical for calculating the fit of the single factor model}
+\item{omega.freq.method}{A character string for the method of frequentist omega, either "pfa" or "cfa"}
 
 \item{n.obs}{A number for the sample observations when a covariance matrix is supplied and the factor model is calculated}
 
@@ -48,8 +46,8 @@ The estimates supported are Cronbach alpha, lambda2/4/6, the glb, and Mcdonald o
 the computational effort is considerable
 }
 \examples{
-summary(strel(cavalini, estimates = "lambda2"))
-summary(strel(cavalini, estimates = "lambda2", item.dropped = TRUE))
+summary(strel(cavalini[1:200, ], estimates = "lambda2"))
+summary(strel(cavalini[1:200, ], estimates = "lambda2", item.dropped = TRUE))
 
 
 }

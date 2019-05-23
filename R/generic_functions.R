@@ -42,7 +42,6 @@ summary.strel <- function(object, ...){
   out.matrix$n.burnin <- object$n.burnin
   out.matrix$interval <- object$interval
   out.matrix$estimates <- object$estimates
-  out.matrix$fit.indices <- object$freq$fit$omega
   out.matrix$ifitem$bay.tab <- object$bay$ifitem$est
   out.matrix$ifitem$freq.tab <- object$freq$ifitem
 
@@ -78,14 +77,14 @@ print.summary.strel <- function(x, ...){
       cat("frequentist omega method is:")
       print.default(x$omega.freq.method)
       cat("omega confidence interval is estimated with:")
-      if (x$omega.freq.method == "pa") {print.default("bootstrap")}
+      if (x$omega.freq.method == "pfa") {print.default("bootstrap")}
       if (x$omega.freq.method == "cfa") {print.default("maximum likelihood z-value")}
     }
-    if (!is.null(x$fit.indices)){
-      options(scipen = 999)
-      cat("\nFrequentist fit of 1-factor-model for omega is:\n")
-      print.default(as.matrix(x$fit.indices))
-    }
+    # if (!is.null(x$fit.indices)){
+    #   options(scipen = 999)
+    #   cat("\nFrequentist fit of 1-factor-model for omega is:\n")
+    #   print.default(as.matrix(x$fit.indices))
+    # }
   }
 
 
