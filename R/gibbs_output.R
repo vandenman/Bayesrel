@@ -26,8 +26,8 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
     res$cred$up$bayes.alpha <- int[2]
     res$est$bayes.alpha<- median(res$samp$bayes.alpha)
     if (item.dropped){
-      res$ifitem$samp$alpha <- coda::as.mcmc(apply(Ctmp, c(1, 2), applyalpha))
-      res$ifitem$est$alpha <- apply(res$ifitem$samp$alpha, 1, median)
+      res$ifitem$samp$alpha <- coda::mcmc(apply(Ctmp, c(2, 1), applyalpha))
+      res$ifitem$est$alpha <- apply(res$ifitem$samp$alpha, 2, median)
     }
   }
 
@@ -38,8 +38,8 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
     res$cred$up$bayes.l2 <- int[2]
     res$est$bayes.l2<- median(res$samp$bayes.l2)
     if (item.dropped){
-      res$ifitem$samp$l2 <- coda::as.mcmc(apply(Ctmp, c(1, 2), applyl2))
-      res$ifitem$est$l2 <- apply(res$ifitem$samp$l2, 1, median)
+      res$ifitem$samp$l2 <- coda::mcmc(apply(Ctmp, c(2, 1), applyl2))
+      res$ifitem$est$l2 <- apply(res$ifitem$samp$l2, 2, median)
     }
   }
 
@@ -50,8 +50,8 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
     res$cred$up$bayes.l4 <- int[2]
     res$est$bayes.l4<- median(res$samp$bayes.l4)
     if (item.dropped){
-      res$ifitem$samp$l4 <- coda::as.mcmc(apply(Ctmp, c(1, 2), applyl4))
-      res$ifitem$est$l4 <- apply(res$ifitem$samp$l4, 1, median)
+      res$ifitem$samp$l4 <- coda::mcmc(apply(Ctmp, c(2, 1), applyl4))
+      res$ifitem$est$l4 <- apply(res$ifitem$samp$l4, 2, median)
     }
   }
 
@@ -62,8 +62,8 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
     res$cred$up$bayes.l6 <- int[2]
     res$est$bayes.l6<- median(res$samp$bayes.l6)
     if (item.dropped){
-      res$ifitem$samp$l6 <- coda::as.mcmc(apply(Ctmp, c(1, 2), applyl6))
-      res$ifitem$est$l6 <- apply(res$ifitem$samp$l6, 1, median)
+      res$ifitem$samp$l6 <- coda::mcmc(apply(Ctmp, c(2, 1), applyl6))
+      res$ifitem$est$l6 <- apply(res$ifitem$samp$l6, 2, median)
     }
   }
 
@@ -78,8 +78,8 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
     res$cred$up$bayes.glb <- int[2]
     res$est$bayes.glb<- median(res$samp$bayes.glb)
     if (item.dropped){
-      res$ifitem$samp$glb <- coda::as.mcmc(apply(Ctmp, c(1, 2), applyglb))
-      res$ifitem$est$glb <- apply(res$ifitem$samp$glb, 1, median)
+      res$ifitem$samp$glb <- coda::mcmc(apply(Ctmp, c(2, 1), applyglb))
+      res$ifitem$est$glb <- apply(res$ifitem$samp$glb, 2, median)
     }
   }
 
@@ -95,13 +95,13 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
     res$est$bayes.omega <- median(res$samp$bayes.omega)
 
     if (item.dropped){
-      om.samp.ifitem <- matrix(0, p, n.iter - n.burnin)
+      om.samp.ifitem <- matrix(0, n.iter - n.burnin, p)
       for (i in 1:p){
         tmp <- data[-i, -i]
-        om.samp.ifitem[i, ] <- omegaSampler(tmp, n.iter, n.burnin)$omega
+        om.samp.ifitem[, i] <- omegaSampler(tmp, n.iter, n.burnin)$omega
       }
-      res$ifitem$samp$omega <- coda::as.mcmc(om.samp.ifitem)
-      res$ifitem$est$omega <- apply(om.samp.ifitem, 1, mean)
+      res$ifitem$samp$omega <- coda::mcmc(om.samp.ifitem)
+      res$ifitem$est$omega <- apply(om.samp.ifitem, 2, median)
     }
   }
 

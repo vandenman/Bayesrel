@@ -29,12 +29,12 @@ test_that("Bayes glb is correct", {
 
 set.seed(1234)
 
-test_that("Bayes Alpha is correct", {
+test_that("Bayes Alpha if item deleted is correct", {
 
   data(cavalini, package = "Bayesrel")
-  ee <- Bayesrel::strel(cavalini, estimates = "alpha", n.iter = 200, freq = F, item.dropped = T)
+  ee <- Bayesrel::strel(cavalini[1:200, ], estimates = "alpha", n.iter = 200, freq = F, item.dropped = T)
 
-  expect_equal(ee$bay$ifitem$est$alpha, c(0.7687316, 0.7325940, 0.7622475, 0.7567935, 0.7558746, 0.7517239, 0.7526119, 0.7619934),
+  expect_equal(as.numeric(ee$bay$ifitem$est$alpha), c(0.7787775, 0.7443492, 0.7906046, 0.7705179, 0.7524018, 0.7653496, 0.7674595, 0.7788023),
                tolerance = 1e-2)
 
 })
