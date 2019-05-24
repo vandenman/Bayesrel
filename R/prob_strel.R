@@ -15,7 +15,7 @@
 
 pstrel <- function(x, estimate, low.bound){
   posi <- grep(estimate, x$estimates, ignore.case = T)
-  samp <- coda::as.mcmc(unlist(x$bay$samp[posi]))
+  samp <- unlist(x$bay$samp[posi])
   obj <- ecdf(samp)
   est.prob <- 1 - obj(low.bound)
   return(est.prob)
