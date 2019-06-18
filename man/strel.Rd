@@ -29,8 +29,6 @@ strel(x, estimates = c("alpha", "lambda2", "glb", "omega"),
 
 \item{alpha.int.analytic}{A logical for calculating the alpha confidence interval analytically}
 
-\item{bayes}{A logical for calculating the Bayesian estimates}
-
 \item{freq}{A logical for calculating the frequentist estimates}
 
 \item{para.boot}{A logical for calculating the parametric bootstrap, the default is the non-parametric}

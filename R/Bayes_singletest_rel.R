@@ -14,7 +14,6 @@
 #' @param omega.freq.method A character string for the method of frequentist omega, either "pfa" or "cfa"
 #' @param n.obs A number for the sample observations when a covariance matrix is supplied and the factor model is calculated
 #' @param alpha.int.analytic A logical for calculating the alpha confidence interval analytically
-#' @param bayes A logical for calculating the Bayesian estimates
 #' @param freq A logical for calculating the frequentist estimates
 #' @param para.boot A logical for calculating the parametric bootstrap, the default is the non-parametric
 #' @param prior.samp A logical for calculating the prior distributions (necessary for plot functions)
@@ -72,9 +71,9 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
   if (omega.freq.method != "cfa" & omega.freq.method != "pfa") {
     return("enter a valid omega method, either 'cfa' or 'pfa'")}
 
-  if (bayes){
-    sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, item.dropped)
-  }
+
+  sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, item.dropped)
+
 
   if(freq){
     if (para.boot){
