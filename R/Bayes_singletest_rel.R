@@ -20,8 +20,8 @@
 #' @param item.dropped A logical for calculating the if-item-dropped statistics
 #'
 #' @examples
-#' summary(strel(cavalini[1:200, ], estimates = "lambda2"))
-#' summary(strel(cavalini[1:200, ], estimates = "lambda2", item.dropped = TRUE))
+#' summary(strel(asrm, estimates = "lambda2"))
+#' summary(strel(asrm, estimates = "lambda2", item.dropped = TRUE))
 #'
 #'
 #' @references{
@@ -39,7 +39,7 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
                interval = .95, n.iter = 2e3, n.burnin = 50, n.boot = 1000,
                omega.freq.method = "cfa",
                n.obs = NULL, alpha.int.analytic = FALSE,
-               bayes = TRUE, freq = TRUE, para.boot = FALSE, prior.samp = FALSE,
+               freq = TRUE, para.boot = FALSE, prior.samp = FALSE,
                item.dropped = FALSE) {
 
   estimates <- match.arg(estimates, several.ok = T)

@@ -9,8 +9,7 @@
 #' @param cuts A two element vector indicating what the cutoffs should be
 #' @param twopie A logical indicating if an additional pie plot with the prior should be drawn
 #'
-#' @examples
-#' plotstrel(strel(cavalini[1:200, ], "lambda2"), "lambda2")
+#' @examples plotstrel(strel(asrm, "lambda2"), "lambda2")
 #'
 #' @export
 plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80), twopie = FALSE){
@@ -228,7 +227,7 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 #' @param estimate A character string indicating what estimate to plot from the strel output object
 #' @param ordering A logical indicating if the densities in the plot should be ordered
 #'
-#' @examples plotstrel.id(strel(cavalini[1:200, ], "lambda2", item.dropped = TRUE), "lambda2")
+#' @examples plotstrel.id(strel(asrm, "lambda2", item.dropped = TRUE), "lambda2")
 #'
 #' @export
 plotstrel.id<- function(x, estimate, ordering = FALSE){
@@ -252,13 +251,14 @@ plotstrel.id<- function(x, estimate, ordering = FALSE){
   }
 
   for (i in 1:n.row){
-    tmp <- as.data.frame(dat.del[, i])
+    tmp <- as.data.frame(dat.del[i, ])
     colnames(tmp) <- "value"
     tmp$var <- names[i]
     tmp$colos <- "2"
     dat <- rbind(dat, tmp)
   }
   dat$var <- factor(dat$var, levels = unique(dat$var))
+
   if (ordering){
     est <- as.data.frame(unlist(x$bay$ifitem$est[posi]))
     est[n.row + 1, ] <- 1

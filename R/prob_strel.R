@@ -9,7 +9,7 @@
 #' @param low.bound A number for the threshold to be tested against
 #'
 #' @examples
-#' pstrel(strel(cavalini[1:200, ], "lambda2"), "lambda2", .80)
+#' pstrel(strel(asrm, "lambda2"), "lambda2", .80)
 #' @export
 
 
