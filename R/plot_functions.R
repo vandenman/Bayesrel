@@ -34,7 +34,7 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
     colos <- c("gray100", "gray70", "gray10")
   }
 
-  dens.prior <- density(prior, from = 0, to = 1, n = 2e3)
+  dens.prior <- density(prior, from = 0, to = 1, n = 2^11)
   options(warn = -1)
   xx0 <- min(which(dens.prior$x <= cuts[1]))
   xx1 <- max(which(dens.prior$x <= cuts[1]))
@@ -46,7 +46,7 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
   if (!is.integer(xx2)) xx2 <- 1
   if (!is.integer(xx3)) xx3 <- 1
 
-  dens.post <- density(samp, adjust = 1.75, n = 2e3)
+  dens.post <- density(samp, adjust = 1.5, n = 2^11)
   x0 <- min(which(dens.post$x <= cuts[1]))
   x1 <- max(which(dens.post$x <= cuts[1]))
   x2 <- max(which(dens.post$x <= cuts[2]))
@@ -83,7 +83,7 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
 
   if (criteria){
     if (twopie){
-      plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = "Reliability", ylab = NA,
+      plot(density(samp, adjust = 1.5), type = "l", axes = F, xlab = "Reliability", ylab = NA,
            xlim = c(0, 1), ylim = c(-.1,  peak * 1.55),
            lwd = 3, main = "")
       plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
@@ -94,7 +94,7 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
       axis(side = 2, at = seq(0, peak, by = peak/5), labels = NA, cex.axis = 1.2, lwd = 1.5)
 
       title(ylab = "Density", mgp = c(1, 1, 0), adj = 0.31)
-      arrows(x0 = hdi[1], y0 = peak, x1 = hdi[2], y1 = peak, angle = 90, length = 0.05,
+      arrows(x0 = hdi[1], y0 = peak*1.02, x1 = hdi[2], y1 = peak*1.02, angle = 90, length = 0.05,
              code = 3, lwd = 2)
 
       t1 <- legend(x = .95, y = peak*1.33, legend=c("", "", ""), cex = 1.2, bty ="n", xjust = 0, yjust = 1)
@@ -124,7 +124,7 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
       text(l2$rect$left + l2$rect$w, l2$text$y*.99, c(pie.post.labels), pos = 2, cex = 1.2)
 
     } else {
-      plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = "Reliability", ylab = NA,
+      plot(density(samp, adjust = 1.5), type = "l", axes = F, xlab = "Reliability", ylab = NA,
            xlim = c(0, 1), ylim = c(-.1,  peak * 1.33),
            lwd = 3, main = "")
       plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
@@ -134,7 +134,7 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
       axis(side = 1, at = seq(0, 1, by = .2), labels = seq(0, 1, by = .2), cex.axis = 1.2, lwd = 1.5)
       axis(side = 2, at = seq(0, peak, by = peak/5), labels = NA, cex.axis = 1.2, lwd = 1.5)
       title(ylab = "Density", mgp = c(1, 1, 0), adj = 0.31)
-      arrows(x0 = hdi[1], y0 = peak, x1 = hdi[2], y1 = peak, angle = 90, length = 0.05,
+      arrows(x0 = hdi[1], y0 = peak*1.02, x1 = hdi[2], y1 = peak*1.02, angle = 90, length = 0.05,
              code = 3, lwd = 2)
 
       t1 <- legend(x = .95, y = peak*1.33, legend=c("", "", ""), cex = 1.2, bty ="n", xjust = 0, yjust = 1)
@@ -157,7 +157,7 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
     }
 
   } else {
-    plot(density(samp, adjust = 1.75), type = "l", axes = F, xlab = "Reliability", ylab = NA,
+    plot(density(samp, adjust = 1.5), type = "l", axes = F, xlab = "Reliability", ylab = NA,
          xlim = c(0, 1), ylim = c(0,  peak * 1.25),
          lwd = 3, main = "")
     plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
@@ -168,7 +168,7 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
     axis(side = 1, at = seq(0, 1, by = .2), labels = seq(0, 1, by = .2), cex.axis = 1.2, lwd = 1.5)
     axis(side = 2, at = seq(0, peak, by = peak/5), labels = NA, cex.axis = 1.2, lwd = 1.5)
     title(ylab = "Density", mgp = c(1, 1, 0), adj = 0.31)
-    arrows(x0 = hdi[1], y0 = peak, x1 = hdi[2], y1 = peak, angle = 90, length = 0.05,
+    arrows(x0 = hdi[1], y0 = peak*1.02, x1 = hdi[2], y1 = peak*1.02, angle = 90, length = 0.05,
            code = 3, lwd = 2)
 
     t1 <- legend(x = .95, y = peak*1.33, legend=c("", "", ""), cex = 1.2, bty ="n", xjust = 0, yjust = 1)
@@ -231,6 +231,9 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 #'
 #' @export
 plotstrel.id<- function(x, estimate, ordering = FALSE){
+
+  if (is.null(x$bay$ifitem$samp)) {return("please run the analysis again with item.dropped = TRUE")}
+
   n.row <- length(unlist(x$bay$ifitem$est[1]))
   posi <- grep(estimate, x$estimates, ignore.case = T)
 
@@ -269,7 +272,7 @@ plotstrel.id<- function(x, estimate, ordering = FALSE){
   }
 
   ggplot2::ggplot(dat, ggplot2::aes(x = value, y = var, fill = colos)) +
-    ggridges::stat_density_ridges(quantile_lines = TRUE, quantiles = c(0.025, 0.5, 0.975),
+    ggridges::stat_density_ridges(quantile_lines = T, quantiles = c(0.025, 0.5, 0.975),
                                   alpha = .85, show.legend = F) +
     ggplot2::theme_linedraw() +
     ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white"),

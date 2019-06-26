@@ -20,7 +20,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
   res$covsamp <- C
 
   if ("alpha" %in% estimates){
-    res$samp$bayes.alpha <- coda::as.mcmc(apply(C, MARGIN = 1, applyalpha))
+    res$samp$bayes.alpha <- coda::mcmc(apply(C, MARGIN = 1, applyalpha))
     int <- coda::HPDinterval(res$samp$bayes.alpha, prob = interval)
     res$cred$low$bayes.alpha <- int[1]
     res$cred$up$bayes.alpha <- int[2]
@@ -32,7 +32,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
   }
 
   if ("lambda2" %in% estimates){
-    res$samp$bayes.l2 <- coda::as.mcmc(apply(C, MARGIN = 1, applyl2))
+    res$samp$bayes.l2 <- coda::mcmc(apply(C, MARGIN = 1, applyl2))
     int <- coda::HPDinterval(res$samp$bayes.l2, prob = interval)
     res$cred$low$bayes.l2 <- int[1]
     res$cred$up$bayes.l2 <- int[2]
@@ -44,7 +44,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
   }
 
   if ("lambda4" %in% estimates){
-    res$samp$bayes.l4 <- coda::as.mcmc(apply(C, MARGIN = 1, applyl4))
+    res$samp$bayes.l4 <- coda::mcmc(apply(C, MARGIN = 1, applyl4))
     int <- coda::HPDinterval(res$samp$bayes.l4, prob = interval)
     res$cred$low$bayes.l4 <- int[1]
     res$cred$up$bayes.l4 <- int[2]
@@ -56,7 +56,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
   }
 
   if ("lambda6" %in% estimates){
-    res$samp$bayes.l6 <- coda::as.mcmc(apply(C, MARGIN = 1, applyl6))
+    res$samp$bayes.l6 <- coda::mcmc(apply(C, MARGIN = 1, applyl6))
     int <- coda::HPDinterval(res$samp$bayes.l6, prob = interval)
     res$cred$low$bayes.l6 <- int[1]
     res$cred$up$bayes.l6 <- int[2]
@@ -68,7 +68,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
   }
 
   if ("glb" %in% estimates){
-    res$samp$bayes.glb <- coda::as.mcmc(glbOnArray(C))
+    res$samp$bayes.glb <- coda::mcmc(glbOnArray(C))
     if (sum(is.na(res$samp$bayes.glb) > 0)) {
       int <- c(NA, NA)
     } else {
@@ -86,7 +86,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
   # special case omega -----------------------------------------------------------------
   if ("omega" %in% estimates){
     om.samp <- omegaSampler(data, n.iter, n.burnin)
-    res$samp$bayes.omega <- coda::as.mcmc(om.samp$omega)
+    res$samp$bayes.omega <- coda::mcmc(om.samp$omega)
     res$loadings <- apply(om.samp$lambda, 2, median)
     res$resid.var <- apply(om.samp$psi, 2, median)
     int <- coda::HPDinterval(res$samp$bayes.omega, prob = interval)
