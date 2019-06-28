@@ -16,7 +16,6 @@
 #' @param alpha.int.analytic A logical for calculating the alpha confidence interval analytically
 #' @param freq A logical for calculating the frequentist estimates
 #' @param para.boot A logical for calculating the parametric bootstrap, the default is the non-parametric
-#' @param prior.samp A logical for calculating the prior distributions (necessary for plot functions)
 #' @param item.dropped A logical for calculating the if-item-dropped statistics
 #'
 #' @examples
@@ -39,7 +38,7 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
                interval = .95, n.iter = 2e3, n.burnin = 50, n.boot = 1000,
                omega.freq.method = "cfa",
                n.obs = NULL, alpha.int.analytic = FALSE,
-               freq = TRUE, para.boot = FALSE, prior.samp = FALSE,
+               freq = TRUE, para.boot = FALSE,
                item.dropped = FALSE) {
 
   estimates <- match.arg(estimates, several.ok = T)
@@ -86,15 +85,11 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
     sum.res$omega.freq.method <- omega.freq.method
   }
 
-  if (prior.samp) {
-    sum.res$priors <- priorSamp(ncol(data), estimates)
-  }
 
   sum.res$estimates <- estimates
   sum.res$n.iter <- n.iter
   sum.res$n.burnin <- n.burnin
   sum.res$interval <- interval
-  sum.res$n.item <- ncol(data)
   sum.res$data <- data
 
   class(sum.res) = 'strel'
