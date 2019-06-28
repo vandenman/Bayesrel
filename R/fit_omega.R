@@ -37,8 +37,8 @@ fit.omega <- function(x){
 
   lines(eigen(sigma)$values, type = "p")
   lines(eigen(sigma)$values, type = "l", lwd = 2)
-  legend(ncol(sigma)/3, ymax*(2/3), legend = c("Dataset Covariance Matrix",
-                                               "Simulated Data from Model Implied Covariance Matrix"),
+  legend(ncol(sigma)/3, ymax*(2/3),
+         legend = c("Dataset Covariance Matrix", "Simulated Data from Model Implied Covariance Matrix"),
          col=c("black", "gray"), lwd = c(2, 2), box.lwd = 0)
 
 }
