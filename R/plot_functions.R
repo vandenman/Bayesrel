@@ -20,7 +20,7 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
   if (n.item > 50) {
     prior <- density(unlist(priorSamp(n.item, estimate)), from = 0, to = 1, n = 512)
   } else {
-    prior <- priors[[n.item]][[posi]]
+    prior <- priors[[as.character(n.item)]][[posi]]
   }
   par(cex.main = 1.5, mar = c(4, 4,  1, 1), mgp = c(2, .6, 0), cex.lab = 1.5,
       font.lab = 2, cex.axis = 1.8, bty = "n", las = 1)
