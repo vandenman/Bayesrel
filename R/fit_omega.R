@@ -22,18 +22,24 @@ fit.omega <- function(x){
   psi <- x$bay$resid.var
   cimpl <- lambda %*% t(lambda) + diag(psi)
   ymax <- max(eigen(cimpl)$values, eigen(sigma)$values) * 1.3
+  ee.impl <- matrix(0, 1e3, ncol(x$data))
+  for (i in 1:1e3) {
+    dtmp <- MASS::mvrnorm(nrow(x$data), rep(0, ncol(sigma)), cimpl)
+    ee.impl[i, ] <- eigen(cov(dtmp))$values
+  }
+
   plot(eigen(sigma)$values, axes = F, ylim = c(0, ymax), ylab = "Eigenvalue - Size", xlab = "Eigenvalue - No.")
   axis(side = 1, at = seq(1:ncol(sigma)))
   axis(side = 2)
   title(main = "Posterior Predictive Check for Omega 1-Factor-Model")
 
-  for (i in 1:1e3) {
-    dtmp <- MASS::mvrnorm(nrow(x$data), rep(0, ncol(sigma)), cimpl)
-    lines(eigen(cov(dtmp))$values, type = "l", col = "gray")
+  apply(ee.impl, 1, lines, col = "gray")
 
-  }
-  lines(eigen(sigma)$values, col = "black", type = "p")
-  lines(eigen(sigma)$values, col = "black", lwd = 2)
-  legend(ncol(sigma)/3, ymax*(2/3), legend = c("Dataset Covariance Matrix", "Simulated Data from Model Implied Covariance Matrix"),
+  lines(eigen(sigma)$values, type = "p")
+  lines(eigen(sigma)$values, type = "l", lwd = 2)
+  legend(ncol(sigma)/3, ymax*(2/3), legend = c("Dataset Covariance Matrix",
+                                               "Simulated Data from Model Implied Covariance Matrix"),
          col=c("black", "gray"), lwd = c(2, 2), box.lwd = 0)
+
 }
+
