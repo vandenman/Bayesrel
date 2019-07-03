@@ -49,7 +49,7 @@ applyomega_cfa_data <- function(data){
 applyomega_pa <- function(m){
   f <- princFac(m)
   l_fa <- f$loadings
-  er_fa <- f$err.var
+  er_fa <- f$err_var
   om <- sum(l_fa)^2 / (sum(l_fa)^2 + sum(er_fa))
   if (om < 0 || om > 1 || is.na(om)) om <- NA
   return(om)
