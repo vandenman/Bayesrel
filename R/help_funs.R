@@ -59,7 +59,7 @@ lavOneFile <- function(data){
   }
   v <- paste0(v, collapse = "+")
   mod <- paste0("g=~", v) # dynamic lavaan model file
-  mod <- paste0(mod, "; g ~~ 1*g")
+  # mod <- paste0(mod, "; g ~~ 1*g") # fix the factor variance to 1, but this line does not yield good results
 
   # column names specify
   names <- 0
