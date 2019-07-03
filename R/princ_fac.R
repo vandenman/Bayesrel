@@ -3,7 +3,8 @@
 # https://www.r-bloggers.com/iterated-principal-factor-method-of-factor-analysis-with-r/
 
 princFac <- function(m, max_iter = 50){
-  r <- cov2cor(m)
+  # r <- cov2cor(m)
+  r <- m
   r_smc <- (1 - 1 / diag(solve(r)))
   diag(r) <- r_smc
   min_error <- .001
@@ -28,6 +29,7 @@ princFac <- function(m, max_iter = 50){
     diag(r) <- r_mod_diag
     i <- i + 1
     if (i > max_iter) {
+      print(error)
       error <- 0
     }
   }
@@ -40,7 +42,8 @@ princFac <- function(m, max_iter = 50){
   if(sum(lambda) < 0){
     lambda <- -lambda
   }
-  e <- 1 - lambda^2
+  L <- lambda %*% t(lambda)
+  e <- diag(m - L)
   return(list(loadings = lambda, err_var = e))
 }
 
