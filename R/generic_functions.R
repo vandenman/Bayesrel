@@ -31,7 +31,7 @@ summary.strel <- function(object, ...){
                                 as.data.frame(as.matrix(object$freq$conf$low)))
     out_matrix$int$up <- rbind(as.data.frame(as.matrix(object$bay$cred$up)),
                                as.data.frame(as.matrix(object$freq$conf$up)))
-    out_matrix$omega_freq_method <- object$omega_freq_method
+    out_matrix$omega.freq.method <- object$omega.freq.method
   } else{
     out_matrix$est <- as.data.frame(as.matrix(object$bay$est))
     out_matrix$int$low <- as.data.frame(as.matrix(object$bay$cred$low))
@@ -75,10 +75,10 @@ print.summary.strel <- function(x, ...){
   if (length(grep("freq", x$est)) > 0){
     if ("omega" %in% x$estimates){
       cat("frequentist omega method is:")
-      print.default(x$omega_freq_method)
+      print.default(x$omega.freq.method)
       cat("omega confidence interval is estimated with:")
-      if (x$omega_freq_method == "pfa") {print.default("bootstrap")}
-      if (x$omega_freq_method == "cfa") {print.default("maximum likelihood z-value")}
+      if (x$omega.freq.method == "pfa") {print.default("bootstrap")}
+      if (x$omega.freq.method == "cfa") {print.default("maximum likelihood z-value")}
     }
     # if (!is.null(x$fit.indices)){
     #   options(scipen = 999)

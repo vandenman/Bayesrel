@@ -5,13 +5,13 @@ set.seed(1234)
 
 test_that("Reliability estimates are correct", {
 
-  data(cavalini, package = "Bayesrel")
-  ee <- Bayesrel::strel(asrm, estimates = c("lambda2", "omega"), n.iter=500, n.boot=200)
+  data(asrm, package = "Bayesrel")
+  ee <- Bayesrel::strel(asrm, estimates = c("lambda2", "omega"), n.iter=500, n.boot = 200)
 
   expect_equal(ee$bay$est$bayes_l2, 0.7962999, tolerance = 1e-2)
   expect_equal(ee$freq$est$freq_l2, 0.7960336, tolerance = 1e-2)
   expect_equal(ee$bay$est$bayes_omega, 0.7915491, tolerance = 1e-2)
-  expect_equal(ee$freq$est$freq_omega, 0.7928258, tolerance = 1e-2)
+  expect_equal(ee$freq$est$freq_omega, 0.8136248, tolerance = 1e-2)
 
   expect_equal(ee$bay$cred$low$bayes_l2, 0.7112308, tolerance = 1e-2)
   expect_equal(ee$bay$cred$up$bayes_omega, 0.8356543, tolerance = 1e-2)

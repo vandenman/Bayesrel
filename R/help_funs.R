@@ -59,6 +59,7 @@ lavOneFile <- function(data){
   }
   v <- paste0(v, collapse = "+")
   mod <- paste0("g=~", v) # dynamic lavaan model file
+  mod <- paste0(mod, "; g ~~ 1*g")
 
   # column names specify
   names <- 0
