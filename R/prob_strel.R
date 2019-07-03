@@ -9,20 +9,20 @@
 #' @param low.bound A number for the threshold to be tested against
 #'
 #' @examples
-#' pstrel(strel(asrm, "lambda2"), "lambda2", .80)
+#' p_strel(strel(asrm, "lambda2"), "lambda2", .80)
 #' @export
 
 
-pstrel <- function(x, estimate, low.bound){
+p_strel <- function(x, estimate, low.bound){
   posi <- grep(estimate, x$estimates, ignore.case = T)
   samp <- unlist(x$bay$samp[posi])
   obj <- ecdf(samp)
-  est.prob <- 1 - obj(low.bound)
-  return(est.prob)
+  est_prob <- 1 - obj(low.bound)
+  return(est_prob)
 }
 
 # probic <- function(x, low.bound){
 #   obj <- ecdf(x)
-#   est.prob <- 1 - obj(low.bound)
-#   return(est.prob)
+#   est_prob <- 1 - obj(low.bound)
+#   return(est_prob)
 # }

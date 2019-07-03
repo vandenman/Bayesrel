@@ -8,24 +8,24 @@
 #'
 #' @param x A strel output object (list)
 #'
-#' @examples fit.omega(strel(asrm, "omega"))
+  #' @examples fit_omega(strel(asrm, "omega"))
 #'
 #' @export
-fit.omega <- function(x){
+fit_omega <- function(x){
   if (!("omega" %in% x$estimates)) {return("please run the analysis with omega as an estimate")}
 
-  if (!is.null(x$freq$fit.omega)){
-    print(x$freq$fit.omega)}
+  if (!is.null(x$freq$fit_omega)){
+    print(x$freq$fit_omega)}
 
   sigma <- cov(x$data)
   lambda <- x$bay$loadings
-  psi <- x$bay$resid.var
+  psi <- x$bay$resid_var
   cimpl <- lambda %*% t(lambda) + diag(psi)
   ymax <- max(eigen(cimpl)$values, eigen(sigma)$values) * 1.3
-  ee.impl <- matrix(0, 1e3, ncol(x$data))
+  ee_impl <- matrix(0, 1e3, ncol(x$data))
   for (i in 1:1e3) {
     dtmp <- MASS::mvrnorm(nrow(x$data), rep(0, ncol(sigma)), cimpl)
-    ee.impl[i, ] <- eigen(cov(dtmp))$values
+    ee_impl[i, ] <- eigen(cov(dtmp))$values
   }
 
   plot(eigen(sigma)$values, axes = F, ylim = c(0, ymax), ylab = "Eigenvalue - Size", xlab = "Eigenvalue - No.")
@@ -33,7 +33,7 @@ fit.omega <- function(x){
   axis(side = 2)
   title(main = "Posterior Predictive Check for Omega 1-Factor-Model")
 
-  apply(ee.impl, 1, lines, col = "gray")
+  apply(ee_impl, 1, lines, col = "gray")
 
   lines(eigen(sigma)$values, type = "p")
   lines(eigen(sigma)$values, type = "l", lwd = 2)

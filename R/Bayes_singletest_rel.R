@@ -47,8 +47,8 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
   estimates <- estimates[mat]
   estimates <- estimates[!is.na(estimates)]
   p <- NULL
-  sum.res <- list()
-  sum.res$call <- match.call()
+  sum_res <- list()
+  sum_res$call <- match.call()
 
   if (sum(is.na(x)) > 0) {
     return("missing values in data detected, please remove and run again")
@@ -71,27 +71,27 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
     return("enter a valid omega method, either 'cfa' or 'pfa'")}
 
 
-  sum.res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, item.dropped)
+  sum_res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, item.dropped)
 
 
   if(freq){
     if (para.boot){
-      sum.res$freq <- freqFun_para(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
+      sum_res$freq <- freqFun_para(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
                                    alpha.int.analytic)
     } else{
-      sum.res$freq <- freqFun_nonpara(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
+      sum_res$freq <- freqFun_nonpara(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
                                     alpha.int.analytic)
     }
-    sum.res$omega.freq.method <- omega.freq.method
+    sum_res$omega.freq.method <- omega.freq.method
   }
 
 
-  sum.res$estimates <- estimates
-  sum.res$n.iter <- n.iter
-  sum.res$n.burnin <- n.burnin
-  sum.res$interval <- interval
-  sum.res$data <- data
+  sum_res$estimates <- estimates
+  sum_res$n.iter <- n.iter
+  sum_res$n.burnin <- n.burnin
+  sum_res$interval <- interval
+  sum_res$data <- data
 
-  class(sum.res) = 'strel'
-  return(sum.res)
+  class(sum_res) = 'strel'
+  return(sum_res)
 }

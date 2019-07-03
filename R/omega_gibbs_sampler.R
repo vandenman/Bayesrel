@@ -53,10 +53,10 @@ omegaSampler <- function(data, n.iter = 2e3, n.burnin = 50){
   La <- La[(n.burnin + 1):n.iter, ]
   Ps <- Ps[(n.burnin + 1):n.iter, ]
 
-  gibbs.o.obj <- numeric(nrow(La))
+  gibbs_om_obj <- numeric(nrow(La))
   for (i in 1:(nrow(La))){
-    gibbs.o.obj[i] <- sum(La[i,])^2 / (sum(La[i,])^2 + sum(Ps[i,]))
+    gibbs_om_obj[i] <- sum(La[i,])^2 / (sum(La[i,])^2 + sum(Ps[i,]))
   }
-  return(list(omega = gibbs.o.obj, lambda = La, psi = Ps))
+  return(list(omega = gibbs_om_obj, lambda = La, psi = Ps))
 }
 

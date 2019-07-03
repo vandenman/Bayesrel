@@ -8,19 +8,19 @@
 #' @param criteria A logical indicating if cutoff criteria should be drawn
 #' @param cuts A two element vector indicating what the cutoffs should be
 #'
-#' @examples plotstrel(strel(asrm, "lambda2"), "lambda2")
+#' @examples plot_strel(strel(asrm, "lambda2"), "lambda2")
 #'
 #' @export
-plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80)){
+plot_strel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80)){
 
   posi <- grep(estimate, x$estimates, ignore.case = T)
   samp <- coda::as.mcmc(unlist(x$bay$samp[posi]))
-  n.item <- ncol(x$data)
+  n_item <- ncol(x$data)
 
-  if (n.item > 50) {
-    prior <- density(unlist(priorSamp(n.item, estimate)), from = 0, to = 1, n = 512)
+  if (n_item > 50) {
+    prior <- density(unlist(priorSamp(n_item, estimate)), from = 0, to = 1, n = 512)
   } else {
-    prior <- priors[[as.character(n.item)]][[posi]]
+    prior <- priors[[as.character(n_item)]][[posi]]
   }
   par(cex.main = 1.5, mar = c(4, 4,  1, 1), mgp = c(2, .6, 0), cex.lab = 1.5,
       font.lab = 2, cex.axis = 1.8, bty = "n", las = 1)
@@ -35,23 +35,23 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
     colos <- c("gray100", "gray70", "gray10")
   }
 
-  dens.prior <- prior
+  dens_prior <- prior
   options(warn = -1)
-  xx0 <- min(which(dens.prior$x <= cuts[1]))
-  xx1 <- max(which(dens.prior$x <= cuts[1]))
-  xx2 <- max(which(dens.prior$x <= cuts[2]))
-  xx3 <- max(which(dens.prior$x <= 1))
+  xx0 <- min(which(dens_prior$x <= cuts[1]))
+  xx1 <- max(which(dens_prior$x <= cuts[1]))
+  xx2 <- max(which(dens_prior$x <= cuts[2]))
+  xx3 <- max(which(dens_prior$x <= 1))
 
   if (!is.integer(xx0)) xx0 <- 1
   if (!is.integer(xx1)) xx1 <- 1
   if (!is.integer(xx2)) xx2 <- 1
   if (!is.integer(xx3)) xx3 <- 1
 
-  dens.post <- density(samp, adjust = 1, n = 2^10)
-  x0 <- min(which(dens.post$x <= cuts[1]))
-  x1 <- max(which(dens.post$x <= cuts[1]))
-  x2 <- max(which(dens.post$x <= cuts[2]))
-  x3 <- max(which(dens.post$x <= 1))
+  dens_post <- density(samp, adjust = 1, n = 2^10)
+  x0 <- min(which(dens_post$x <= cuts[1]))
+  x1 <- max(which(dens_post$x <= cuts[1]))
+  x2 <- max(which(dens_post$x <= cuts[2]))
+  x3 <- max(which(dens_post$x <= 1))
 
   if (!is.integer(x0)) x0 <- 1
   if (!is.integer(x1)) x1 <- 1
@@ -62,12 +62,12 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
   z2 <- sum(samp <= cuts[2])
   z3 <- sum(samp <= 1)
 
-  pie.post <- c(z1, z2-z1, z3-z2)
-  pie.post[pie.post == 0] <- 1e-20
-  pie.post.labels <- as.character(round(pie.post/(length(samp)*1e-2), 1))
+  pie_post <- c(z1, z2-z1, z3-z2)
+  pie_post[pie_post == 0] <- 1e-20
+  pie_post_labels <- as.character(round(pie_post/(length(samp)*1e-2), 1))
 
   for (i in 1:3){
-    pie.post.labels[i] <- paste(pie.post.labels[i], "%")
+    pie_post_labels[i] <- paste(pie_post_labels[i], "%")
   }
 
   # ------------------------------- plotting --------------------------------------
@@ -77,10 +77,10 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
     plot(density(samp, adjust = 1), type = "l", axes = F, xlab = "Reliability", ylab = NA,
          xlim = c(0, 1), ylim = c(-.1,  peak * 1.33),
          lwd = 3, main = "")
-    plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
-    plotShadePost(dens.post, xx = c(x0, x1, x2, x3), cols = colos, criteria = criteria, blackwhite = blackwhite)
+    plotShadePrior(dens_prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
+    plotShadePost(dens_post, xx = c(x0, x1, x2, x3), cols = colos, criteria = criteria, blackwhite = blackwhite)
 
-    lines(dens.prior, lty = 3, lwd = 3)
+    lines(dens_prior, lty = 3, lwd = 3)
     axis(side = 1, at = seq(0, 1, by = .2), labels = seq(0, 1, by = .2), cex.axis = 1.2, lwd = 1.5)
     axis(side = 2, at = seq(0, peak, by = peak/5), labels = NA, cex.axis = 1.2, lwd = 1.5)
     title(ylab = "Density", mgp = c(1, 1, 0), adj = 0.31)
@@ -100,19 +100,19 @@ plotstrel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c
     text("good", x = (cuts[2] + 1)/2, y = peak*-.03, adj = .5, cex = 1.2)
     legend(x = 0, y = peak*1.33,  fill=colos, horiz=F, cex=1.2, bty = "n",
            c("insufficient:", "sufficient:", "good:"))
-    f.post <- plotrix::floating.pie(xpos = .42, ypos = peak*1.2, x = pie.post, radius = rad+.02,
+    f_post <- plotrix::floating.pie(xpos = .42, ypos = peak*1.2, x = pie_post, radius = rad+.02,
                                     col = colos, startpos = 0)
     l2 <- legend(x = .275, y = peak*1.33, legend=c("", "", ""), cex = 1.2, bty ="n", xjust = 0, yjust = 1)
-    text(l2$rect$left + l2$rect$w, l2$text$y*.993, c(pie.post.labels), pos = 2, cex = 1.2)
+    text(l2$rect$left + l2$rect$w, l2$text$y*.993, c(pie_post_labels), pos = 2, cex = 1.2)
 
   } else {
     plot(density(samp, adjust = 1), type = "l", axes = F, xlab = "Reliability", ylab = NA,
          xlim = c(0, 1), ylim = c(0,  peak * 1.25),
          lwd = 3, main = "")
-    plotShadePrior(dens.prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
-    plotShadePost(dens.post, xx = c(x0, x1, x2, x3), cols = colos, criteria = criteria, blackwhite = blackwhite)
+    plotShadePrior(dens_prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
+    plotShadePost(dens_post, xx = c(x0, x1, x2, x3), cols = colos, criteria = criteria, blackwhite = blackwhite)
 
-    lines(dens.prior, lty = 3, lwd = 3)
+    lines(dens_prior, lty = 3, lwd = 3)
 
     axis(side = 1, at = seq(0, 1, by = .2), labels = seq(0, 1, by = .2), cex.axis = 1.2, lwd = 1.5)
     axis(side = 2, at = seq(0, peak, by = peak/5), labels = NA, cex.axis = 1.2, lwd = 1.5)
@@ -176,14 +176,14 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 #' @param estimate A character string indicating what estimate to plot from the strel output object
 #' @param ordering A logical indicating if the densities in the plot should be ordered
 #'
-#' @examples plotstrel.id(strel(asrm, "lambda2", item.dropped = TRUE), "lambda2")
+#' @examples plot_strel_id(strel(asrm, "lambda2", item.dropped = TRUE), "lambda2")
 #'
 #' @export
-plotstrel.id<- function(x, estimate, ordering = FALSE){
+plot_strel_id <- function(x, estimate, ordering = FALSE){
 
   if (is.null(x$bay$ifitem$samp)) {return("please run the analysis again with item.dropped = TRUE")}
 
-  n.row <- length(unlist(x$bay$ifitem$est[1]))
+  n_row <- length(unlist(x$bay$ifitem$est[1]))
   posi <- grep(estimate, x$estimates, ignore.case = T)
 
 # needs to look like this to pass the check for CRAN
@@ -195,15 +195,15 @@ plotstrel.id<- function(x, estimate, ordering = FALSE){
   dat$var <- "original"
 
 
-  dat.del <- t(as.matrix(as.data.frame(x$bay$ifitem$samp[posi])))
+  dat_del <- t(as.matrix(as.data.frame(x$bay$ifitem$samp[posi])))
 
   names <- NULL
-  for(i in 1:(n.row)){
+  for(i in 1:(n_row)){
     names[i] <- paste0("x", i)
   }
 
-  for (i in 1:n.row){
-    tmp <- as.data.frame(dat.del[i, ])
+  for (i in 1:n_row){
+    tmp <- as.data.frame(dat_del[i, ])
     colnames(tmp) <- "value"
     tmp$var <- names[i]
     tmp$colos <- "2"
@@ -213,7 +213,7 @@ plotstrel.id<- function(x, estimate, ordering = FALSE){
 
   if (ordering){
     est <- as.data.frame(unlist(x$bay$ifitem$est[posi]))
-    est[n.row + 1, ] <- 1
+    est[n_row + 1, ] <- 1
     colnames(est) <- "value"
     est$name <- c(names, "original")
     est <- est[order(est$value, decreasing = T), ]

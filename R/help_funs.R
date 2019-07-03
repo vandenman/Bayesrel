@@ -1,5 +1,5 @@
 # forces a quadratic matrix to be symmetrical
-make.symmetric <- function(a, lower.tri=TRUE){
+make_symmetric <- function(a, lower.tri=TRUE){
   if (lower.tri){
     ind <- upper.tri(a)
     a[ind] <- t(a)[ind]
