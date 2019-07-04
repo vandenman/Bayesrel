@@ -3,14 +3,14 @@
 # this function calls on other functions in order to return the frequentist estimates
 # and non-parametric bootstrapped confidence intervals, now calculated with SEs and z-values
 
-freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq_method,
+freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method,
                             item.dropped, alpha.int.analytic){
   p <- ncol(data)
   n <- nrow(data)
   res <- list()
   res$covsamp <- NULL
   if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates ||
-      "glb" %in% estimates || omega.freq_method == "pfa"){
+      "glb" %in% estimates || omega.freq.method == "pfa"){
     boot_data <- array(0, c(boot.n, n, p))
     boot_cov <- array(0, c(boot.n, p, p))
     for (i in 1:boot.n){
@@ -115,7 +115,7 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq_method
 
   #omega --------------------------------------------------------------------------
   if ("omega" %in% estimates){
-    if (omega.freq_method == "cfa"){
+    if (omega.freq.method == "cfa"){
       out <- omegaFreqData(data)
       res$est$freq_omega <- out$omega
       res$loadings <- out$loadings
@@ -127,7 +127,7 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq_method
       if (item.dropped){
         res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data)
       }
-    } else if (omega.freq_method == "pfa"){
+    } else if (omega.freq.method == "pfa"){
       res$est$freq_omega <- applyomega_pa(cov(data))
       omega_obj <- apply(boot_cov, 1, applyomega_pa)
       if (length(unique(round(omega_obj, 4))) == 1){
