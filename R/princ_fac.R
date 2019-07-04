@@ -29,7 +29,6 @@ princFac <- function(m, max_iter = 50){
     diag(r) <- r_mod_diag
     i <- i + 1
     if (i > max_iter) {
-      print(error)
       error <- 0
     }
   }
