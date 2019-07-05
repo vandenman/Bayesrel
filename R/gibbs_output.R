@@ -89,6 +89,8 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
     res$samp$bayes_omega <- coda::mcmc(om_samp$omega)
     res$loadings <- apply(om_samp$lambda, 2, median)
     res$resid_var <- apply(om_samp$psi, 2, median)
+    # res$loadings <- coda::mcmc(om_samp$lambda)
+    # res$resid_var <- coda::mcmc(om_samp$psi)
     int <- coda::HPDinterval(res$samp$bayes_omega, prob = interval)
     res$cred$low$bayes_omega <- int[1]
     res$cred$up$bayes_omega<- int[2]
