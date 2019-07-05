@@ -42,7 +42,7 @@ fit_omega <- function(x){
   title(main = "Posterior Predictive Check for Omega 1-Factor-Model")
 
   legend(ncol(sigma)/3*1.1, ymax*(2/3),
-         legend = c("Dataset Covariance Matrix", "Simulated Data from Model Implied Covariance Matrix"),
+         legend = c("Dataset Covariance Matrix", "Model Implied Covariance Matrix"),
          col=c("black", "gray"), lwd = c(2, 2), box.lwd = 0, lty = c(1, 2), cex = .8)
 
 }
