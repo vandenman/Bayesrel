@@ -8,9 +8,10 @@
 #'
 #' @param x A strel output object (list)
 #'
-  #' @examples fit_omega(strel(asrm, "omega"))
+#' @examples fit_omega(strel(asrm, "omega"))
 #'
 #' @export
+#'
 fit_omega <- function(x){
   if (!("omega" %in% x$estimates)) {return("please run the analysis with omega as an estimate")}
 
@@ -33,7 +34,7 @@ fit_omega <- function(x){
   plot(eigen(sigma)$values, axes = F, ylim = c(0, ymax), ylab = "Eigenvalue - Size", xlab = "Eigenvalue - No.")
   lines(qq_ee_low, col = "gray50", lty = 2)
   lines(qq_ee_up, col = "gray50", lty = 2)
-  polygon(x = c(1:ncol(sigma), rev(1:ncol(sigma))), y = c(qq_ee_up, rev(qq_ee_low)),
+  graphics::polygon(x = c(1:ncol(sigma), rev(1:ncol(sigma))), y = c(qq_ee_up, rev(qq_ee_low)),
           col = adjustcolor("gray", alpha.f = .7), border = NA)
   lines(eigen(sigma)$values, type = "l", lwd = 2)
   lines(eigen(sigma)$values, type = "p")
