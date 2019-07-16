@@ -5,7 +5,7 @@
 princFac <- function(m, max_iter = 50){
   # r <- cov2cor(m)
   r <- m
-  r_smc <- (1 - 1 / diag(solve(cov2cor(r))))
+  r_smc <- (1 - 1 / diag(try(solve(cov2cor(r)))))
   diag(r) <- r_smc
   min_error <- .001
   com_iter <- c()
