@@ -1,5 +1,5 @@
 # Bayesrel
-R-Package "Bayesrel" provides both Bayesian and frequentist internal consistency estimates
+R-Package "Bayesrel" provides both Bayesian and frequentist single-test reliability estimates
 
 Functionality for the most common single test reliability estimates is provided: 
     Coefficient Alpha, Guttman's lambda-2/-4/-6, greatest lower bound and Mcdonald's Omega. 
