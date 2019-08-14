@@ -1,7 +1,5 @@
 
-# adjusted code from psych Package to make it execute faster:
-# Revelle, W. (2018) psych: Procedures for Personality and Psychological Research,
-# Northwestern University, Evanston, Illinois, USA, https://CRAN.R-project.org/package=psych Version = 1.8.4.
+# adjusted code from Rcsdp package:
 glbOnArray <- function(Cov) {
 
   d <- dim(Cov)

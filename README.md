@@ -15,6 +15,6 @@ Functionality for the most common single test reliability estimates is provided:
     There is also the functionality to plot the posterior against the prior for a chosen estimator with cutoffs. 
     In addition to that a plot for the multiple posteriors for the if-item-dropped cases can be done.
     The PFA method for omega is from Aaron Schlegel (url:https://www.r-bloggers.com/iterated-principal-factor-method-of-factor-analysis-with-r/). 
-    The glb.algebraic method is an altered function from Moltner (https://www.rdocumentation.org/packages/psych/versions/1.8.10/topics/glb.algebraic)
+    The glb method is adjusted code from the Rcsdp package (https://CRAN.R-project.org/package=Rcsdp) 
     The Lambda4 method is from Tom Benton (doi:10.1007/978-3-319-07503-7_19)
    
