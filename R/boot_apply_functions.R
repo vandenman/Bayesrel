@@ -56,9 +56,6 @@ applyomega_pa <- function(m){
 }
 
 
-omegaBasic <- function(l, e){
-  o <- sum(l)^2 / (sum(l)^2 + sum(e))
-  return(o)
-}
+
 
 

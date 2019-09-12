@@ -69,3 +69,10 @@ lavOneFile <- function(data){
   return(list(names = names, model = mod))
 }
 
+
+# calculate omega from loadings and residual (error variances)
+
+omegaBasic <- function(l, e){
+  o <- sum(l)^2 / (sum(l)^2 + sum(e))
+  return(o)
+}
