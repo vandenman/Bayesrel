@@ -5,22 +5,32 @@ omegaFreqData <- function(data){
   p <- ncol(data)
   file <- lavOneFile(data)
   colnames(data) <- file$names
-  mod <- file$model
+
+  lam_names <- paste("l", 1:p, sep = "")
+  err_names <- paste("e", 1:p, sep = "")
+  model <- paste0("f1 =~ ")
+  loadings <- paste(paste(lam_names, "*", file$names, sep = ""),
+                       collapse = " + ")
+  factors <- "f1 ~~ 1*f1\n"
+  errors <- paste(paste(file$names, " ~~ ", err_names, "*",
+                           file$names, sep = ""), collapse = "\n")
+  sum_loads <- paste("loading :=", paste(lam_names, collapse = " + "),
+                      "\n")
+  sum_errs <- paste("error :=", paste(err_names, collapse = " + "),
+                    "\n")
+  omega <- "omega := (loading^2) / ((loading^2) + error) \n"
+  mod <- paste(model, loadings, "\n", factors, errors,
+                 "\n", sum_loads, sum_errs, omega)
+
   fit <- try(lavaan::cfa(mod, data, std.lv = T), silent = TRUE)
   params <- try(lavaan::parameterestimates(fit), silent = TRUE)
   if ("try-error" %in% class(params)) {
     load <- resid <- omega <- om_low <- om_up <- fit_tmp <- indic <- NA
   } else {
-    load <- params$est[1:p]
-    resid <- params$est[(p+2) : (p*2+1)]
-    omega <- omegaBasic(load, resid)
+    omega <- params$est[params$lhs=="omega"]
+    om_low <- params$ci.lower[params$lhs=="omega"]
+    om_up <- params$ci.upper[params$lhs=="omega"]
 
-    load_low <- params$ci.lower[1:p]
-    resid_low <- params$ci.lower[(p+2) : (p*2+1)]
-    om_low <- omegaBasic(load_low, resid_low)
-    load_up <- params$ci.upper[1:p]
-    resid_up <- params$ci.upper[(p+2) : (p*2+1)]
-    om_up <- omegaBasic(load_up, resid_up)
 
     fit_tmp <- lavaan::fitMeasures(fit)
     indic <- c(fit_tmp["chisq"], fit_tmp["df"], fit_tmp["pvalue"],
@@ -28,7 +38,6 @@ omegaFreqData <- function(data){
                fit_tmp["srmr"])
   }
 
-  return(list(omega = omega, loadings = load, errors = resid,
-              omega_lower = om_low, omega_upper = om_up, indices = indic))
+  return(list(omega = omega, omega_lower = om_low, omega_upper = om_up, indices = indic))
 }
 
