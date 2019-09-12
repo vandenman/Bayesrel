@@ -8,9 +8,9 @@ omegaSampler <- function(data, n.iter = 2e3, n.burnin = 50){
   p <- ncol(data)
   H0 <- 2.5 # prior multiplier matrix for lambdas variance
 
-  l0k <- rep(0, p) # prior lambdas
+  l0k <- rep(1, p) # prior lambdas
   a0k <- 1 # prior gamma function for psis
-  b0k <- .05 # prior gamma for psi
+  b0k <- .5 # prior gamma for psi
 
   # draw starting values for sampling from prior distributions:
   invpsi <- rgamma(p, a0k, b0k)
@@ -22,9 +22,11 @@ omegaSampler <- function(data, n.iter = 2e3, n.burnin = 50){
   invPhi <- 1/Phi
   wi <- rnorm(n, 0, sqrt(Phi))
   wi <- wi/sd(wi) # fix variance to 1
-  # prepare matrices for saving lambda and psi:
+
+  # prepare matrices for saving lambda and psi and omega:
   La <- matrix(0, n.iter, p)
   Ps <- matrix(0, n.iter, p)
+  oms <- numeric(n.iter)
 
   for (i in 1:n.iter){
     # hyperparameters for posteriors
@@ -33,6 +35,7 @@ omegaSampler <- function(data, n.iter = 2e3, n.burnin = 50){
     bekk <- b0k + 0.5 * (t(data) %*% data - ak %*% t(ak)* (1/Ak)
                          + l0k %*% t(l0k) * (1/H0))
     bek <- diag(bekk)
+
     #  sample psi and lambda
     invpsi <- rgamma(p, n/2 + a0k, bek)
     invPsi <- diag(invpsi)
@@ -44,19 +47,23 @@ omegaSampler <- function(data, n.iter = 2e3, n.burnin = 50){
     V <- solve(invPhi + t(lambda) %*% invPsi %*% lambda)
     wi <- rnorm(n, m, sqrt(V))
     wi <- wi/sd(wi)
-    # we dont sample phi
+
+    # sample phi:
+    Phi <- LaplacesDemon::rinvwishart(t(wi) %*% (wi), n+p)
+    invPhi <- 1/Phi
+
 
     La[i, ] <- lambda
     Ps[i, ] <- psi
+    oms[i] <- omegaBasic(La[i, ], Ps[i, ])
+
   }
+
   # n.burnin
   La <- La[(n.burnin + 1):n.iter, ]
   Ps <- Ps[(n.burnin + 1):n.iter, ]
+  oms <- oms[(n.burnin + 1):n.iter]
 
-  gibbs_om_obj <- numeric(nrow(La))
-  for (i in 1:(nrow(La))){
-    gibbs_om_obj[i] <- sum(La[i,])^2 / (sum(La[i,])^2 + sum(Ps[i,]))
-  }
-  return(list(omega = gibbs_om_obj, lambda = La, psi = Ps))
+
+  return(list(omega = oms, lambda = coda::as.mcmc(La), psi = coda::as.mcmc(Ps)))
 }
-
