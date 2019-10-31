@@ -87,14 +87,14 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
   if ("omega" %in% estimates){
     om_samp <- omegaSampler(data, n.iter, n.burnin)
     res$samp$bayes_omega <- coda::mcmc(om_samp$omega)
-    res$loadings <- apply(om_samp$lambda, 2, median)
-    res$resid_var <- apply(om_samp$psi, 2, median)
+    res$loadings <- apply(om_samp$lambda, 2, mean)
+    res$resid_var <- apply(om_samp$psi, 2, mean)
     # res$loadings <- coda::mcmc(om_samp$lambda)
     # res$resid_var <- coda::mcmc(om_samp$psi)
     int <- coda::HPDinterval(res$samp$bayes_omega, prob = interval)
     res$cred$low$bayes_omega <- int[1]
     res$cred$up$bayes_omega<- int[2]
-    res$est$bayes_omega <- median(res$samp$bayes_omega)
+    res$est$bayes_omega <- mean(res$samp$bayes_omega)
 
     if (item.dropped){
       om_samp_ifitem <- matrix(0, n.iter - n.burnin, p)
@@ -103,7 +103,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
         om_samp_ifitem[, i] <- omegaSampler(tmp, n.iter, n.burnin)$omega
       }
       res$ifitem$samp$omega <- coda::mcmc(om_samp_ifitem)
-      res$ifitem$est$omega <- apply(om_samp_ifitem, 2, median)
+      res$ifitem$est$omega <- apply(om_samp_ifitem, 2, mean)
     }
   }
 
