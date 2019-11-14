@@ -122,7 +122,7 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
       res$resid_var <- out$errors
       res$conf$low$freq_omega <- out$omega_low
       res$conf$up$freq_omega <- out$omega_up
-      res$fit_omega <- out$indices
+      res$omega_fit <- out$indices
 
       if (item.dropped){
         res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data)

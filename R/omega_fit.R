@@ -8,15 +8,15 @@
 #'
 #' @param x A strel output object (list)
 #'
-#' @examples fit_omega(strel(asrm, "omega"))
+#' @examples omega_fit(strel(asrm, "omega"))
 #'
 #' @export
 #'
 omega_fit <- function(x){
   if (!("omega" %in% x$estimates)) {return("please run the analysis with omega as an estimate")}
 
-  if (!is.null(x$freq$fit_omega)){
-    print(x$freq$fit_omega)}
+  if (!is.null(x$freq$omega_fit)){
+    print(x$freq$omega_fit)}
 
   sigma <- cov(x$data)
   lambda <- x$bay$loadings
