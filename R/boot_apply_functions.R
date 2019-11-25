@@ -30,10 +30,11 @@ applyl6 <- function(M){
   return(l6)
 }
 
-applyglb <- function(M){
-  gl <- glbOnArray(M)
-  return(gl)
-}
+# applyglb <- function(M){
+#   gl <- glbOnArray(M)
+#   return(gl)
+# }
+
 # applyglb <- function(M){
 #   gl <- glb.algebraic2(M)
 #   return(gl)

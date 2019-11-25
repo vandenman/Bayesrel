@@ -5,7 +5,7 @@
 \title{calculate single test reliability estimates}
 \usage{
 strel(x, estimates = c("alpha", "lambda2", "glb", "omega"),
-  interval = 0.95, n.iter = 2000, n.burnin = 50, n.boot = 1000,
+  interval = 0.95, n.iter = 1000, n.burnin = 50, n.boot = 1000,
   omega.freq.method = "cfa", n.obs = NULL,
   alpha.int.analytic = FALSE, freq = TRUE, para.boot = FALSE,
   item.dropped = FALSE)

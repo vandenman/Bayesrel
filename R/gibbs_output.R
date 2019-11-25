@@ -78,7 +78,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped){
     res$cred$up$bayes_glb <- int[2]
     res$est$bayes_glb<- median(res$samp$bayes_glb)
     if (item.dropped){
-      res$ifitem$samp$glb <- coda::mcmc(apply(Ctmp, c(2, 1), applyglb))
+      res$ifitem$samp$glb <- coda::mcmc(glbOnArray(Ctmp))
       res$ifitem$est$glb <- apply(res$ifitem$samp$glb, 2, median)
     }
   }
