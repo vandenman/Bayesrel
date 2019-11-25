@@ -47,7 +47,7 @@ applyomega_cfa_data <- function(data){
 }
 
 
-applyomega_pa <- function(m){
+applyomega_pfa <- function(m){
   f <- princFac(m)
   l_fa <- f$loadings
   er_fa <- f$err_var

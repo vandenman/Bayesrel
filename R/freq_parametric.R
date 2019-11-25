@@ -132,8 +132,8 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
         res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data)
       }
     } else if (omega.freq.method == "pfa"){
-      res$est$freq_omega <- applyomega_pa(cov(data))
-      omega_obj <- apply(boot_cov, 1, applyomega_pa)
+      res$est$freq_omega <- applyomega_pfa(cov(data))
+      omega_obj <- apply(boot_cov, 1, applyomega_pfa)
       if (length(unique(round(omega_obj, 4))) == 1){
         res$conf$low$freq_omega <- NA
         res$conf$up$freq_omega <- NA
@@ -144,7 +144,7 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
       }
       res$boot$omega <- omega_obj
       if (item.dropped){
-        res$ifitem$omega <- apply(Ctmp, 1, applyomega_pa)
+        res$ifitem$omega <- apply(Ctmp, 1, applyomega_pfa)
       }
     }
   }
