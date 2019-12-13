@@ -2,21 +2,21 @@
 #'@export
 print.strel <- function(x, ...){
   if (!is.null(x$freq)){
-    est <- cbind(as.data.frame(as.matrix(x$bay$est)),
-                 as.data.frame(as.matrix(x$freq$est)))
-    colnames(est) <- c("bayes", "frequentist")
+    out <- cbind(as.data.frame(as.matrix(x$bay$cred$low)), as.data.frame(as.matrix(x$bay$cred$up)),
+                 as.data.frame(as.matrix(x$freq$conf$low)), as.data.frame(as.matrix(x$freq$conf$up)))
+    colnames(out) <- c("Bay.lower", "Bay.upper","freq.lower", "freq.upper")
   }
   else{
-    est <- as.data.frame(as.matrix(x$bay$est))
-    colnames(est) <- "bayes"
+    out <- cbind(as.data.frame(as.matrix(x$bay$cred$low)), as.data.frame(as.matrix(x$bay$cred$low)))
+    colnames(out) <- c("Bay.lower", "Bay.upper")
   }
-  row.names(est) <- x$estimates
+  row.names(out) <- x$estimates
   cat("Call: \n")
   print.default(x$call)
   cat("\n")
-  cat("Point Estimates of Internal Consistency Measures: \n")
+  cat(x$interval,"% Interval Estimates of Internal Consistency Measures: \n")
   cat("\n")
-  print(est)
+  print(out)
 
 }
 
