@@ -37,10 +37,10 @@ priorSamp <- function(p, estimates, n.samp = 2e3){
     # unlink("param.csdp")
   }
   if ("omega" %in% estimates){
-    H0 <- 2.5 # prior multiplier matrix for lambdas variance
+    H0 <- 1 # prior multiplier matrix for lambdas variance
     l0k <- rep(0, p) # prior lambdas
     a0k <- 1 # prior gamma function for psis
-    b0k <- .05 # prior gamma for psi
+    b0k <- 2 # prior gamma for psi
     prioromega <- numeric(n.samp)
     for (i in 1:n.samp){
       invpsi <- rgamma(p, a0k, b0k)
