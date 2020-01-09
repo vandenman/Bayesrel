@@ -4,11 +4,21 @@
 \alias{strel}
 \title{calculate single test reliability estimates}
 \usage{
-strel(x, estimates = c("alpha", "lambda2", "glb", "omega"),
-  interval = 0.95, n.iter = 1000, n.burnin = 50, n.boot = 1000,
-  omega.freq.method = "cfa", n.obs = NULL,
-  alpha.int.analytic = FALSE, freq = TRUE, para.boot = FALSE,
-  item.dropped = FALSE)
+strel(
+  x,
+  estimates = c("alpha", "lambda2", "glb", "omega"),
+  interval = 0.95,
+  n.iter = 1000,
+  n.burnin = 50,
+  n.boot = 1000,
+  omega.freq.method = "cfa",
+  n.obs = NULL,
+  alpha.int.analytic = FALSE,
+  freq = TRUE,
+  Bayes = TRUE,
+  para.boot = FALSE,
+  item.dropped = FALSE
+)
 }
 \arguments{
 \item{x}{A dataset or covariance matrix}
@@ -30,6 +40,8 @@ strel(x, estimates = c("alpha", "lambda2", "glb", "omega"),
 \item{alpha.int.analytic}{A logical for calculating the alpha confidence interval analytically}
 
 \item{freq}{A logical for calculating the frequentist estimates}
+
+\item{Bayes}{A logical for calculating the Bayesian estimates}
 
 \item{para.boot}{A logical for calculating the parametric bootstrap, the default is the non-parametric}
 

@@ -4,8 +4,13 @@
 \alias{plot_strel}
 \title{plot function for an single test reliability estimate's posterior sample}
 \usage{
-plot_strel(x, estimate, blackwhite = FALSE, criteria = TRUE,
-  cuts = c(0.7, 0.8))
+plot_strel(
+  x,
+  estimate,
+  blackwhite = FALSE,
+  criteria = TRUE,
+  cuts = c(0.7, 0.8)
+)
 }
 \arguments{
 \item{x}{A strel output object (list)}

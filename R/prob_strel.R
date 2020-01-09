@@ -15,7 +15,7 @@
 
 p_strel <- function(x, estimate, low.bound){
   posi <- grep(estimate, x$estimates, ignore.case = T)
-  samp <- unlist(x$bay$samp[posi])
+  samp <- unlist(x$Bayes$samp[posi])
   obj <- ecdf(samp)
   est_prob <- 1 - obj(low.bound)
   return(est_prob)

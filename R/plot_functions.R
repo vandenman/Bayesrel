@@ -14,7 +14,7 @@
 plot_strel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80)){
 
   posi <- grep(estimate, x$estimates, ignore.case = T)
-  samp <- coda::as.mcmc(unlist(x$bay$samp[posi]))
+  samp <- coda::as.mcmc(unlist(x$Bayes$samp[posi]))
   n_item <- ncol(x$data)
 
   if (n_item > 50) {
@@ -181,21 +181,21 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 #' @export
 plot_strel_id <- function(x, estimate, ordering = FALSE){
 
-  if (is.null(x$bay$ifitem$samp)) {return("please run the analysis again with item.dropped = TRUE")}
+  if (is.null(x$Bayes$ifitem$samp)) {return("please run the analysis again with item.dropped = TRUE")}
 
-  n_row <- length(unlist(x$bay$ifitem$est[1]))
+  n_row <- length(unlist(x$Bayes$ifitem$est[1]))
   posi <- grep(estimate, x$estimates, ignore.case = T)
 
 # needs to look like this to pass the check for CRAN
   value <- NULL
-  dat <- data.frame(as.matrix(unlist(x$bay$samp[posi])), row.names =  NULL)
+  dat <- data.frame(as.matrix(unlist(x$Bayes$samp[posi])), row.names =  NULL)
   names(dat) <- "value"
   colos <- NULL
   dat$colos <- "1"
   dat$var <- "original"
 
 
-  dat_del <- t(as.matrix(as.data.frame(x$bay$ifitem$samp[posi])))
+  dat_del <- t(as.matrix(as.data.frame(x$Bayes$ifitem$samp[posi])))
 
   names <- NULL
   for(i in 1:(n_row)){
@@ -212,7 +212,7 @@ plot_strel_id <- function(x, estimate, ordering = FALSE){
   dat$var <- factor(dat$var, levels = unique(dat$var))
 
   if (ordering){
-    est <- as.data.frame(unlist(x$bay$ifitem$est[posi]))
+    est <- as.data.frame(unlist(x$Bayes$ifitem$est[posi]))
     est[n_row + 1, ] <- 1
     colnames(est) <- "value"
     est$name <- c(names, "original")

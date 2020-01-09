@@ -15,6 +15,7 @@
 #' @param n.obs A number for the sample observations when a covariance matrix is supplied and the factor model is calculated
 #' @param alpha.int.analytic A logical for calculating the alpha confidence interval analytically
 #' @param freq A logical for calculating the frequentist estimates
+#' @param Bayes A logical for calculating the Bayesian estimates
 #' @param para.boot A logical for calculating the parametric bootstrap, the default is the non-parametric
 #' @param item.dropped A logical for calculating the if-item-dropped statistics
 #'
@@ -38,11 +39,12 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
                interval = .95, n.iter = 1e3, n.burnin = 50, n.boot = 1000,
                omega.freq.method = "cfa",
                n.obs = NULL, alpha.int.analytic = FALSE,
-               freq = TRUE, para.boot = FALSE,
+               freq = TRUE, Bayes = TRUE,
+               para.boot = FALSE,
                item.dropped = FALSE) {
 
-  estimates <- match.arg(estimates, several.ok = T)
   default <- c("alpha", "lambda2", "lambda4", "lambda6", "glb", "omega")
+  # estimates <- match.arg(arg = estimates, several.ok = T)
   mat <- match(default, estimates)
   estimates <- estimates[mat]
   estimates <- estimates[!is.na(estimates)]
@@ -70,8 +72,9 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
   if (omega.freq.method != "cfa" & omega.freq.method != "pfa") {
     return("enter a valid omega method, either 'cfa' or 'pfa'")}
 
-
-  sum_res$bay <- gibbsFun(data, n.iter, n.burnin, estimates, interval, item.dropped)
+  if (Bayes) {
+    sum_res$Bayes <- gibbsFun(data, n.iter, n.burnin, estimates, interval, item.dropped)
+  }
 
 
   if(freq){
@@ -91,6 +94,7 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
   sum_res$n.burnin <- n.burnin
   sum_res$interval <- interval
   sum_res$data <- data
+  sum_res$n.boot <- n.boot
 
   class(sum_res) = 'strel'
   return(sum_res)

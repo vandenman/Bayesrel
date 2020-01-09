@@ -1,7 +1,7 @@
 Package: Bayesrel
 Type: Package
 Title: Bayesian Reliability Estimation
-Version: 0.5.2
+Version: 0.5.3
 Author: Julius Pfadt and Don van den Bergh
 Maintainer: Julius Pfadt <julius.pfadt@gmail.com>
 Description: Functionality for the most common single test reliability estimates is provided:  
@@ -23,7 +23,7 @@ Encoding: UTF-8
 LazyData: true
 Imports: LaplacesDemon, Rcsdp, MASS, ggplot2, ggridges, lavaan, plotrix, coda, methods, stats, graphics, Rdpack
 RdMacros: Rdpack
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Depends: R (>= 2.10)
 Suggests: 
     testthat (>= 2.1.0)

@@ -18,16 +18,16 @@ priorSamp <- function(p, estimates, n.samp = 2e3){
     out$prioralpha <- quantiles(priora[priora >= 0])
   }
   if ("lambda2" %in% estimates){
-    priorl2 <- apply(m, MARGIN = 1, applyl2)
-    out$priorlambda2 <- quantiles(priorl2[priorl2 >= 0])
+    priorlambda2 <- apply(m, MARGIN = 1, applylambda2)
+    out$priorlambda2 <- quantiles(priorlambda2[priorlambda2 >= 0])
   }
   if ("lambda4" %in% estimates){
     priorl4 <- apply(m, MARGIN = 1, applyl4)
     out$priorlambda4 <- quantiles(priorl4[priorl4 >= 0])
   }
   if ("lambda6" %in% estimates){
-    priorl6 <- apply(m, MARGIN = 1, applyl6)
-    out$priorlambda6 <- quantiles(priorl6[priorl6 >= 0])
+    priorlambda6 <- apply(m, MARGIN = 1, applylambda6)
+    out$priorlambda6 <- quantiles(priorlambda6[priorlambda6 >= 0])
   }
   if ("glb" %in% estimates){
     # control <- Rcsdp::csdp.control(printlevel = 0)

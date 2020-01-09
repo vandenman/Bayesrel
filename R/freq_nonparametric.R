@@ -51,18 +51,18 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
     }
   }
   if ("lambda2" %in% estimates){
-    res$est$freq_l2 <- applyl2(cov(data))
-    l2_obj <- apply(boot_cov, 1, applyl2)
-    if (length(unique(round(l2_obj, 4))) == 1){
-      res$conf$low$freq_l2 <- NA
-      res$conf$up$freq_l2 <- NA
+    res$est$freq_lambda2 <- applylambda2(cov(data))
+    lambda2_obj <- apply(boot_cov, 1, applylambda2)
+    if (length(unique(round(lambda2_obj, 4))) == 1){
+      res$conf$low$freq_lambda2 <- NA
+      res$conf$up$freq_lambda2 <- NA
     } else{
-      res$conf$low$freq_l2 <- quantile(l2_obj, probs = (1 - interval)/2, na.rm = T)
-      res$conf$up$freq_l2 <- quantile(l2_obj, probs = interval + (1 - interval)/2, na.rm = T)
+      res$conf$low$freq_lambda2 <- quantile(lambda2_obj, probs = (1 - interval)/2, na.rm = T)
+      res$conf$up$freq_lambda2 <- quantile(lambda2_obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
-    res$boot$l2 <- l2_obj
+    res$boot$lambda2 <- lambda2_obj
     if (item.dropped){
-      res$ifitem$l2 <- apply(Ctmp, 1, applyl2)
+      res$ifitem$lambda2 <- apply(Ctmp, 1, applylambda2)
     }
   }
 
@@ -83,18 +83,18 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
   }
 
   if ("lambda6" %in% estimates){
-    res$est$freq_l6 <- applyl6(cov(data))
-    l6_obj <- apply(boot_cov, 1, applyl6)
-    if (length(unique(round(l6_obj, 4))) == 1){
-      res$conf$low$freq_l6 <- NA
-      res$conf$up$freq_l6 <- NA
+    res$est$freq_lambda6 <- applylambda6(cov(data))
+    lambda6_obj <- apply(boot_cov, 1, applylambda6)
+    if (length(unique(round(lambda6_obj, 4))) == 1){
+      res$conf$low$freq_lambda6 <- NA
+      res$conf$up$freq_lambda6 <- NA
     } else{
-      res$conf$low$freq_l6 <- quantile(l6_obj, probs = (1 - interval)/2, na.rm = T)
-      res$conf$up$freq_l6 <- quantile(l6_obj, probs = interval + (1 - interval)/2, na.rm = T)
+      res$conf$low$freq_lambda6 <- quantile(lambda6_obj, probs = (1 - interval)/2, na.rm = T)
+      res$conf$up$freq_lambda6 <- quantile(lambda6_obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
-    res$boot$l6 <- l6_obj
+    res$boot$lambda6 <- lambda6_obj
     if (item.dropped){
-      res$ifitem$l6 <- apply(Ctmp, 1, applyl6)
+      res$ifitem$lambda6 <- apply(Ctmp, 1, applylambda6)
     }
   }
   if ("glb" %in% estimates){

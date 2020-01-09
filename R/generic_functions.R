@@ -1,20 +1,26 @@
 
 #'@export
-print.strel <- function(x, ...){
-  if (!is.null(x$freq)){
-    out <- cbind(as.data.frame(as.matrix(x$bay$cred$low)), as.data.frame(as.matrix(x$bay$cred$up)),
+print.strel <- function(x, ...) {
+  if (!is.null(x$Bayes) & !is.null(x$freq)) {
+    out <- cbind(as.data.frame(as.matrix(x$Bayes$cred$low)), as.data.frame(as.matrix(x$Bayes$cred$up)),
                  as.data.frame(as.matrix(x$freq$conf$low)), as.data.frame(as.matrix(x$freq$conf$up)))
     colnames(out) <- c("Bay.lower", "Bay.upper","freq.lower", "freq.upper")
   }
-  else{
-    out <- cbind(as.data.frame(as.matrix(x$bay$cred$low)), as.data.frame(as.matrix(x$bay$cred$low)))
+  else if (!is.null(x$Bayes)) {
+    out <- cbind(as.data.frame(as.matrix(x$Bayes$cred$low)), as.data.frame(as.matrix(x$Bayes$cred$up)))
     colnames(out) <- c("Bay.lower", "Bay.upper")
+  }
+  else if (!is.null(x$freq)) {
+    out <- cbind(as.data.frame(as.matrix(x$freq$conf$low)), as.data.frame(as.matrix(x$freq$conf$up)))
+    colnames(out) <- c("freq.lower", "freq.upper")
+  } else {
+    return(warning("no estimates calculated"))
   }
   row.names(out) <- x$estimates
   cat("Call: \n")
   print.default(x$call)
   cat("\n")
-  cat(x$interval,"% Interval Estimates of Internal Consistency Measures: \n")
+  cat(x$interval,"% Interval Estimates of Single-Test Reliability Measures: \n")
   cat("\n")
   print(out)
 
@@ -24,26 +30,44 @@ print.strel <- function(x, ...){
 summary.strel <- function(object, ...){
 
   out_matrix <- list()
-  if (!is.null(object$freq)){
-    out_matrix$est <- rbind(as.data.frame(as.matrix(object$bay$est)),
+  if (!is.null(object$freq) & !is.null(object$Bayes)){
+    out_matrix$est <- rbind(as.data.frame(as.matrix(object$Bayes$est)),
                             as.data.frame(as.matrix(object$freq$est)))
-    out_matrix$int$low <- rbind(as.data.frame(as.matrix(object$bay$cred$low)),
+    out_matrix$int$low <- rbind(as.data.frame(as.matrix(object$Bayes$cred$low)),
                                 as.data.frame(as.matrix(object$freq$conf$low)))
-    out_matrix$int$up <- rbind(as.data.frame(as.matrix(object$bay$cred$up)),
+    out_matrix$int$up <- rbind(as.data.frame(as.matrix(object$Bayes$cred$up)),
                                as.data.frame(as.matrix(object$freq$conf$up)))
     out_matrix$omega.freq.method <- object$omega.freq.method
-  } else{
-    out_matrix$est <- as.data.frame(as.matrix(object$bay$est))
-    out_matrix$int$low <- as.data.frame(as.matrix(object$bay$cred$low))
-    out_matrix$int$up <- as.data.frame(as.matrix(object$bay$cred$up))
+    out_matrix$n.iter <- object$n.iter
+    out_matrix$n.burnin <- object$n.burnin
+    out_matrix$n.boot <- object$n.boot
+    out_matrix$ifitem$bay_tab <- object$Bayes$ifitem$est
+    out_matrix$ifitem$freq_tab <- object$freq$ifitem
+
+  }
+  else if (!is.null(object$Bayes)) {
+    out_matrix$est <- as.data.frame(as.matrix(object$Bayes$est))
+    out_matrix$int$low <- as.data.frame(as.matrix(object$Bayes$cred$low))
+    out_matrix$int$up <- as.data.frame(as.matrix(object$Bayes$cred$up))
+    out_matrix$n.iter <- object$n.iter
+    out_matrix$n.burnin <- object$n.burnin
+    out_matrix$ifitem$bay_tab <- object$Bayes$ifitem$est
+
+  }
+  else if (!is.null(object$freq)) {
+    out_matrix$est <- as.data.frame(as.matrix(object$freq$est))
+    out_matrix$int$low <- as.data.frame(as.matrix(object$freq$conf$low))
+    out_matrix$int$up <- as.data.frame(as.matrix(object$freq$conf$up))
+    out_matrix$n.boot <- object$n.boot
+    out_matrix$ifitem$freq_tab <- object$freq$ifitem
+    out_matrix$omega.freq.method <- object$omega.freq.method
+
+  } else {
+    return(warning("no estimates calculated"))
   }
   out_matrix$call <- object$call
-  out_matrix$n.iter <- object$n.iter
-  out_matrix$n.burnin <- object$n.burnin
   out_matrix$interval <- object$interval
   out_matrix$estimates <- object$estimates
-  out_matrix$ifitem$bay_tab <- object$bay$ifitem$est
-  out_matrix$ifitem$freq_tab <- object$freq$ifitem
 
   class(out_matrix) <- "summary.strel"
   out_matrix
@@ -62,17 +86,26 @@ print.summary.strel <- function(x, ...){
 
   cat("Call: \n")
   print.default(x$call)
+  cat("\n")
   cat("Results: \n")
   print(mat, right = F)
   cat("\n")
-  cat("iterations: ")
-  print.default(x$n.iter)
-  cat("burnin: ")
-  print.default(x$n.burnin)
-  cat("uncertainty interval:")
-  print.default(x$interval)
+  cat("uncertainty interval: ")
+  cat(x$interval, "\n")
 
-  if (length(grep("freq", x$est)) > 0){
+  if (!is.null(x$n.iter) & !is.null(x$n.burnin)) {
+    cat("iterations: ")
+    cat(x$n.iter, "\n")
+    cat("burnin: ")
+    cat(x$n.burnin, "\n")
+  }
+
+  if (length(grep("freq", x$est)) > 0) {
+    if (sum((c("alpha", "lambda2", "lambda6", "glb") %in% x$estimates)) > 0 |
+        ("omega" %in% x$estimates & x$omega.freq.method == "pfa")) {
+        cat("bootstrap samples: ")
+        cat(x$n.boot, "\n")
+      }
     if ("omega" %in% x$estimates){
       cat("frequentist omega method is:")
       print.default(x$omega.freq.method)

@@ -19,8 +19,8 @@ omega_fit <- function(x){
     print(x$freq$omega_fit)}
 
   sigma <- cov(x$data)
-  lambda <- x$bay$loadings
-  psi <- x$bay$resid_var
+  lambda <- x$Bayes$loadings
+  psi <- x$Bayes$resid_var
   cimpl <- lambda %*% t(lambda) + diag(psi)
   ymax <- max(eigen(cimpl)$values, eigen(sigma)$values) * 1.3
   ee_impl <- matrix(0, 1e3, ncol(x$data))

@@ -8,12 +8,12 @@ applyalpha <- function(M){
   return(a)
 }
 
-applyl2 <- function(M){
+applylambda2 <- function(M){
   p <- ncol(M)
   M0 <- M
   diag(M0) <- 0
-  l2 <- (sum(M0) + sqrt(p/(p-1) * sum(M0^2))) / sum(M)
-  return(l2)
+  lambda2 <- (sum(M0) + sqrt(p/(p-1) * sum(M0^2))) / sum(M)
+  return(lambda2)
 }
 
 applyl4 <- function(M){
@@ -23,11 +23,11 @@ applyl4 <- function(M){
 }
 
 
-applyl6 <- function(M){
+applylambda6 <- function(M){
   M <- cov2cor(M)
   smc <- 1 - (1 / diag(solve(M)))
-  l6 <- 1 - (sum(1 - (smc)) / sum(M))
-  return(l6)
+  lambda6 <- 1 - (sum(1 - (smc)) / sum(M))
+  return(lambda6)
 }
 
 # applyglb <- function(M){
