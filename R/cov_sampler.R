@@ -35,8 +35,8 @@ covSamp <- function(data, n.iter, n.burnin, pairwise){
       dfChisq <- vn:(vn-p+1)
       utz <- upper.tri(matrix(0, p, p))
       cc <- rinvwishart2(vn, Tn, p, dfChisq, utz) # sample from inverse Wishart
-      ms <- MASS::mvrnorm(1, mun, cc/kn)
-      # ms <- numeric(p)
+      # ms <- MASS::mvrnorm(1, mun, cc/kn)
+      ms <- numeric(p)
       c_post[i, , ] <- cc
       # substitute missing values one by one, where each value is drawn conditional on the rest of the data
       rows <- unique(inds[, 1])
