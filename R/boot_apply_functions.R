@@ -40,8 +40,8 @@ applylambda6 <- function(M){
 #   return(gl)
 # }
 
-applyomega_cfa_data <- function(data){
-  out <- omegaFreqData(data)
+applyomega_cfa_data <- function(data, pairwise){
+  out <- omegaFreqData(data, pairwise)
   om <- out$omega
   return(om)
 }
@@ -55,8 +55,5 @@ applyomega_pfa <- function(m){
   if (om < 0 || om > 1 || is.na(om)) om <- NA
   return(om)
 }
-
-
-
 
 

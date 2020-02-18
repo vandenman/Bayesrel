@@ -18,6 +18,7 @@
 #' @param Bayes A logical for calculating the Bayesian estimates
 #' @param para.boot A logical for calculating the parametric bootstrap, the default is the non-parametric
 #' @param item.dropped A logical for calculating the if-item-dropped statistics
+#' @param missing A string specifying the way to handle missing data
 #'
 #' @examples
 #' summary(strel(asrm, estimates = "lambda2"))
@@ -41,7 +42,8 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
                n.obs = NULL, alpha.int.analytic = FALSE,
                freq = TRUE, Bayes = TRUE,
                para.boot = FALSE,
-               item.dropped = FALSE) {
+               item.dropped = FALSE,
+               missing = "listwise") {
 
   default <- c("alpha", "lambda2", "lambda4", "lambda6", "glb", "omega")
   # estimates <- match.arg(arg = estimates, several.ok = T)
@@ -52,8 +54,18 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
   sum_res <- list()
   sum_res$call <- match.call()
 
-  if (sum(is.na(x)) > 0) {
-    return("missing values in data detected, please remove and run again")
+  pairwise <- FALSE
+  if (any(is.na(x))) {
+    if (missing == "listwise") {
+      pos <- which(is.na(x), arr.ind = T)[, 1]
+      x <- x[-pos, ]
+      ncomp <- nrow(x)
+      sum_res$complete <- ncomp
+    }
+    else if (missing == "pairwise") {
+      pairwise = T
+      sum_res$miss_pairwise <- T
+    } else return("missing values in data detected, please remove and run again")
   }
   data <- NULL
   sigma <- NULL
@@ -66,24 +78,24 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
     data <- MASS::mvrnorm(n.obs, rep(0, ncol(sigma)), sigma, empirical = TRUE)
   } else{
     data <- scale(x, scale = F)
-    sigma <- cov(data)
+    # sigma <- cov(data)
   }
 
   if (omega.freq.method != "cfa" & omega.freq.method != "pfa") {
     return("enter a valid omega method, either 'cfa' or 'pfa'")}
 
   if (Bayes) {
-    sum_res$Bayes <- gibbsFun(data, n.iter, n.burnin, estimates, interval, item.dropped)
+    sum_res$Bayes <- gibbsFun(data, n.iter, n.burnin, estimates, interval, item.dropped, pairwise)
   }
 
 
   if(freq){
     if (para.boot){
       sum_res$freq <- freqFun_para(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
-                                   alpha.int.analytic)
+                                   alpha.int.analytic, pairwise)
     } else{
       sum_res$freq <- freqFun_nonpara(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
-                                    alpha.int.analytic)
+                                    alpha.int.analytic, pairwise)
     }
     sum_res$omega.freq.method <- omega.freq.method
   }

@@ -3,9 +3,8 @@
 # it returns the posterior distribution sample of omegas calculated from those parameters
 # source: Lee, S.-Y. (2007). Structural equation modeling: A bayesian approach(Vol. 711). JohnWiley & Sons.
 # p. 81 ff.
-omegaSampler <- function(data, n.iter = 1e3, n.burnin = 50, thin = 1, n.chains = 1){
+omegaSampler <- function(data, n.iter, n.burnin, pairwise, thin = 1, n.chains = 1){
 
-  C <- cov(data)
   n <- nrow(data)
   p <- ncol(data)
   H0k <- 1 # prior multiplier for lambdas variance
@@ -42,40 +41,108 @@ omegaSampler <- function(data, n.iter = 1e3, n.burnin = 50, thin = 1, n.chains =
     oms <- numeric(n.iter)
     ph <- numeric(n.iter)
 
-    for (i in 1:n.iter){
 
-      # hyperparameters for posteriors
-      Ak <- (1/H0k + c(t(wi) %*% wi))^-1
-      ak <- Ak * ((1/H0k) * l0k + t(wi) %*% data)
-      bekk <- b0k + 0.5 * (t(data) %*% data - (t(ak) * (1/Ak)) %*% ak
-                           + (l0k * (1/H0k)) %*% t(l0k))
-      bek <- diag(bekk)
+    if (pairwise) { # missing data
+      inds <- which(is.na(data), arr.ind = T)
+      dat_complete <- data
+      dat_complete[inds] <- colMeans(data, na.rm = T)[inds[, 2]]
 
-      #  sample psi and lambda
-      invpsi <- rgamma(p, n/2 + a0k, bek)
-      invPsi <- diag(invpsi)
-      psi <- 1/invpsi
-      lambda <- rnorm(p, ak * sqrt(as.vector(phi)), sqrt(psi * Ak))
+      for (i in 1:n.iter){
 
-      if (mean(lambda) < 0) # solve label switching problem
-        lambda <- -lambda
+        # hyperparameters for posteriors
+        Ak <- (1/H0k + c(t(wi) %*% wi))^-1
+        ak <- Ak * ((1/H0k) * l0k + t(wi) %*% dat_complete)
+        bekk <- b0k + 0.5 * (t(dat_complete) %*% dat_complete - (t(ak) * (1/Ak)) %*% ak
+                             + (l0k * (1/H0k)) %*% t(l0k))
+        bek <- diag(bekk)
 
-      # sample wi posterior:
-      m <- solve(invphi + t(lambda) %*% invPsi %*% lambda) %*% t(lambda) %*% invPsi %*% t(data)
-      V <- solve(invphi + t(lambda) %*% invPsi %*% lambda)
-      wi <- rnorm(n, m, sqrt(V))
-      # set factor variance to 1 to identify the model
-      wi <- wi/sd(wi)
+        #  sample psi and lambda
+        invpsi <- rgamma(p, n/2 + a0k, bek)
+        invPsi <- diag(invpsi)
+        psi <- 1/invpsi
+        lambda <- rnorm(p, ak * sqrt(as.vector(phi)), sqrt(psi * Ak))
 
-      # sample phi:
-      phi <- LaplacesDemon::rinvwishart(nu = n + p0, S = t(wi) %*% (wi) + R0)
-      invphi <- 1/phi
+        if (mean(lambda) < 0) {# solve label switching problem
+          lambda <- -lambda
+        }
+        # sample wi posterior:
+        m <- solve(invphi + t(lambda) %*% invPsi %*% lambda) %*% t(lambda) %*% invPsi %*% t(dat_complete)
+        V <- solve(invphi + t(lambda) %*% invPsi %*% lambda)
+        wi <- rnorm(n, m, sqrt(V))
+        # set factor variance to 1 to identify the model
+        wi <- wi/sd(wi)
 
-      oms[i] <- omegaBasic(lambda, psi)
+        # sample phi:
+        phi <- LaplacesDemon::rinvwishart(nu = n + p0, S = t(wi) %*% (wi) + R0)
+        invphi <- 1/phi
 
-      La[i, ] <- lambda
-      Psi[i, ] <- psi
+        # substitute missing values one by one, assuming a normal with mean zero and model implied variance
+        # by conditioning on the remaining complete data:
 
+        cc <- lambda %*% phi %*% t(lambda) + diag(psi)
+
+        # ms <- MASS::mvrnorm(1, numeric(p), cc)
+        ms <- numeric(p) # not sure if this is the right way, it works however
+        rows <- unique(inds[, 1])
+        for (r in rows) {
+          cols <- inds[which(inds[, 1] == r), 2]
+          for (b in cols) {
+            mu1 <- ms[b]
+            mu2 <- ms[-b]
+            cc11 <- cc[b, b]
+            cc21 <- cc[-b, b]
+            cc12 <- cc[b, -b]
+            cc22 <- cc[-b, -b]
+            muq <- mu1 + cc12 %*% solve(cc22) %*% (as.numeric(dat_complete[r, -b]) - mu2)
+            ccq <- cc11 - cc12 %*% solve(cc22) %*% cc21
+            dat_complete[r, b] <- rnorm(1, muq, ccq)
+          }
+        }
+
+        oms[i] <- omegaBasic(lambda, psi)
+
+        La[i, ] <- lambda
+        Psi[i, ] <- psi
+
+      }
+
+    } else { # no missing data
+
+      for (i in 1:n.iter){
+
+        # hyperparameters for posteriors
+        Ak <- (1/H0k + c(t(wi) %*% wi))^-1
+        ak <- Ak * ((1/H0k) * l0k + t(wi) %*% data)
+        bekk <- b0k + 0.5 * (t(data) %*% data - (t(ak) * (1/Ak)) %*% ak
+                             + (l0k * (1/H0k)) %*% t(l0k))
+        bek <- diag(bekk)
+
+        #  sample psi and lambda
+        invpsi <- rgamma(p, n/2 + a0k, bek)
+        invPsi <- diag(invpsi)
+        psi <- 1/invpsi
+        lambda <- rnorm(p, ak * sqrt(as.vector(phi)), sqrt(psi * Ak))
+
+        if (mean(lambda) < 0) # solve label switching problem
+          lambda <- -lambda
+
+        # sample wi posterior:
+        m <- solve(invphi + t(lambda) %*% invPsi %*% lambda) %*% t(lambda) %*% invPsi %*% t(data)
+        V <- solve(invphi + t(lambda) %*% invPsi %*% lambda)
+        wi <- rnorm(n, m, sqrt(V))
+        # set factor variance to 1 to identify the model
+        wi <- wi/sd(wi)
+
+        # sample phi:
+        phi <- LaplacesDemon::rinvwishart(nu = n + p0, S = t(wi) %*% (wi) + R0)
+        invphi <- 1/phi
+
+        oms[i] <- omegaBasic(lambda, psi)
+
+        La[i, ] <- lambda
+        Psi[i, ] <- psi
+
+      }
     }
 
     # n.burnin

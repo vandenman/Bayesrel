@@ -17,7 +17,8 @@ strel(
   freq = TRUE,
   Bayes = TRUE,
   para.boot = FALSE,
-  item.dropped = FALSE
+  item.dropped = FALSE,
+  missing = "listwise"
 )
 }
 \arguments{
@@ -46,6 +47,8 @@ strel(
 \item{para.boot}{A logical for calculating the parametric bootstrap, the default is the non-parametric}
 
 \item{item.dropped}{A logical for calculating the if-item-dropped statistics}
+
+\item{missing}{A string specifying the way to handle missing data}
 }
 \description{
 calculate Bayesian and frequentist single test reliability measures.

@@ -27,47 +27,49 @@ print.strel <- function(x, ...) {
 }
 
 #'@export
-summary.strel <- function(object, ...){
+summary.strel <- function(x, ...){
 
   out_matrix <- list()
-  if (!is.null(object$freq) & !is.null(object$Bayes)){
-    out_matrix$est <- rbind(as.data.frame(as.matrix(object$Bayes$est)),
-                            as.data.frame(as.matrix(object$freq$est)))
-    out_matrix$int$low <- rbind(as.data.frame(as.matrix(object$Bayes$cred$low)),
-                                as.data.frame(as.matrix(object$freq$conf$low)))
-    out_matrix$int$up <- rbind(as.data.frame(as.matrix(object$Bayes$cred$up)),
-                               as.data.frame(as.matrix(object$freq$conf$up)))
-    out_matrix$omega.freq.method <- object$omega.freq.method
-    out_matrix$n.iter <- object$n.iter
-    out_matrix$n.burnin <- object$n.burnin
-    out_matrix$n.boot <- object$n.boot
-    out_matrix$ifitem$bay_tab <- object$Bayes$ifitem$est
-    out_matrix$ifitem$freq_tab <- object$freq$ifitem
+  if (!is.null(x$freq) & !is.null(x$Bayes)){
+    out_matrix$est <- rbind(as.data.frame(as.matrix(x$Bayes$est)),
+                            as.data.frame(as.matrix(x$freq$est)))
+    out_matrix$int$low <- rbind(as.data.frame(as.matrix(x$Bayes$cred$low)),
+                                as.data.frame(as.matrix(x$freq$conf$low)))
+    out_matrix$int$up <- rbind(as.data.frame(as.matrix(x$Bayes$cred$up)),
+                               as.data.frame(as.matrix(x$freq$conf$up)))
+    out_matrix$omega.freq.method <- x$omega.freq.method
+    out_matrix$n.iter <- x$n.iter
+    out_matrix$n.burnin <- x$n.burnin
+    out_matrix$n.boot <- x$n.boot
+    out_matrix$ifitem$bay_tab <- x$Bayes$ifitem$est
+    out_matrix$ifitem$freq_tab <- x$freq$ifitem
 
   }
-  else if (!is.null(object$Bayes)) {
-    out_matrix$est <- as.data.frame(as.matrix(object$Bayes$est))
-    out_matrix$int$low <- as.data.frame(as.matrix(object$Bayes$cred$low))
-    out_matrix$int$up <- as.data.frame(as.matrix(object$Bayes$cred$up))
-    out_matrix$n.iter <- object$n.iter
-    out_matrix$n.burnin <- object$n.burnin
-    out_matrix$ifitem$bay_tab <- object$Bayes$ifitem$est
+  else if (!is.null(x$Bayes)) {
+    out_matrix$est <- as.data.frame(as.matrix(x$Bayes$est))
+    out_matrix$int$low <- as.data.frame(as.matrix(x$Bayes$cred$low))
+    out_matrix$int$up <- as.data.frame(as.matrix(x$Bayes$cred$up))
+    out_matrix$n.iter <- x$n.iter
+    out_matrix$n.burnin <- x$n.burnin
+    out_matrix$ifitem$bay_tab <- x$Bayes$ifitem$est
 
   }
-  else if (!is.null(object$freq)) {
-    out_matrix$est <- as.data.frame(as.matrix(object$freq$est))
-    out_matrix$int$low <- as.data.frame(as.matrix(object$freq$conf$low))
-    out_matrix$int$up <- as.data.frame(as.matrix(object$freq$conf$up))
-    out_matrix$n.boot <- object$n.boot
-    out_matrix$ifitem$freq_tab <- object$freq$ifitem
-    out_matrix$omega.freq.method <- object$omega.freq.method
+  else if (!is.null(x$freq)) {
+    out_matrix$est <- as.data.frame(as.matrix(x$freq$est))
+    out_matrix$int$low <- as.data.frame(as.matrix(x$freq$conf$low))
+    out_matrix$int$up <- as.data.frame(as.matrix(x$freq$conf$up))
+    out_matrix$n.boot <- x$n.boot
+    out_matrix$ifitem$freq_tab <- x$freq$ifitem
+    out_matrix$omega.freq.method <- x$omega.freq.method
 
   } else {
     return(warning("no estimates calculated"))
   }
-  out_matrix$call <- object$call
-  out_matrix$interval <- object$interval
-  out_matrix$estimates <- object$estimates
+  out_matrix$call <- x$call
+  out_matrix$interval <- x$interval
+  out_matrix$estimates <- x$estimates
+  out_matrix$complete <- x$complete
+  out_matrix$pairwise <- x$miss_pairwise
 
   class(out_matrix) <- "summary.strel"
   out_matrix
@@ -107,17 +109,25 @@ print.summary.strel <- function(x, ...){
         cat(x$n.boot, "\n")
       }
     if ("omega" %in% x$estimates){
-      cat("frequentist omega method is:")
-      print.default(x$omega.freq.method)
-      cat("omega confidence interval is estimated with:")
-      if (x$omega.freq.method == "pfa") {print.default("bootstrap")}
-      if (x$omega.freq.method == "cfa") {print.default("maximum likelihood z-value")}
+      cat("frequentist omega method is: ")
+      cat(x$omega.freq.method, "\n")
+      cat("omega confidence interval is estimated with: ")
+      if (x$omega.freq.method == "pfa") {cat("bootstrap \n")}
+      if (x$omega.freq.method == "cfa") {cat("maximum likelihood z-value \n")}
     }
     # if (!is.null(x$fit.indices)){
     #   options(scipen = 999)
     #   cat("\nFrequentist fit of 1-factor-model for omega is:\n")
     #   print.default(as.matrix(x$fit.indices))
     # }
+  }
+
+  if (!is.null(x$complete)) {
+    cat("using listwise deletion the number of complete cases is: ")
+    cat(x$complete)
+  }
+  if (!is.null(x$pairwise)) {
+    cat("using pairwise complete cases")
   }
 
 
