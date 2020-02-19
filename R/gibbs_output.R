@@ -28,6 +28,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped, 
     if (item.dropped){
       res$ifitem$samp$alpha <- coda::mcmc(apply(Ctmp, c(2, 1), applyalpha))
       res$ifitem$est$alpha <- apply(res$ifitem$samp$alpha, 2, median)
+      res$ifitem$cred$alpha <- coda::HPDinterval(res$ifitem$samp$alpha, prob = interval)
     }
   }
 
@@ -40,18 +41,22 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped, 
     if (item.dropped){
       res$ifitem$samp$lambda2 <- coda::mcmc(apply(Ctmp, c(2, 1), applylambda2))
       res$ifitem$est$lambda2 <- apply(res$ifitem$samp$lambda2, 2, median)
+      res$ifitem$cred$lambda2 <- coda::HPDinterval(res$ifitem$samp$lambda2, prob = interval)
+
     }
   }
 
   if ("lambda4" %in% estimates){
-    res$samp$Bayes_l4 <- coda::mcmc(apply(C, MARGIN = 1, applyl4))
-    int <- coda::HPDinterval(res$samp$Bayes_l4, prob = interval)
-    res$cred$low$Bayes_l4 <- int[1]
-    res$cred$up$Bayes_l4 <- int[2]
-    res$est$Bayes_l4<- median(res$samp$Bayes_l4)
+    res$samp$Bayes_lambda4 <- coda::mcmc(apply(C, MARGIN = 1, applylambda4))
+    int <- coda::HPDinterval(res$samp$Bayes_lambda4, prob = interval)
+    res$cred$low$Bayes_lambda4 <- int[1]
+    res$cred$up$Bayes_lambda4 <- int[2]
+    res$est$Bayes_lambda4<- median(res$samp$Bayes_lambda4)
     if (item.dropped){
-      res$ifitem$samp$l4 <- coda::mcmc(apply(Ctmp, c(2, 1), applyl4))
-      res$ifitem$est$l4 <- apply(res$ifitem$samp$l4, 2, median)
+      res$ifitem$samp$lambda4 <- coda::mcmc(apply(Ctmp, c(2, 1), applylambda4))
+      res$ifitem$est$lambda4 <- apply(res$ifitem$samp$lambda4, 2, median)
+      res$ifitem$cred$lambda4 <- coda::HPDinterval(res$ifitem$samp$lambda4, prob = interval)
+
     }
   }
 
@@ -64,6 +69,8 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped, 
     if (item.dropped){
       res$ifitem$samp$lambda6 <- coda::mcmc(apply(Ctmp, c(2, 1), applylambda6))
       res$ifitem$est$lambda6 <- apply(res$ifitem$samp$lambda6, 2, median)
+      res$ifitem$cred$lambda6 <- coda::HPDinterval(res$ifitem$samp$lambda6, prob = interval)
+
     }
   }
 
@@ -80,6 +87,8 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped, 
     if (item.dropped){
       res$ifitem$samp$glb <- coda::mcmc(apply(Ctmp, c(2, 1), glbOnArray))
       res$ifitem$est$glb <- apply(res$ifitem$samp$glb, 2, median)
+      res$ifitem$cred$glb <- coda::HPDinterval(res$ifitem$samp$glb, prob = interval)
+
     }
   }
 
@@ -104,6 +113,8 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped, 
       }
       res$ifitem$samp$omega <- coda::mcmc(om_samp_ifitem)
       res$ifitem$est$omega <- apply(om_samp_ifitem, 2, mean)
+      res$ifitem$cred$omega <- coda::HPDinterval(res$ifitem$samp$omega, prob = interval)
+
     }
   }
 

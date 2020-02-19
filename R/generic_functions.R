@@ -41,7 +41,8 @@ summary.strel <- function(x, ...){
     out_matrix$n.iter <- x$n.iter
     out_matrix$n.burnin <- x$n.burnin
     out_matrix$n.boot <- x$n.boot
-    out_matrix$ifitem$bay_tab <- x$Bayes$ifitem$est
+    out_matrix$ifitem$bay_est <- x$Bayes$ifitem$est
+    out_matrix$ifitem$bay_cred <- x$Bayes$ifitem$cred
     out_matrix$ifitem$freq_tab <- x$freq$ifitem
 
   }
@@ -51,7 +52,8 @@ summary.strel <- function(x, ...){
     out_matrix$int$up <- as.data.frame(as.matrix(x$Bayes$cred$up))
     out_matrix$n.iter <- x$n.iter
     out_matrix$n.burnin <- x$n.burnin
-    out_matrix$ifitem$bay_tab <- x$Bayes$ifitem$est
+    out_matrix$ifitem$bay_est <- x$Bayes$ifitem$est
+    out_matrix$ifitem$bay_cred <- x$Bayes$ifitem$cred
 
   }
   else if (!is.null(x$freq)) {
@@ -131,22 +133,33 @@ print.summary.strel <- function(x, ...){
   }
 
 
-  if (!is.null(x$ifitem$bay_tab)){
-    n_row <- length(unlist(x$ifitem$bay_tab[1])) + 1
-    n_col <- length(x$ifitem$bay_tab)
-    mat_ifitem_bay <- data.frame(matrix(0, n_row, n_col))
-    mat_ifitem_bay[1, ] <- as.vector(unlist(x$est))[1:n_col]
-    for (i in 1:n_col){
-      mat_ifitem_bay[2:n_row, i] <- as.vector(unlist(x$ifitem$bay_tab[i]))
-    }
-    colnames(mat_ifitem_bay) <- x$estimates
+  if (!is.null(x$ifitem$bay_est)){
+    n_row <- length(unlist(x$ifitem$bay_est[1])) + 1
+    n_col <- 3
     names <- NULL
-    for(i in 1:(n_row-1)){
-      names[i] <- paste0("x", i)
+    for(z in 1:(n_row-1)){
+      names[z] <- paste0("x", z)
     }
-    row.names(mat_ifitem_bay) <- c("original", names)
+    row_names <- c("original", names)
 
-    if (length(grep("freq", x$est)) > 0){
+    for (i in 1:length(x$estimates)) {
+      mat_ifitem_bay <- data.frame(matrix(0, n_row, n_col))
+      row.names(mat_ifitem_bay) <- row_names
+
+      mat_ifitem_bay[1, ] <- c(unlist(x$est)[i], unlist(x$int$low)[i], unlist(x$int$up)[i])
+      mat_ifitem_bay[2:n_row, ] <- cbind(as.vector(unlist(x$ifitem$bay_est[i])),
+                                         matrix(unlist(x$ifitem$bay_cred[i]), n_row-1, 2))
+      colnames(mat_ifitem_bay) <- c("point.estimate", "interval.low","interval.up")
+      cat("\n")
+      cat(paste0("Bayesian ", x$estimate[i], " if item dropped: \n"))
+      print(mat_ifitem_bay)
+
+    }
+  }
+
+  if (!is.null(x$ifitem$freq_tab)){
+      n_row <- length(unlist(x$ifitem$freq_tab[1])) + 1
+      n_col <- length(x$estimates)
       mat_ifitem_freq <- data.frame(matrix(0, n_row, n_col))
       mat_ifitem_freq[1, ] <- as.vector(unlist(x$est)[(n_col+1):(n_col*2)])
       for (i in 1:n_col){
@@ -154,16 +167,10 @@ print.summary.strel <- function(x, ...){
       }
       colnames(mat_ifitem_freq) <- x$estimates
       row.names(mat_ifitem_freq) <- c("original", names)
-    }
 
-    cat("\n")
-    cat("Bayesian coefficient if item dropped: \n")
-    print(mat_ifitem_bay)
-    if (length(grep("freq", x$est)) > 0){
       cat("\n")
-      cat("Frequentist coefficient if item dropped: \n")
+      cat("Frequentist point estimate if item dropped: \n")
       print(mat_ifitem_freq)
-    }
   }
 
 }
