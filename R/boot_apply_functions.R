@@ -16,7 +16,7 @@ applylambda2 <- function(M){
   return(lambda2)
 }
 
-applyl4 <- function(M){
+applylambda4 <- function(M){
   if (ncol(M) < 15) {l4 <- MaxSplitExhaustive(M)}
   else {l4 <- quant.lambda4(M)}
   return(l4)
@@ -35,10 +35,10 @@ applylambda6 <- function(M){
 #   return(gl)
 # }
 
-# applyglb <- function(M){
-#   gl <- glb.algebraic2(M)
-#   return(gl)
-# }
+applyglb <- function(M){
+  gl <- glb.algebraic2(M)
+  return(gl)
+}
 
 applyomega_cfa_data <- function(data, pairwise){
   out <- omegaFreqData(data, pairwise)

@@ -22,8 +22,8 @@ priorSamp <- function(p, estimates, n.samp = 2e3){
     out$priorlambda2 <- quantiles(priorlambda2[priorlambda2 >= 0])
   }
   if ("lambda4" %in% estimates){
-    priorl4 <- apply(m, MARGIN = 1, applyl4)
-    out$priorlambda4 <- quantiles(priorl4[priorl4 >= 0])
+    priorlambda4 <- apply(m, MARGIN = 1, applylambda4)
+    out$priorlambda4 <- quantiles(priorlambda4[priorlambda4 >= 0])
   }
   if ("lambda6" %in% estimates){
     priorlambda6 <- apply(m, MARGIN = 1, applylambda6)

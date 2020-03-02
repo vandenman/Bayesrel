@@ -73,19 +73,19 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
   }
 
   if ("lambda4" %in% estimates){
-    res$est$freq_l4 <- applyl4(cc)
-    l4_obj <- apply(boot_cov, 1, applyl4)
-    if (length(unique(round(l4_obj, 4))) == 1){
-      res$conf$low$freq_l4 <- NA
-      res$conf$up$freq_l4 <- NA
+    res$est$freq_lambda4 <- applylambda4(cc)
+    lambda4_obj <- apply(boot_cov, 1, applylambda4)
+    if (length(unique(round(lambda4_obj, 4))) == 1){
+      res$conf$low$freq_lambda4 <- NA
+      res$conf$up$freq_lambda4 <- NA
     }
     else{
-      res$conf$low$freq_l4 <- quantile(l4_obj, probs = (1 - interval)/2, na.rm = T)
-      res$conf$up$freq_l4 <- quantile(l4_obj, probs = interval + (1 - interval)/2, na.rm = T)
+      res$conf$low$freq_lambda4 <- quantile(lambda4_obj, probs = (1 - interval)/2, na.rm = T)
+      res$conf$up$freq_lambda4 <- quantile(lambda4_obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
-    res$boot$l4 <- l4_obj
+    res$boot$lambda4 <- lambda4_obj
     if (item.dropped){
-      res$ifitem$l4 <- apply(Ctmp, 1, applyl4)
+      res$ifitem$lambda4 <- apply(Ctmp, 1, applylambda4)
     }
   }
 

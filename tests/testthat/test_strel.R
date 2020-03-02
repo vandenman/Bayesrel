@@ -48,13 +48,13 @@ test_that("Bayes Alpha if item deleted is correct", {
 
 
 
-test_that("Bayes posterior probability for Alpha >.8 is correct", {
+test_that("Bayes prior and posterior probability for Alpha >.8 is correct", {
 
   data(asrm, package = "Bayesrel")
   set.seed(1234)
   tt <- Bayesrel::strel(asrm, estimates = "alpha", n.iter = 500, freq = F)
   ee <- Bayesrel::p_strel(tt, "alpha", .8)
 
-  expect_equal(ee, .371, tolerance = 1e-3)
+  expect_equal(as.numeric(ee), c(0.1552618, 0.3711111), tolerance = 1e-3)
 
 })

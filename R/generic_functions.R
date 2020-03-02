@@ -27,51 +27,51 @@ print.strel <- function(x, ...) {
 }
 
 #'@export
-summary.strel <- function(x, ...){
+summary.strel <- function(object, ...){
 
   out_matrix <- list()
-  if (!is.null(x$freq) & !is.null(x$Bayes)){
-    out_matrix$est <- rbind(as.data.frame(as.matrix(x$Bayes$est)),
-                            as.data.frame(as.matrix(x$freq$est)))
-    out_matrix$int$low <- rbind(as.data.frame(as.matrix(x$Bayes$cred$low)),
-                                as.data.frame(as.matrix(x$freq$conf$low)))
-    out_matrix$int$up <- rbind(as.data.frame(as.matrix(x$Bayes$cred$up)),
-                               as.data.frame(as.matrix(x$freq$conf$up)))
-    out_matrix$omega.freq.method <- x$omega.freq.method
-    out_matrix$n.iter <- x$n.iter
-    out_matrix$n.burnin <- x$n.burnin
-    out_matrix$n.boot <- x$n.boot
-    out_matrix$ifitem$bay_est <- x$Bayes$ifitem$est
-    out_matrix$ifitem$bay_cred <- x$Bayes$ifitem$cred
-    out_matrix$ifitem$freq_tab <- x$freq$ifitem
+  if (!is.null(object$freq) & !is.null(object$Bayes)){
+    out_matrix$est <- rbind(as.data.frame(as.matrix(object$Bayes$est)),
+                            as.data.frame(as.matrix(object$freq$est)))
+    out_matrix$int$low <- rbind(as.data.frame(as.matrix(object$Bayes$cred$low)),
+                                as.data.frame(as.matrix(object$freq$conf$low)))
+    out_matrix$int$up <- rbind(as.data.frame(as.matrix(object$Bayes$cred$up)),
+                               as.data.frame(as.matrix(object$freq$conf$up)))
+    out_matrix$omega.freq.method <- object$omega.freq.method
+    out_matrix$n.iter <- object$n.iter
+    out_matrix$n.burnin <- object$n.burnin
+    out_matrix$n.boot <- object$n.boot
+    out_matrix$ifitem$bay_est <- object$Bayes$ifitem$est
+    out_matrix$ifitem$bay_cred <- object$Bayes$ifitem$cred
+    out_matrix$ifitem$freq_tab <- object$freq$ifitem
 
   }
-  else if (!is.null(x$Bayes)) {
-    out_matrix$est <- as.data.frame(as.matrix(x$Bayes$est))
-    out_matrix$int$low <- as.data.frame(as.matrix(x$Bayes$cred$low))
-    out_matrix$int$up <- as.data.frame(as.matrix(x$Bayes$cred$up))
-    out_matrix$n.iter <- x$n.iter
-    out_matrix$n.burnin <- x$n.burnin
-    out_matrix$ifitem$bay_est <- x$Bayes$ifitem$est
-    out_matrix$ifitem$bay_cred <- x$Bayes$ifitem$cred
+  else if (!is.null(object$Bayes)) {
+    out_matrix$est <- as.data.frame(as.matrix(object$Bayes$est))
+    out_matrix$int$low <- as.data.frame(as.matrix(object$Bayes$cred$low))
+    out_matrix$int$up <- as.data.frame(as.matrix(object$Bayes$cred$up))
+    out_matrix$n.iter <- object$n.iter
+    out_matrix$n.burnin <- object$n.burnin
+    out_matrix$ifitem$bay_est <- object$Bayes$ifitem$est
+    out_matrix$ifitem$bay_cred <- object$Bayes$ifitem$cred
 
   }
-  else if (!is.null(x$freq)) {
-    out_matrix$est <- as.data.frame(as.matrix(x$freq$est))
-    out_matrix$int$low <- as.data.frame(as.matrix(x$freq$conf$low))
-    out_matrix$int$up <- as.data.frame(as.matrix(x$freq$conf$up))
-    out_matrix$n.boot <- x$n.boot
-    out_matrix$ifitem$freq_tab <- x$freq$ifitem
-    out_matrix$omega.freq.method <- x$omega.freq.method
+  else if (!is.null(object$freq)) {
+    out_matrix$est <- as.data.frame(as.matrix(object$freq$est))
+    out_matrix$int$low <- as.data.frame(as.matrix(object$freq$conf$low))
+    out_matrix$int$up <- as.data.frame(as.matrix(object$freq$conf$up))
+    out_matrix$n.boot <- object$n.boot
+    out_matrix$ifitem$freq_tab <- object$freq$ifitem
+    out_matrix$omega.freq.method <- object$omega.freq.method
 
   } else {
     return(warning("no estimates calculated"))
   }
-  out_matrix$call <- x$call
-  out_matrix$interval <- x$interval
-  out_matrix$estimates <- x$estimates
-  out_matrix$complete <- x$complete
-  out_matrix$pairwise <- x$miss_pairwise
+  out_matrix$call <- object$call
+  out_matrix$interval <- object$interval
+  out_matrix$estimates <- object$estimates
+  out_matrix$complete <- object$complete
+  out_matrix$pairwise <- object$miss_pairwise
 
   class(out_matrix) <- "summary.strel"
   out_matrix

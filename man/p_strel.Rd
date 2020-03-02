@@ -2,7 +2,7 @@
 % Please edit documentation in R/prob_strel.R
 \name{p_strel}
 \alias{p_strel}
-\title{probability of estimate being bigger than threshold}
+\title{prior and posterior probability of estimate being bigger than threshold}
 \usage{
 p_strel(x, estimate, low.bound)
 }
@@ -15,8 +15,8 @@ p_strel(x, estimate, low.bound)
 }
 \description{
 takes a mcmc posterior sample of any of the single test reliability estimates
-and calculates any given probability of the estimate being bigger
-or smaller than an arbitrary value
+and calculates the prior and posterior probability of the estimate being bigger
+or smaller than an arbitrary value (priors are stored in the package)
 }
 \examples{
 p_strel(strel(asrm, "lambda2"), "lambda2", .80)

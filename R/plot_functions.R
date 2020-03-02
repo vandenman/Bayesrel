@@ -20,7 +20,9 @@ plot_strel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = 
   if (n_item > 50) {
     prior <- density(unlist(priorSamp(n_item, estimate)), from = 0, to = 1, n = 512)
   } else {
-    prior <- priors[[as.character(n_item)]][[posi]]
+    prior_all <- priors[[as.character(n_item)]]
+    posi2 <- grep(estimate, prior_all, ignore.case = T)
+    prior <- prior_all[[posi2]]
   }
   par(cex.main = 1.5, mar = c(4, 4,  1, 1), mgp = c(2, .6, 0), cex.lab = 1.5,
       font.lab = 2, cex.axis = 1.8, bty = "n", las = 1)
@@ -80,7 +82,7 @@ plot_strel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = 
     plotShadePrior(dens_prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
     plotShadePost(dens_post, xx = c(x0, x1, x2, x3), cols = colos, criteria = criteria, blackwhite = blackwhite)
 
-    lines(dens_prior, lty = 3, lwd = 3)
+    lines(dens_prior, lty = 2, lwd = 3)
     axis(side = 1, at = seq(0, 1, by = .2), labels = seq(0, 1, by = .2), cex.axis = 1.2, lwd = 1.5)
     axis(side = 2, at = seq(0, peak, by = peak/5), labels = NA, cex.axis = 1.2, lwd = 1.5)
     title(ylab = "Density", mgp = c(1, 1, 0), adj = 0.31)
@@ -93,7 +95,7 @@ plot_strel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = 
            paste("95% HDI: [", round(hdi[1], 3), ", ", round(hdi[2], 3),"]", sep ="")),
          cex = 1.2, pos = 2)
 
-    legend(x = 0, y = peak, lty = c(1, 3), lwd = 2, c("Posterior", "Prior"), bty = "n", cex = 1.2)
+    legend(x = 0, y = peak, lty = c(1, 2), lwd = 2, c("Posterior", "Prior"), bty = "n", cex = 1.2)
 
     text("insufficient", x = cuts[1]/2, y = peak*-.03, adj = 0.5, cex = 1.2)
     text("sufficient", x = (cuts[1] + cuts[2])/2, y = peak*-.03, adj = .5, cex = 1.2)
@@ -112,7 +114,7 @@ plot_strel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = 
     plotShadePrior(dens_prior, xx = c(xx0, xx1, xx2, xx3), cols = colos, criteria = criteria, blackwhite = blackwhite)
     plotShadePost(dens_post, xx = c(x0, x1, x2, x3), cols = colos, criteria = criteria, blackwhite = blackwhite)
 
-    lines(dens_prior, lty = 3, lwd = 3)
+    lines(dens_prior, lty = 2, lwd = 3)
 
     axis(side = 1, at = seq(0, 1, by = .2), labels = seq(0, 1, by = .2), cex.axis = 1.2, lwd = 1.5)
     axis(side = 2, at = seq(0, peak, by = peak/5), labels = NA, cex.axis = 1.2, lwd = 1.5)
@@ -126,7 +128,7 @@ plot_strel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = 
            paste("95% HDI: [", round(hdi[1], 3), ", ", round(hdi[2], 3),"]", sep ="")),
          cex = 1.2, pos = 2)
 
-    legend(x = 0, y = peak, lty = c(1, 3), lwd = 2, c("Posterior", "Prior"), bty = "n", cex = 1.2)
+    legend(x = 0, y = peak, lty = c(1, 2), lwd = 2, c("Posterior", "Prior"), bty = "n", cex = 1.2)
 
   }
 
