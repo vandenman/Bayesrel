@@ -3,7 +3,7 @@ Type: Package
 Title: Bayesian Reliability Estimation
 Version: 0.6.1
 Author: Julius M. Pfadt and Don van den Bergh
-Maintainer: Julius Pfadt <julius.pfadt@gmail.com>
+Maintainer: Julius M. Pfadt <julius.pfadt@gmail.com>
 Description: Functionality for the most common single test reliability estimates is provided:  
     Coefficient alpha, 'Guttman's' lambda-2/-4/-6, the greatest lower bound and coefficient omega. 
     The Bayesian estimates are provided with credible intervals. 
