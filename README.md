@@ -18,3 +18,6 @@ Functionality for the most common single test reliability estimates is provided:
     The glb method is adjusted code from the Rcsdp package by Hector Corrada Bravo (https://CRAN.R-project.org/package=Rcsdp) 
     The Lambda4 method is from Tom Benton (doi:10.1007/978-3-319-07503-7_19)
    
+   <!-- badges: start -->
+[![Travis build status](https://travis-ci.org/juliuspf/Bayesrel.svg?branch=master)](https://travis-ci.org/juliuspf/Bayesrel)
+<!-- badges: end -->
