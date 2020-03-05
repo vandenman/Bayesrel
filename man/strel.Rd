@@ -10,6 +10,7 @@ strel(
   interval = 0.95,
   n.iter = 1000,
   n.burnin = 50,
+  thin = 1,
   n.boot = 1000,
   omega.freq.method = "cfa",
   n.obs = NULL,
@@ -31,6 +32,8 @@ strel(
 \item{n.iter}{A number for the iterations of the Gibbs Sampler}
 
 \item{n.burnin}{A number for the burnin in the Gibbs Sampler}
+
+\item{thin}{A number for the thinning of the MCMC samples}
 
 \item{n.boot}{A number for the bootstrap samples}
 

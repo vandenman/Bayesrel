@@ -3,7 +3,7 @@
 # it returns the posterior distribution sample of omegas calculated from those parameters
 # source: Lee, S.-Y. (2007). Structural equation modeling: A bayesian approach(Vol. 711). JohnWiley & Sons.
 # p. 81 ff.
-omegaSampler <- function(data, n.iter, n.burnin, pairwise, thin = 1, n.chains = 1){
+omegaSampler <- function(data, n.iter, n.burnin, thin, pairwise, n.chains = 1){
 
   n <- nrow(data)
   p <- ncol(data)
@@ -18,7 +18,7 @@ omegaSampler <- function(data, n.iter, n.burnin, pairwise, thin = 1, n.chains = 
   p0 <- p+2 # prior df for wishart distribution for variance of factor scores (wi)
   # this lets the factor variance be approx 1
 
-  omega <- matrix(0, (n.iter-n.burnin), n.chains)
+  omm <- matrix(0, (n.iter-n.burnin), n.chains)
 
   for (z in 1:n.chains) {
     # draw starting values for sampling from prior distributions:
@@ -150,11 +150,14 @@ omegaSampler <- function(data, n.iter, n.burnin, pairwise, thin = 1, n.chains = 
     Psi <- Psi[(n.burnin + 1):n.iter, ]
     La <- La[(n.burnin + 1):n.iter, ]
 
-    omega[, z] <- oms
+    omm[, z] <- oms
   }
-  omega <- as.vector(omega)
-  omega <- omega[seq(1, length(omega), thin)]
+  omm <- as.vector(omm)
+  omm <- omm[seq(1, length(omm), by = thin)]
 
-  return(list(omega = coda::mcmc(omega), lambda = coda::mcmc(La), psi = coda::mcmc(Psi)
+  La_out <- La[seq(1, nrow(La), by = thin), ]
+  Psi_out <- Psi[seq(1, nrow(Psi), by = thin), ]
+
+  return(list(omega = coda::mcmc(omm), lambda = coda::mcmc(La_out), psi = coda::mcmc(Psi_out)
   ))
 }

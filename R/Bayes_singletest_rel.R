@@ -10,6 +10,7 @@
 #' @param interval A number specifying the uncertainty interval
 #' @param n.iter A number for the iterations of the Gibbs Sampler
 #' @param n.burnin A number for the burnin in the Gibbs Sampler
+#' @param thin A number for the thinning of the MCMC samples
 #' @param n.boot A number for the bootstrap samples
 #' @param omega.freq.method A character string for the method of frequentist omega, either "pfa" or "cfa"
 #' @param n.obs A number for the sample observations when a covariance matrix is supplied and the factor model is calculated
@@ -37,7 +38,8 @@
 #'
 #' @export
 strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
-               interval = .95, n.iter = 1e3, n.burnin = 50, n.boot = 1000,
+               interval = .95, n.iter = 1e3, n.burnin = 50, thin = 1,
+               n.boot = 1000,
                omega.freq.method = "cfa",
                n.obs = NULL, alpha.int.analytic = FALSE,
                freq = TRUE, Bayes = TRUE,
@@ -85,7 +87,7 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
     return("enter a valid omega method, either 'cfa' or 'pfa'")}
 
   if (Bayes) {
-    sum_res$Bayes <- gibbsFun(data, n.iter, n.burnin, estimates, interval, item.dropped, pairwise)
+    sum_res$Bayes <- gibbsFun(data, n.iter, n.burnin, thin, estimates, interval, item.dropped, pairwise)
   }
 
 

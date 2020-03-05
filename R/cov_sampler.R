@@ -3,7 +3,7 @@
 # sources: https://en.wikipedia.org/wiki/Normal-inverse-Wishart_distribution,
 # Murphy, K. P. (2007). Conjugate bayesian analysis of the gaussian distribution(Tech. Rep.). University of British Columbia.
 
-covSamp <- function(data, n.iter, n.burnin, pairwise){
+covSamp <- function(data, n.iter, n.burnin, thin, pairwise){
   n <- nrow(data)
   p <- ncol(data)
   # posterior covariance matrix ---------------------------------------------------
@@ -74,6 +74,7 @@ covSamp <- function(data, n.iter, n.burnin, pairwise){
   }
 
   c_post <- c_post[(n.burnin + 1):n.iter, , ]
+  c_post <- c_post[seq(1, dim(c_post)[1], thin), , ]
 
   return(c_post)
 }

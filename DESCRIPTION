@@ -1,7 +1,7 @@
 Package: Bayesrel
 Type: Package
 Title: Bayesian Reliability Estimation
-Version: 0.6.1
+Version: 0.6.2
 Author: Julius M. Pfadt and Don van den Bergh
 Maintainer: Julius M. Pfadt <julius.pfadt@gmail.com>
 Description: Functionality for the most common single test reliability estimates is provided:  
@@ -12,13 +12,13 @@ Description: Functionality for the most common single test reliability estimates
     is sampling from the posterior inverse 'Wishart' for the covariance matrix based measures. 
     See 'Murphy' (2007) <https://www.seas.harvard.edu/courses/cs281/papers/murphy-2007.pdf>. 
     In the case of omega it is 'Gibbs' Sampling from the joint conditional distributions of a single factor model. 
-    See 'Lee' (2007, <https://dx.doi.org/10.1002/9780470024737>). 
+    See 'Lee' (2007, <doi:10.1002/9780470024737>). 
     The glb method is adjusted code from the 'Rcsdp' package by 'Hector Corrada Bravo', 
     <https://CRAN.R-project.org/package=Rcsdp>; 
-    lambda-4 is from 'Benton' (2015) <https://dx.doi.org/10.1007/978-3-319-07503-7_19>; 
+    lambda-4 is from 'Benton' (2015) <doi:10.1007/978-3-319-07503-7_19>; 
     the principal factor analysis for the frequentist omega is from 'Schlegel' (2017) 
     <https://www.r-bloggers.com/iterated-principal-factor-method-of-factor-analysis-with-r/>; 
-    and the analytic alpha interval is from 'Bonett' and 'Wright' (2014) <https://dx.doi.org/10.1002/job.1960>. 
+    and the analytic alpha interval is from 'Bonett' and 'Wright' (2014) <doi:10.1002/job.1960>. 
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

@@ -2,12 +2,12 @@
 # and the credible intervals together with the posterior distribution objects
 # to be passed on for forther analysis
 
-gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped, pairwise){
+gibbsFun <- function(data, n.iter, n.burnin, thin, estimates, interval, item.dropped, pairwise){
   p <- ncol(data)
   res <- list()
   if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates ||
       "glb" %in% estimates){
-    C <- covSamp(data, n.iter, n.burnin, pairwise)
+    C <- covSamp(data, n.iter, n.burnin, thin, pairwise)
     if (item.dropped) {
       Ctmp <- array(0, c(p, n.iter - n.burnin, p - 1, p - 1))
       for (i in 1:p){
@@ -94,7 +94,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped, 
 
   # special case omega -----------------------------------------------------------------
   if ("omega" %in% estimates){
-    om_samp <- omegaSampler(data, n.iter, n.burnin, pairwise)
+    om_samp <- omegaSampler(data, n.iter, n.burnin, thin, pairwise)
     res$samp$Bayes_omega <- coda::mcmc(om_samp$omega)
     res$loadings <- apply(om_samp$lambda, 2, mean)
     res$resid_var <- apply(om_samp$psi, 2, mean)
@@ -109,7 +109,7 @@ gibbsFun <- function(data, n.iter, n.burnin, estimates, interval, item.dropped, 
       om_samp_ifitem <- matrix(0, n.iter - n.burnin, p)
       for (i in 1:p){
         tmp <- data[-i, -i]
-        om_samp_ifitem[, i] <- omegaSampler(tmp, n.iter, n.burnin, pairwise)$omega
+        om_samp_ifitem[, i] <- omegaSampler(tmp, n.iter, n.burnin, thin, pairwise)$omega
       }
       res$ifitem$samp$omega <- coda::mcmc(om_samp_ifitem)
       res$ifitem$est$omega <- apply(om_samp_ifitem, 2, mean)
