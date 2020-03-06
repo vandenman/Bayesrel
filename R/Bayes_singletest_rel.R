@@ -46,7 +46,7 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
                freq = TRUE, Bayes = TRUE,
                para.boot = FALSE,
                item.dropped = FALSE,
-               missing = "listwise") {
+               missing = "pairwise") {
 
   default <- c("alpha", "lambda2", "lambda4", "lambda6", "glb", "omega")
   # estimates <- match.arg(arg = estimates, several.ok = T)
@@ -64,8 +64,7 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
       x <- x[-pos, ]
       ncomp <- nrow(x)
       sum_res$complete <- ncomp
-    }
-    else if (missing == "pairwise") {
+    } else if (missing == "pairwise") {
       pairwise = T
       sum_res$miss_pairwise <- T
     } else return("missing values in data detected, please remove and run again")
