@@ -4,18 +4,23 @@
 \alias{plot_strel_id}
 \title{plots posterior distributions of chosen estimate and the item-dropped cases in one plot}
 \usage{
-plot_strel_id(x, estimate, ordering = FALSE)
+plot_strel_id(x, estimate, ordering = FALSE, distance = "kl")
 }
 \arguments{
 \item{x}{A strel output object (list)}
 
 \item{estimate}{A character string indicating what estimate to plot from the strel output object}
 
-\item{ordering}{A logical indicating if the densities in the plot should be ordered}
+\item{ordering}{A logical indicating if the densities in the plot should be ordered by a distance measure}
+
+\item{distance}{A string indicating what distance measure is to be used for the ordering,
+can be either "mean" for the differences between the point estimates; "ks" for the Kolmogorov Smirnov distance;
+or "kl" for the Kublack Leibler divergence}
 }
 \description{
 gives posterior densities of original dataset together with the the posteriors of datasets with
-items deleted. Can be ordered for the change item deleting brings about
+items deleted. Can be ordered for the change item deleting brings about. The method for ordering can be chosen;
+the items are ordered in from top to bottom from most change to least change in the posterior
 }
 \examples{
 plot_strel_id(strel(asrm, "lambda2", freq = FALSE, item.dropped = TRUE, n.chains = 2), "lambda2")

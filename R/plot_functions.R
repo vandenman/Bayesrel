@@ -172,16 +172,19 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 #'
 #' @description
 #' gives posterior densities of original dataset together with the the posteriors of datasets with
-#' items deleted. Can be ordered for the change item deleting brings about
+#' items deleted. Can be ordered for the change item deleting brings about. The method for ordering can be chosen;
+#' the items are ordered in from top to bottom from most change to least change in the posterior
 #'
 #' @param x A strel output object (list)
 #' @param estimate A character string indicating what estimate to plot from the strel output object
-#' @param ordering A logical indicating if the densities in the plot should be ordered
-#'
+#' @param ordering A logical indicating if the densities in the plot should be ordered by a distance measure
+#' @param distance A string indicating what distance measure is to be used for the ordering,
+#' can be either "mean" for the differences between the point estimates; "ks" for the Kolmogorov Smirnov distance;
+#' or "kl" for the Kublack Leibler divergence
 #' @examples plot_strel_id(strel(asrm, "lambda2", freq = FALSE, item.dropped = TRUE, n.chains = 2), "lambda2")
 #'
 #' @export
-plot_strel_id <- function(x, estimate, ordering = FALSE){
+plot_strel_id <- function(x, estimate, ordering = FALSE, distance = "kl"){
 
   if (is.null(x$Bayes$ifitem$samp)) {return("please run the analysis again with item.dropped = TRUE")}
 
@@ -217,7 +220,24 @@ plot_strel_id <- function(x, estimate, ordering = FALSE){
     est[n_row + 1, ] <- 1
     colnames(est) <- "value"
     est$name <- c(names, "original")
-    est <- est[order(est$value, decreasing = T), ]
+
+    if (distance == "mean") {
+      dists <- est$value
+      est <- est[order(dists, decreasing = T), ]
+    } else if (distance == "ks") {
+       samps <- chainSmoker(x$Bayes$ifitem$samp[[posi]])
+       og_samp <- chainSmoker(x$Bayes$samp[[posi]])
+       dists <- apply(samps, 2, ks.test.statistic, y = og_samp) # ks distance
+       dists[length(dists)+1] <- 0
+       est <- est[order(dists), ]
+    } else if (distance == "kl") {
+      samps <- chainSmoker(x$Bayes$ifitem$samp[[posi]])
+      og_samp <- chainSmoker(x$Bayes$samp[[posi]])
+      dists <- apply(samps, 2, KLD.statistic, y = og_samp) # kl divergence
+      dists[length(dists)+1] <- 0
+      est <- est[order(dists), ]
+    } else return("please supply a valid distance method")
+
     dat$var <- factor(dat$var, levels = c(est$name))
   }
 

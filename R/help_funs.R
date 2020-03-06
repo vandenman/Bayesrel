@@ -88,3 +88,18 @@ chainSmoker <- function(A) {
   }
   return(coda::mcmc(Av))
 }
+
+
+# calculate the kolomogorov smirnov distances between some samples and the original sample
+ks.test.statistic <- function(x, y) {
+  t <- stats::ks.test(x, y)
+  t$statistic
+}
+
+# calculate the kublack leibler distance between two samples
+KLD.statistic <- function(x, y) {
+  t <- LaplacesDemon::KLD(x, y)
+  t$mean.sum.KLD
+}
+
+
