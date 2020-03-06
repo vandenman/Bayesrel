@@ -223,7 +223,7 @@ plot_strel_id <- function(x, estimate, ordering = FALSE){
 
   ggplot2::ggplot(dat, ggplot2::aes(x = value, y = var, fill = colos)) +
     ggridges::stat_density_ridges(quantile_lines = T, quantiles = c(0.025, 0.5, 0.975),
-                                  alpha = .85, show.legend = F) +
+                                  alpha = .85, show.legend = F, scale = 1) +
     ggplot2::theme_linedraw() +
     ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white"),
                    strip.text = ggplot2::element_text(colour = "black")) +

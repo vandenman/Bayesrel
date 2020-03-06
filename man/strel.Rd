@@ -20,7 +20,7 @@ strel(
   Bayes = TRUE,
   para.boot = FALSE,
   item.dropped = FALSE,
-  missing = "listwise"
+  missing = "pairwise"
 )
 }
 \arguments{
