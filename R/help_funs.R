@@ -99,7 +99,8 @@ ks.test.statistic <- function(x, y) {
 # calculate the kublack leibler distance between two samples
 KLD.statistic <- function(x, y) {
   t <- LaplacesDemon::KLD(x, y)
-  t$mean.sum.KLD
+  t$sum.KLD.py.px
 }
+
 
 
