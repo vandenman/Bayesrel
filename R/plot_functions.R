@@ -8,13 +8,13 @@
 #' @param criteria A logical indicating if cutoff criteria should be drawn
 #' @param cuts A two element vector indicating what the cutoffs should be
 #'
-#' @examples plot_strel(strel(asrm, "lambda2"), "lambda2")
+#' @examples plot_strel(strel(asrm, "lambda2", n.chains = 2, freq = FALSE), "lambda2")
 #'
 #' @export
 plot_strel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80)){
 
   posi <- grep(estimate, x$estimates, ignore.case = T)
-  samp <- coda::as.mcmc(unlist(x$Bayes$samp[posi]))
+  samp <- chainSmoker(x$Bayes$samp[[posi]])
   n_item <- ncol(x$data)
 
   if (n_item > 50) {
@@ -178,7 +178,7 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 #' @param estimate A character string indicating what estimate to plot from the strel output object
 #' @param ordering A logical indicating if the densities in the plot should be ordered
 #'
-#' @examples plot_strel_id(strel(asrm, "lambda2", item.dropped = TRUE), "lambda2")
+#' @examples plot_strel_id(strel(asrm, "lambda2", freq = FALSE, item.dropped = TRUE, n.chains = 2), "lambda2")
 #'
 #' @export
 plot_strel_id <- function(x, estimate, ordering = FALSE){
@@ -196,8 +196,7 @@ plot_strel_id <- function(x, estimate, ordering = FALSE){
   dat$colos <- "1"
   dat$var <- "original"
 
-
-  dat_del <- t(as.matrix(as.data.frame(x$Bayes$ifitem$samp[posi])))
+  dat_del <- t(as.matrix(as.data.frame(chainSmoker(x$Bayes$ifitem$samp[[posi]]))))
 
   names <- NULL
   for(i in 1:(n_row)){
@@ -214,7 +213,7 @@ plot_strel_id <- function(x, estimate, ordering = FALSE){
   dat$var <- factor(dat$var, levels = unique(dat$var))
 
   if (ordering){
-    est <- as.data.frame(unlist(x$Bayes$ifitem$est[posi]))
+    est <- as.data.frame(x$Bayes$ifitem$est[[posi]])
     est[n_row + 1, ] <- 1
     colnames(est) <- "value"
     est$name <- c(names, "original")

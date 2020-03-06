@@ -28,6 +28,6 @@ gives posterior and prior distribution and pie plots
 input is the main reliability estimation object and the estimate to be plotted
 }
 \examples{
-plot_strel(strel(asrm, "lambda2"), "lambda2")
+plot_strel(strel(asrm, "lambda2", n.chains = 2, freq = FALSE), "lambda2")
 
 }

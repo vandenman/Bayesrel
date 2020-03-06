@@ -41,6 +41,8 @@ summary.strel <- function(object, ...){
     out_matrix$n.iter <- object$n.iter
     out_matrix$n.burnin <- object$n.burnin
     out_matrix$n.boot <- object$n.boot
+    out_matrix$thin <- object$thin
+    out_matrix$n.chains <- object$n.chains
     out_matrix$ifitem$bay_est <- object$Bayes$ifitem$est
     out_matrix$ifitem$bay_cred <- object$Bayes$ifitem$cred
     out_matrix$ifitem$freq_tab <- object$freq$ifitem
@@ -52,6 +54,8 @@ summary.strel <- function(object, ...){
     out_matrix$int$up <- as.data.frame(as.matrix(object$Bayes$cred$up))
     out_matrix$n.iter <- object$n.iter
     out_matrix$n.burnin <- object$n.burnin
+    out_matrix$thin <- object$thin
+    out_matrix$n.chains <- object$n.chains
     out_matrix$ifitem$bay_est <- object$Bayes$ifitem$est
     out_matrix$ifitem$bay_cred <- object$Bayes$ifitem$cred
 
@@ -102,6 +106,10 @@ print.summary.strel <- function(x, ...){
     cat(x$n.iter, "\n")
     cat("burnin: ")
     cat(x$n.burnin, "\n")
+    cat("thinning interval: ")
+    cat(x$thin, "\n")
+    cat("chains: ")
+    cat(x$n.chains, "\n")
   }
 
   if (length(grep("freq", x$est)) > 0) {

@@ -3,7 +3,7 @@
 # it returns the posterior distribution sample of omegas calculated from those parameters
 # source: Lee, S.-Y. (2007). Structural equation modeling: A bayesian approach(Vol. 711). JohnWiley & Sons.
 # p. 81 ff.
-omegaSampler <- function(data, n.iter, n.burnin, thin, pairwise, n.chains = 1){
+omegaSampler <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
 
   n <- nrow(data)
   p <- ncol(data)
@@ -18,7 +18,10 @@ omegaSampler <- function(data, n.iter, n.burnin, thin, pairwise, n.chains = 1){
   p0 <- p+2 # prior df for wishart distribution for variance of factor scores (wi)
   # this lets the factor variance be approx 1
 
-  omm <- matrix(0, (n.iter-n.burnin), n.chains)
+  omm <- matrix(0, n.chains, n.iter)
+  lll <- array(0, c(n.chains, n.iter, p))
+  ppp <- array(0, c(n.chains, n.iter, p))
+
 
   for (z in 1:n.chains) {
     # draw starting values for sampling from prior distributions:
@@ -145,19 +148,20 @@ omegaSampler <- function(data, n.iter, n.burnin, thin, pairwise, n.chains = 1){
       }
     }
 
-    # n.burnin
-    oms <- oms[(n.burnin + 1):n.iter]
-    Psi <- Psi[(n.burnin + 1):n.iter, ]
-    La <- La[(n.burnin + 1):n.iter, ]
-
-    omm[, z] <- oms
+    omm[z, ] <- oms
+    lll[z, , ] <- La
+    ppp[z, , ] <- Psi
   }
-  omm <- as.vector(omm)
-  omm <- omm[seq(1, length(omm), by = thin)]
 
-  La_out <- La[seq(1, nrow(La), by = thin), ]
-  Psi_out <- Psi[seq(1, nrow(Psi), by = thin), ]
+  omm_burned <- omm[, (n.burnin+1):n.iter, drop = F]
+  omm_out <- omm_burned[, seq(1, dim(omm_burned)[2], thin), drop = F]
 
-  return(list(omega = coda::mcmc(omm), lambda = coda::mcmc(La_out), psi = coda::mcmc(Psi_out)
+  lll_burned <- lll[, (n.burnin+1):n.iter, , drop = F]
+  ppp_burned <- ppp[, (n.burnin+1):n.iter, , drop = F]
+  lll_out <- lll_burned[, seq(1, dim(lll_burned)[2], thin), , drop = F]
+  ppp_out <- ppp_burned[, seq(1, dim(ppp_burned)[2], thin), , drop = F]
+
+
+  return(list(omega = coda::mcmc(omm_out), lambda = coda::mcmc(lll_out), psi = coda::mcmc(ppp_out)
   ))
 }

@@ -8,9 +8,10 @@ strel(
   x,
   estimates = c("alpha", "lambda2", "glb", "omega"),
   interval = 0.95,
-  n.iter = 1000,
+  n.iter = 500,
   n.burnin = 50,
   thin = 1,
+  n.chains = 3,
   n.boot = 1000,
   omega.freq.method = "cfa",
   n.obs = NULL,
@@ -34,6 +35,8 @@ strel(
 \item{n.burnin}{A number for the burnin in the Gibbs Sampler}
 
 \item{thin}{A number for the thinning of the MCMC samples}
+
+\item{n.chains}{A number for the chains to run for the MCMC sampling}
 
 \item{n.boot}{A number for the bootstrap samples}
 
@@ -60,8 +63,8 @@ The estimates supported are Cronbach alpha, lambda2/4/6, the glb, and Mcdonald o
 the computational effort is considerable
 }
 \examples{
-summary(strel(asrm, estimates = "lambda2"))
-summary(strel(asrm, estimates = "lambda2", item.dropped = TRUE))
+summary(strel(asrm, estimates = "lambda2", n.chains = 1))
+summary(strel(asrm, estimates = "lambda2", item.dropped = TRUE, n.chains = 1))
 
 
 }

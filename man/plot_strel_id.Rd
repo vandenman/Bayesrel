@@ -18,6 +18,6 @@ gives posterior densities of original dataset together with the the posteriors o
 items deleted. Can be ordered for the change item deleting brings about
 }
 \examples{
-plot_strel_id(strel(asrm, "lambda2", item.dropped = TRUE), "lambda2")
+plot_strel_id(strel(asrm, "lambda2", freq = FALSE, item.dropped = TRUE, n.chains = 2), "lambda2")
 
 }

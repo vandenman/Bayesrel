@@ -9,18 +9,18 @@
 #' @param low.bound A number for the threshold to be tested against
 #'
 #' @examples
-#' p_strel(strel(asrm, "lambda2"), "lambda2", .80)
+#' p_strel(strel(asrm, "lambda2", n.chains = 1), "lambda2", .80)
 #' @export
 
 
 p_strel <- function(x, estimate, low.bound){
   posi1 <- grep(estimate, x$estimates, ignore.case = T)
-  samp <- unlist(x$Bayes$samp[posi1])
+  samp <- chainSmoker(x$Bayes$samp[[posi1]])
   obj <- ecdf(samp)
   post_prob <- 1 - obj(low.bound)
 
   # prior prob
-  n.item <- dim(x$Bayes$covsamp)[2]
+  n.item <- dim(x$Bayes$covsamp)[3]
   prior_all <- priors[[as.character(n.item)]]
   posi2 <- grep(estimate, prior_all, ignore.case = T)
   prior <- prior_all[[posi2]]

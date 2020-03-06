@@ -76,3 +76,15 @@ omegaBasic <- function(l, e){
   o <- sum(l)^2 / (sum(l)^2 + sum(e))
   return(o)
 }
+
+
+# aggregate mutliple chains
+chainSmoker <- function(A) {
+  d <- dim(A)
+  if (length(d) == 2) {
+    Av <- as.vector(A)
+  } else{
+    Av <- apply(A, seq(3, length(d), 1), as.vector)
+  }
+  return(coda::mcmc(Av))
+}

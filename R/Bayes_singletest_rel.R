@@ -11,6 +11,7 @@
 #' @param n.iter A number for the iterations of the Gibbs Sampler
 #' @param n.burnin A number for the burnin in the Gibbs Sampler
 #' @param thin A number for the thinning of the MCMC samples
+#' @param n.chains A number for the chains to run for the MCMC sampling
 #' @param n.boot A number for the bootstrap samples
 #' @param omega.freq.method A character string for the method of frequentist omega, either "pfa" or "cfa"
 #' @param n.obs A number for the sample observations when a covariance matrix is supplied and the factor model is calculated
@@ -22,8 +23,8 @@
 #' @param missing A string specifying the way to handle missing data
 #'
 #' @examples
-#' summary(strel(asrm, estimates = "lambda2"))
-#' summary(strel(asrm, estimates = "lambda2", item.dropped = TRUE))
+#' summary(strel(asrm, estimates = "lambda2", n.chains = 1))
+#' summary(strel(asrm, estimates = "lambda2", item.dropped = TRUE, n.chains = 1))
 #'
 #'
 #' @references{
@@ -38,7 +39,7 @@
 #'
 #' @export
 strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
-               interval = .95, n.iter = 1e3, n.burnin = 50, thin = 1,
+               interval = .95, n.iter = 500, n.burnin = 50, thin = 1, n.chains = 3,
                n.boot = 1000,
                omega.freq.method = "cfa",
                n.obs = NULL, alpha.int.analytic = FALSE,
@@ -87,7 +88,7 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
     return("enter a valid omega method, either 'cfa' or 'pfa'")}
 
   if (Bayes) {
-    sum_res$Bayes <- gibbsFun(data, n.iter, n.burnin, thin, estimates, interval, item.dropped, pairwise)
+    sum_res$Bayes <- gibbsFun(data, estimates, n.iter, n.burnin, thin, n.chains, interval, item.dropped, pairwise)
   }
 
 
@@ -106,6 +107,8 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
   sum_res$estimates <- estimates
   sum_res$n.iter <- n.iter
   sum_res$n.burnin <- n.burnin
+  sum_res$thin <- thin
+  sum_res$n.chains <- n.chains
   sum_res$interval <- interval
   sum_res$data <- data
   sum_res$n.boot <- n.boot
