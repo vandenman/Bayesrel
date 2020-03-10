@@ -22,6 +22,8 @@ omegaSampler <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
   lll <- array(0, c(n.chains, n.iter, p))
   ppp <- array(0, c(n.chains, n.iter, p))
 
+  inds <- which(is.na(data), arr.ind = T)
+  dat_imp <- array(0, c(n.chains, n.iter, nrow(inds)))
 
   for (z in 1:n.chains) {
     # draw starting values for sampling from prior distributions:
@@ -46,7 +48,6 @@ omegaSampler <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
 
 
     if (pairwise) { # missing data
-      inds <- which(is.na(data), arr.ind = T)
       dat_complete <- data
       dat_complete[inds] <- colMeans(data, na.rm = T)[inds[, 2]]
 
@@ -101,6 +102,7 @@ omegaSampler <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
             dat_complete[r, b] <- rnorm(1, muq, ccq)
           }
         }
+        dat_imp[z, i, ] <- dat_complete[inds]
 
         oms[i] <- omegaBasic(lambda, psi)
 
@@ -161,7 +163,11 @@ omegaSampler <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
   lll_out <- lll_burned[, seq(1, dim(lll_burned)[2], thin), , drop = F]
   ppp_out <- ppp_burned[, seq(1, dim(ppp_burned)[2], thin), , drop = F]
 
+  dat_imp_burned <- dat_imp[, (n.burnin + 1):n.iter, , drop = F]
+  dat_out <- dat_imp_burned[, seq(1, dim(dat_imp_burned)[2], thin), , drop = F]
 
-  return(list(omega = coda::mcmc(omm_out), lambda = coda::mcmc(lll_out), psi = coda::mcmc(ppp_out)
+
+  return(list(omega = coda::mcmc(omm_out), lambda = coda::mcmc(lll_out), psi = coda::mcmc(ppp_out),
+              dat_mis_samp_fm = coda::mcmc(dat_out)
   ))
 }

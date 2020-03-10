@@ -14,13 +14,17 @@
 #' @param n.chains A number for the chains to run for the MCMC sampling
 #' @param n.boot A number for the bootstrap samples
 #' @param omega.freq.method A character string for the method of frequentist omega, either "pfa" or "cfa"
-#' @param n.obs A number for the sample observations when a covariance matrix is supplied and the factor model is calculated
+#' @param n.obs A number for the sample observations when a covariance matrix is supplied
+#' and the factor model is calculated
 #' @param alpha.int.analytic A logical for calculating the alpha confidence interval analytically
 #' @param freq A logical for calculating the frequentist estimates
 #' @param Bayes A logical for calculating the Bayesian estimates
 #' @param para.boot A logical for calculating the parametric bootstrap, the default is the non-parametric
 #' @param item.dropped A logical for calculating the if-item-dropped statistics
-#' @param missing A string specifying the way to handle missing data
+#' @param missing A string specifying the way to handle missing data, 'listwise' is self-explanatory,
+#' 'pairwise' in the Bayesian paradigm means sampling the missing values as additional parameters
+#' from the joint conditional distribution, in the frequentist paradigm this means using the 'pairwise' covariance
+#' matrix and the full information ML method for omega
 #'
 #' @examples
 #' summary(strel(asrm, estimates = "lambda2", n.chains = 1))

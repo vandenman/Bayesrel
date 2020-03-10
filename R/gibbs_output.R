@@ -7,17 +7,17 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
   res <- list()
   if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates ||
       "glb" %in% estimates){
-    C <- covSamp(data, n.iter, n.burnin, thin, n.chains, pairwise)
+    tmp_out <- covSamp(data, n.iter, n.burnin, thin, n.chains, pairwise)
+    C <- tmp_out$cov_mat
+    res$covsamp <- C
+    res$data_mis_samp_cov <- tmp_out$dat_mis_samp_cov
     if (item.dropped) {
       Ctmp <- array(0, c(n.chains, (n.iter - n.burnin)/thin, p, p - 1, p - 1))
       for (i in 1:p){
         Ctmp[, , i, , ] <- C[ , , -i, -i]
       }
     }
-  } else {
-    C = NULL
   }
-  res$covsamp <- C
 
   if ("alpha" %in% estimates){
     res$samp$Bayes_alpha <- coda::mcmc(apply(C, MARGIN = c(1, 2), applyalpha))
@@ -93,8 +93,9 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
   if ("omega" %in% estimates){
     om_samp <- omegaSampler(data, n.iter, n.burnin, thin, n.chains, pairwise)
     res$samp$Bayes_omega <- om_samp$omega
-    res$loadings <- apply(chainSmoker(om_samp$lambda), 2, mean)
-    res$resid_var <- apply(chainSmoker(om_samp$psi), 2, mean)
+    res$data_mis_samp_fm <- om_samp$dat_mis_samp_fm
+    res$loadings <- apply((om_samp$lambda), 3, mean)
+    res$resid_var <- apply((om_samp$psi), 3, mean)
 
     int <- coda::HPDinterval(chainSmoker(res$samp$Bayes_omega), prob = interval)
     res$cred$low$Bayes_omega <- int[1]

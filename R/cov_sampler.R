@@ -15,11 +15,12 @@ covSamp <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
   kn <- k0 + n
   vn <- v0 + n
   c_post <- array(0, c(n.chains, n.iter, p, p))
+  inds <- which(is.na(data), arr.ind = T)
+  dat_imp <- array(0, c(n.chains, n.iter, nrow(inds)))
 
   for (z in 1:n.chains) {
 
     if (pairwise) {
-      inds <- which(is.na(data), arr.ind = T)
       dat_complete <- data
       # initial generation of complete data set with means as substitutes
       dat_complete[inds] <- colMeans(data, na.rm = T)[inds[, 2]]
@@ -28,8 +29,8 @@ covSamp <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
         ym <- .colMeans(dat_complete, n, p)
         mun <- (k0 * mu0 + n * ym) / (k0 + n)
         S <- 0
-        for (z in 1:n){
-          S <- S + tcrossprod(dat_complete[z, ] - ym)
+        for (nn in 1:n){
+          S <- S + tcrossprod(dat_complete[nn, ] - ym)
         }
         Tn <- T0 + S + (k0 * n / (k0 + n)) * (ym - mu0) %*% t(ym - mu0)
         # drawing samples from posterior:
@@ -56,6 +57,7 @@ covSamp <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
             dat_complete[r, b] <- rnorm(1, muq, ccq)
           }
         }
+        dat_imp[z, i, ] <- dat_complete[inds]
       }
 
     } else {
@@ -79,7 +81,10 @@ covSamp <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
   c_post_burned <- c_post[, (n.burnin + 1):n.iter, , , drop = F]
   c_post_out <- c_post_burned[, seq(1, dim(c_post_burned)[2], thin), , , drop = F]
 
-  return(c_post_out)
+  dat_imp_burned <- dat_imp[, (n.burnin + 1):n.iter, , drop = F]
+  dat_out <- dat_imp_burned[, seq(1, dim(dat_imp_burned)[2], thin), , drop = F]
+
+  return(list(cov_mat = coda::mcmc(c_post_out), dat_mis_samp_cov = coda::mcmc(dat_out)))
 }
 
 # ------- customized covariance matrix sampling with cholesky decomposition -----------
