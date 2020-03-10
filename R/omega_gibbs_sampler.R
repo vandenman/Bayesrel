@@ -83,7 +83,7 @@ omegaSampler <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
         # substitute missing values one by one, assuming a normal with mean zero and model implied variance
         # by conditioning on the remaining complete data:
 
-        cc <- lambda %*% phi %*% t(lambda) + diag(psi)
+        cc <- lambda %*% phi %*% t(lambda) + diag(psi) # phi = 1 is bad!
 
         # ms <- MASS::mvrnorm(1, numeric(p), cc)
         ms <- numeric(p) # not sure if this is the right way, it works however
