@@ -42,7 +42,8 @@ strel(
 
 \item{omega.freq.method}{A character string for the method of frequentist omega, either "pfa" or "cfa"}
 
-\item{n.obs}{A number for the sample observations when a covariance matrix is supplied and the factor model is calculated}
+\item{n.obs}{A number for the sample observations when a covariance matrix is supplied
+and the factor model is calculated}
 
 \item{alpha.int.analytic}{A logical for calculating the alpha confidence interval analytically}
 
@@ -54,7 +55,10 @@ strel(
 
 \item{item.dropped}{A logical for calculating the if-item-dropped statistics}
 
-\item{missing}{A string specifying the way to handle missing data}
+\item{missing}{A string specifying the way to handle missing data, 'listwise' is self-explanatory,
+'pairwise' in the Bayesian paradigm means sampling the missing values as additional parameters
+from the joint conditional distribution, in the frequentist paradigm this means using the 'pairwise' covariance
+matrix and the full information ML method for omega}
 }
 \description{
 calculate Bayesian and frequentist single test reliability measures.

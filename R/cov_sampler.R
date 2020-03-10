@@ -84,7 +84,7 @@ covSamp <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
   dat_imp_burned <- dat_imp[, (n.burnin + 1):n.iter, , drop = F]
   dat_out <- dat_imp_burned[, seq(1, dim(dat_imp_burned)[2], thin), , drop = F]
 
-  return(list(cov_mat = coda::mcmc(c_post_out), dat_mis_samp_cov = coda::mcmc(dat_out)))
+  return(list(cov_mat = c_post_out, dat_mis_samp_cov = coda::mcmc(dat_out)))
 }
 
 # ------- customized covariance matrix sampling with cholesky decomposition -----------
