@@ -102,5 +102,30 @@ KLD.statistic <- function(x, y) {
   t$sum.KLD.py.px
 }
 
+hpdHelp <- function(x) {
+  x <- coda::as.mcmc(x)
+  return(coda::HPDinterval(x))
+}
 
+
+# create covariance matrix
+createCovMat <- function(avg, p) {
+  mean_cor <- 1
+  counter <- 1
+  while (mean_cor < (avg - .001) || mean_cor > (avg + .001)) {
+    mlam <- avg * 3 + .02
+    vlam <- avg * 2
+    lam_true <- abs(rnorm(p, mlam, vlam))
+    psi_true <- 1/rgamma(p, 10, 10)
+    loading <- matrix(lam_true, nrow = p)
+    psi_m <- diag(1, nrow = p)
+    diag(psi_m) <- psi_true
+    tmpCov <- make_symmetric(loading %*% 1 %*% t(loading) + psi_m)
+    cormat <- cov2cor(tmpCov)
+    mean_cor <- (sum(cormat) - p) / (p*p - p)
+    counter <- counter + 1
+    if (counter == 1e4) return(print("solution has not been found"))
+  }
+  return(tmpCov)
+}
 

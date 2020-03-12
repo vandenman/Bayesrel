@@ -52,8 +52,8 @@ covSamp <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
             cc21 <- cc[-b, b]
             cc12 <- cc[b, -b]
             cc22 <- cc[-b, -b]
-            muq <- mu1 + cc12 %*% solve(cc22) %*% (as.numeric(dat_complete[r, -b]) - mu2)
-            ccq <- cc11 - cc12 %*% solve(cc22) %*% cc21
+            muq <- mu1 + cc12 %*% try(solve(cc22)) %*% (as.numeric(dat_complete[r, -b]) - mu2)
+            ccq <- cc11 - cc12 %*% try(solve(cc22)) %*% cc21
             dat_complete[r, b] <- rnorm(1, muq, ccq)
           }
         }
