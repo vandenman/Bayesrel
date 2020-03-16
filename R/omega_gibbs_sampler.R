@@ -36,19 +36,20 @@ omegaSampler <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
         wi <- out$wi
         phi <- out$phi
         cc <- out$cc
-        rows <- unique(inds[, 1])
-        for (r in rows) {
-          cols <- inds[which(inds[, 1] == r), 2]
-          for (b in cols) {
-            mu1 <- ms[b]
-            mu2 <- ms[-b]
-            cc11 <- cc[b, b]
-            cc21 <- cc[-b, b]
-            cc12 <- cc[b, -b]
-            cc22 <- cc[-b, -b]
-            muq <- mu1 + cc12 %*% try(solve(cc22)) %*% (as.numeric(dat_complete[r, -b]) - mu2)
-            ccq <- cc11 - cc12 %*% try(solve(cc22)) %*% (cc21)
-            dat_complete[r, b] <- rnorm(1, muq, ccq)
+        # substitute missing values one by one, where each value is drawn conditional on the rest of the data
+        cols <- unique(inds[, 2])
+        for (ccc in cols) {
+          rows <- inds[which(inds[, 2] == ccc), 1]
+          mu1 <- ms[ccc]
+          mu2 <- ms[-ccc]
+          cc11 <- cc[ccc, ccc]
+          cc21 <- cc[-ccc, ccc]
+          cc12 <- cc[ccc, -ccc]
+          cc22 <- cc[-ccc, -ccc]
+          ccq <- cc11 - cc12 %*% try(solve(cc22)) %*% cc21
+          for (r in rows) {
+            muq <- mu1 + cc12 %*% try(solve(cc22)) %*% (as.numeric(dat_complete[r, -ccc]) - mu2)
+            dat_complete[r, ccc] <- rnorm(1, muq, sqrt(ccq))
           }
         }
         omm[z, i] <- omegaBasic(out$lambda, out$psi)

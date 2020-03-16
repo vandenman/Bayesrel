@@ -109,7 +109,7 @@ hpdHelp <- function(x) {
 
 
 # create covariance matrix
-createCovMat <- function(avg, p) {
+createUnidimCovMat <- function(avg, p) {
   mean_cor <- 1
   counter <- 1
   while (mean_cor < (avg - .001) || mean_cor > (avg + .001)) {
