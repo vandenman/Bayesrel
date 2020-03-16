@@ -43,6 +43,14 @@ covSamp <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
       }
 
     } else {
+      k0 <- 1e-10
+      v0 <- p
+      t <- diag(p)
+      T0 <- diag(k0, nrow = p, ncol = p) # matrix inversion of diagonal matrix
+      mu0 <- rep(0, p) # prior means
+      kn <- k0 + n
+      vn <- v0 + n
+
       ym <- .colMeans(data, n, p)
       mun <- (k0 * mu0 + n * ym) / (k0 + n)
       S <-cov(sweep(data, 2L, ym, `-`)) * (n - 1)
