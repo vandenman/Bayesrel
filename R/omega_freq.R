@@ -1,7 +1,7 @@
 # gives freq omega, and loadings and errors
 #
 
-omegaFreqData <- function(data, pairwise){
+omegaFreqData <- function(data, interval, pairwise){
   p <- ncol(data)
   file <- lavOneFile(data)
   colnames(data) <- file$names
@@ -27,7 +27,7 @@ omegaFreqData <- function(data, pairwise){
   } else {
     fit <- try(lavaan::cfa(mod, data, std.lv = T), silent = TRUE)
   }
-  params <- try(lavaan::parameterestimates(fit), silent = TRUE)
+  params <- try(lavaan::parameterestimates(fit, level = interval), silent = TRUE)
   if ("try-error" %in% class(params)) {
     load <- resid <- omega <- om_low <- om_up <- fit_tmp <- indic <- NA
   } else {
