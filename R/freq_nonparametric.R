@@ -125,7 +125,7 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
   #omega --------------------------------------------------------------------------
   if ("omega" %in% estimates){
     if (omega.freq.method == "cfa"){
-      out <- omegaFreqData(data, pairwise)
+      out <- omegaFreqData(data, interval, pairwise)
       res$est$freq_omega <- out$omega
       res$loadings <- out$loadings
       res$resid_var <- out$errors
