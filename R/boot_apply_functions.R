@@ -46,6 +46,12 @@ applyomega_cfa_data <- function(data, pairwise){
   return(om)
 }
 
+applyomega_cfa_cov <- function(cov, pairwise){
+  data <- MASS::mvrnorm(1e3, numeric(ncol(cov)), cov)
+  out <- omegaFreqData(data, pairwise)
+  om <- out$omega
+  return(om)
+}
 
 applyomega_pfa <- function(m){
   f <- princFac(m)
