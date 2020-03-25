@@ -168,8 +168,13 @@ print.summary.strel <- function(x, ...){
   if (!is.null(x$ifitem$freq_tab)){
       n_row <- length(unlist(x$ifitem$freq_tab[1])) + 1
       n_col <- length(x$estimates)
+      names <- NULL
+      for(z in 1:(n_row-1)){
+        names[z] <- paste0("x", z)
+      }
+      row_names <- c("original", names)
       mat_ifitem_freq <- data.frame(matrix(0, n_row, n_col))
-      mat_ifitem_freq[1, ] <- as.vector(unlist(x$est)[(n_col+1):(n_col*2)])
+      mat_ifitem_freq[1, ] <- as.vector(unlist(x$est)[grep("freq", rownames(x$est))])
       for (i in 1:n_col){
         mat_ifitem_freq[2:n_row, i] <- as.vector(unlist(x$ifitem$freq_tab[i]))
       }
