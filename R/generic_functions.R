@@ -37,6 +37,7 @@ summary.strel <- function(object, ...){
                                 as.data.frame(as.matrix(object$freq$conf$low)))
     out_matrix$int$up <- rbind(as.data.frame(as.matrix(object$Bayes$cred$up)),
                                as.data.frame(as.matrix(object$freq$conf$up)))
+    out_matrix$alpha.interval <- object$alpha.interval
     out_matrix$omega.freq.method <- object$omega.freq.method
     out_matrix$n.iter <- object$n.iter
     out_matrix$n.burnin <- object$n.burnin
@@ -66,7 +67,9 @@ summary.strel <- function(object, ...){
     out_matrix$int$up <- as.data.frame(as.matrix(object$freq$conf$up))
     out_matrix$n.boot <- object$n.boot
     out_matrix$ifitem$freq_tab <- object$freq$ifitem
+    out_matrix$alpha.interval <- object$alpha.interval
     out_matrix$omega.freq.method <- object$omega.freq.method
+
 
   } else {
     return(warning("no estimates calculated"))
@@ -113,11 +116,15 @@ print.summary.strel <- function(x, ...){
   }
 
   if (length(grep("freq", x$est)) > 0) {
-    if (sum((c("alpha", "lambda2", "lambda6", "glb") %in% x$estimates)) > 0 |
-        ("omega" %in% x$estimates & x$omega.freq.method == "pfa")) {
+    if (("alpha" %in% x$estimates & is.null(x$alpha.interval)) |
+        "lambda2" %in% x$estimates | "lambda4" %in% x$estimates | "lambda6" %in% x$estimates |
+        "glb" %in% x$estimates | ("omega" %in% x$estimates & x$omega.freq.method == "pfa")){
         cat("bootstrap samples: ")
         cat(x$n.boot, "\n")
-      }
+    }
+    if ("alpha" %in% x$estimates & !is.null(x$alpha.interval)) {
+      cat("alpha confidence interval is estimated analytically \n")
+    }
     if ("omega" %in% x$estimates){
       cat("frequentist omega method is: ")
       cat(x$omega.freq.method, "\n")
@@ -125,11 +132,7 @@ print.summary.strel <- function(x, ...){
       if (x$omega.freq.method == "pfa") {cat("bootstrap \n")}
       if (x$omega.freq.method == "cfa") {cat("maximum likelihood z-value \n")}
     }
-    # if (!is.null(x$fit.indices)){
-    #   options(scipen = 999)
-    #   cat("\nFrequentist fit of 1-factor-model for omega is:\n")
-    #   print.default(as.matrix(x$fit.indices))
-    # }
+
   }
 
   if (!is.null(x$complete)) {

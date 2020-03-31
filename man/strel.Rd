@@ -15,7 +15,7 @@ strel(
   n.boot = 1000,
   omega.freq.method = "cfa",
   n.obs = NULL,
-  alpha.int.analytic = FALSE,
+  alpha.int.analytic = TRUE,
   freq = TRUE,
   Bayes = TRUE,
   para.boot = FALSE,

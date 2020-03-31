@@ -14,8 +14,10 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
   }
   res <- list()
   res$covsamp <- NULL
-  if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates ||
-      "glb" %in% estimates || omega.freq.method == "pfa"){
+  if (("alpha" %in% estimates & !alpha.int.analytic) |
+      "lambda2" %in% estimates | "lambda4" %in% estimates | "lambda6" %in% estimates |
+      "glb" %in% estimates | ("omega" %in% estimates & omega.freq.method == "pfa")){
+
     boot_data <- array(0, c(boot.n, n, p))
     boot_cov <- array(0, c(boot.n, p, p))
     for (i in 1:boot.n){

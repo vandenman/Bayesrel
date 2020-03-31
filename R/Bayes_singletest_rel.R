@@ -46,7 +46,8 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
                interval = .95, n.iter = 500, n.burnin = 50, thin = 1, n.chains = 3,
                n.boot = 1000,
                omega.freq.method = "cfa",
-               n.obs = NULL, alpha.int.analytic = FALSE,
+               n.obs = NULL,
+               alpha.int.analytic = TRUE,
                freq = TRUE, Bayes = TRUE,
                para.boot = FALSE,
                item.dropped = FALSE,
@@ -104,6 +105,7 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
                                     alpha.int.analytic, pairwise)
     }
     sum_res$omega.freq.method <- omega.freq.method
+    if(alpha.int.analytic) {sum_res$alpha.interval = "analytic"}
   }
 
 

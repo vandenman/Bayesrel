@@ -14,8 +14,10 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
   }
   res <- list()
   res$covsamp <- NULL
-  if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates ||
-      "glb" %in% estimates || omega.freq.method == "pfa"){
+  if (("alpha" %in% estimates & !alpha.int.analytic) |
+      "lambda2" %in% estimates | "lambda4" %in% estimates | "lambda6" %in% estimates |
+      "glb" %in% estimates | ("omega" %in% estimates & omega.freq.method == "pfa")){
+
     boot_data <- array(0, c(boot.n, n, p))
     boot_cov <- array(0, c(boot.n, p, p))
     for (i in 1:boot.n){
@@ -50,8 +52,6 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
       } else{
         res$conf$low$freq_alpha <- quantile(alpha_obj, probs = (1 - interval)/2, na.rm = T)
         res$conf$up$freq_alpha <- quantile(alpha_obj, probs = interval + (1 - interval)/2, na.rm = T)
-        # res$conf$low$freq_alpha <- res$est$freq_alpha - qnorm(1 - (1 - interval)/2) * se(alpha_obj)
-        # res$conf$up$freq_alpha <- res$est$freq_alpha + qnorm(1 - (1 - interval)/2) * se(alpha_obj)
         }
       res$boot$alpha <- alpha_obj
     }
