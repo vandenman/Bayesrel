@@ -38,7 +38,8 @@ summary.strel <- function(object, ...){
     out_matrix$int$up <- rbind(as.data.frame(as.matrix(object$Bayes$cred$up)),
                                as.data.frame(as.matrix(object$freq$conf$up)))
     out_matrix$alpha.interval <- object$alpha.interval
-    out_matrix$omega.freq.method <- object$omega.freq.method
+    out_matrix$omega.pfa <- object$freq$omega.pfa
+    out_matrix$omega.error <- object$freq$omega.error
     out_matrix$n.iter <- object$n.iter
     out_matrix$n.burnin <- object$n.burnin
     out_matrix$n.boot <- object$n.boot
@@ -47,6 +48,7 @@ summary.strel <- function(object, ...){
     out_matrix$ifitem$bay_est <- object$Bayes$ifitem$est
     out_matrix$ifitem$bay_cred <- object$Bayes$ifitem$cred
     out_matrix$ifitem$freq_tab <- object$freq$ifitem
+    out_matrix$para.boot <- object$para.boot
 
   } else if (!is.null(object$Bayes)) {
     out_matrix$est <- as.data.frame(as.matrix(object$Bayes$est))
@@ -66,8 +68,9 @@ summary.strel <- function(object, ...){
     out_matrix$n.boot <- object$n.boot
     out_matrix$ifitem$freq_tab <- object$freq$ifitem
     out_matrix$alpha.interval <- object$alpha.interval
-    out_matrix$omega.freq.method <- object$omega.freq.method
-
+    out_matrix$omega.pfa <- object$freq$omega.pfa
+    out_matrix$omega.error <- object$freq$omega.error
+    out_matrix$para.boot <- object$para.boot
 
   } else {
     return(warning("no estimates calculated"))
@@ -116,21 +119,27 @@ print.summary.strel <- function(x, ...){
   if (length(grep("freq", x$est)) > 0) {
     if (("alpha" %in% x$estimates & is.null(x$alpha.interval)) |
         "lambda2" %in% x$estimates | "lambda4" %in% x$estimates | "lambda6" %in% x$estimates |
-        "glb" %in% x$estimates | ("omega" %in% x$estimates & x$omega.freq.method == "pfa")){
+        "glb" %in% x$estimates | ("omega" %in% x$estimates & !is.null(x$omega.pfa))){
         cat("bootstrap samples: ")
         cat(x$n.boot, "\n")
     }
-    if ("alpha" %in% x$estimates & !is.null(x$alpha.interval)) {
-      cat("alpha confidence interval is estimated analytically \n")
-    }
+    # if ("alpha" %in% x$estimates & !is.null(x$alpha.interval)) {
+    #   cat("alpha confidence interval is estimated analytically \n")
+    # }
     if ("omega" %in% x$estimates){
-      cat("frequentist omega method is: ")
-      cat(x$omega.freq.method, "\n")
-      cat("omega confidence interval is estimated with: ")
-      if (x$omega.freq.method == "cfa") {
-        cat("maximum likelihood z-value \n")
+      if (!is.null(x$omega.pfa)) {
+        cat("frequentist omega method is a pfa ")
+        if (!is.null(x$omega.error)) {
+          cat("because the cfa did not find a solution")
+        }
       } else {
+        cat("frequentist omega method is a cfa ")
+      }
+      cat("\nomega confidence interval is estimated with ")
+      if (!is.null(x$omega.pfa)) {
         cat("bootstrap \n")
+      } else {
+        cat("maximum likelihood z-value \n")
       }
     }
 

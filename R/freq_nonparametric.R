@@ -138,7 +138,9 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
           res$conf$up$freq_omega <- quantile(omega_obj, probs = interval + (1 - interval)/2, na.rm = T)
         }
         res$boot$omega <- omega_obj
-        res$omega.freq.method <- "pfa because the cfa did not find a proper solution"
+        res$omega.error <- TRUE
+        res$omega.pfa <- TRUE
+
         if (item.dropped){
           res$ifitem$omega <- apply(Ctmp, 1, applyomega_pfa)
         }
@@ -149,7 +151,6 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
         res$conf$low$freq_omega <- out$omega_low
         res$conf$up$freq_omega <- out$omega_up
         res$omega_fit <- out$indices
-        res$omega.freq.method <- "cfa"
 
         if (item.dropped){
           res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data, pairwise)
@@ -158,7 +159,7 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
     } else if (omega.freq.method == "pfa"){
       res$est$freq_omega <- applyomega_pfa(cc)
       omega_obj <- apply(boot_cov, 1, applyomega_pfa)
-      res$omega.freq.method <- "pfa"
+      res$omega.pfa <- TRUE
       if (length(unique(round(omega_obj, 4))) == 1){
         res$conf$low$freq_omega <- NA
         res$conf$up$freq_omega <- NA

@@ -27,7 +27,7 @@ omegaFreqData <- function(data, interval, pairwise){
   } else {
     fit <- fitmodel(mod, data)
   }
-  if (is.na(fit)) {
+  if (is.null(fit)) {
     load <- resid <- omega <- om_low <- om_up <- fit_tmp <- indic <- NA
   } else {
     params <- lavaan::parameterestimates(fit, level = interval)
@@ -52,10 +52,10 @@ fitmodel <- function(mod, data) {
       lavaan::cfa(mod, data, std.lv = T)
     },
     error = function(cond) {
-      return(NA)
+      return(NULL)
     },
     warning = function(cond) {
-      return(NA)
+      return(NULL)
     },
     finally = {}
   )
@@ -68,10 +68,10 @@ fitmodel_mis <- function(mod, data) {
       lavaan::cfa(mod, data, std.lv = T, missing = "ML")
     },
     error = function(cond) {
-      return(NA)
+      return(NULL)
     },
     warning = function(cond) {
-      return(NA)
+      return(NULL)
     },
     finally = {}
   )
