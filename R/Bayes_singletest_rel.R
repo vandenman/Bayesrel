@@ -93,30 +93,34 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
 
   if (Bayes) {
     sum_res$Bayes <- gibbsFun(data, estimates, n.iter, n.burnin, thin, n.chains, interval, item.dropped, pairwise)
+    sum_res$n.iter <- n.iter
+    sum_res$n.burnin <- n.burnin
+    sum_res$thin <- thin
+    sum_res$n.chains <- n.chains
   }
 
 
   if(freq){
+
     if (para.boot){
       sum_res$freq <- freqFun_para(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
                                    alpha.int.analytic, pairwise)
-    } else{
+    } else {
       sum_res$freq <- freqFun_nonpara(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
                                     alpha.int.analytic, pairwise)
     }
-    sum_res$omega.freq.method <- omega.freq.method
+
     if(alpha.int.analytic) {sum_res$alpha.interval = "analytic"}
+
+    sum_res$n.boot <- n.boot
+    sum_res$para.boot <- para.boot
   }
 
 
   sum_res$estimates <- estimates
-  sum_res$n.iter <- n.iter
-  sum_res$n.burnin <- n.burnin
-  sum_res$thin <- thin
-  sum_res$n.chains <- n.chains
   sum_res$interval <- interval
   sum_res$data <- data
-  sum_res$n.boot <- n.boot
+
 
   class(sum_res) = 'strel'
   return(sum_res)

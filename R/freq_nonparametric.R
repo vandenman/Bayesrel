@@ -126,19 +126,40 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
   if ("omega" %in% estimates){
     if (omega.freq.method == "cfa"){
       out <- omegaFreqData(data, interval, pairwise)
-      res$est$freq_omega <- out$omega
-      res$loadings <- out$loadings
-      res$resid_var <- out$errors
-      res$conf$low$freq_omega <- out$omega_low
-      res$conf$up$freq_omega <- out$omega_up
-      res$omega_fit <- out$indices
+      if (any(is.na(out))) {
+        res$est$freq_omega <- applyomega_pfa(cc)
+        omega_obj <- apply(boot_cov, 1, applyomega_pfa)
+        if (length(unique(round(omega_obj, 4))) == 1){
+          res$conf$low$freq_omega <- NA
+          res$conf$up$freq_omega <- NA
+        }
+        else{
+          res$conf$low$freq_omega <- quantile(omega_obj, probs = (1 - interval)/2, na.rm = T)
+          res$conf$up$freq_omega <- quantile(omega_obj, probs = interval + (1 - interval)/2, na.rm = T)
+        }
+        res$boot$omega <- omega_obj
+        res$omega.error <- TRUE
+        res$omega.pfa <- TRUE
 
-      if (item.dropped){
-        res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data, pairwise)
+        if (item.dropped){
+          res$ifitem$omega <- apply(Ctmp, 1, applyomega_pfa)
+        }
+      } else {
+        res$est$freq_omega <- out$omega
+        res$loadings <- out$loadings
+        res$resid_var <- out$errors
+        res$conf$low$freq_omega <- out$omega_low
+        res$conf$up$freq_omega <- out$omega_up
+        res$omega_fit <- out$indices
+
+        if (item.dropped){
+          res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data, pairwise)
+        }
       }
     } else if (omega.freq.method == "pfa"){
       res$est$freq_omega <- applyomega_pfa(cc)
       omega_obj <- apply(boot_cov, 1, applyomega_pfa)
+      res$omega.pfa <- TRUE
       if (length(unique(round(omega_obj, 4))) == 1){
         res$conf$low$freq_omega <- NA
         res$conf$up$freq_omega <- NA
