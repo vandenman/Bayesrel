@@ -21,7 +21,7 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
     boot_data <- array(0, c(boot.n, n, p))
     boot_cov <- array(0, c(boot.n, p, p))
     for (i in 1:boot.n){
-      boot_data[i, , ] <- MASS::mvrnorm(n, colMeans(data), cc)
+      boot_data[i, , ] <- MASS::mvrnorm(n, colMeans(data, na.rm = T), cc)
       boot_cov[i, , ] <- cov(boot_data[i, , ])
     }
     res$covsamp <- boot_cov
@@ -40,14 +40,12 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
       int <- ciAlpha(1 - interval, n, cc)
       res$conf$low$freq_alpha <- int[1]
       res$conf$up$freq_alpha <- int[2]
-
     } else{
       alpha_obj <- apply(boot_cov, 1, applyalpha)
       if (length(unique(round(alpha_obj, 4))) == 1){
-        res$conf$low$freq_alpha <- NA
-        res$conf$up$freq_alpha <- NA
-      }
-      else{
+        res$conf$low$freq_alpha <- 1
+        res$conf$up$freq_alpha <- 1
+      } else{
         res$conf$low$freq_alpha <- quantile(alpha_obj, probs = (1 - interval)/2, na.rm = T)
         res$conf$up$freq_alpha <- quantile(alpha_obj, probs = interval + (1 - interval)/2, na.rm = T)
       }
@@ -63,8 +61,7 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
     if (length(unique(round(lambda2_obj, 4))) == 1){
       res$conf$low$freq_lambda2 <- NA
       res$conf$up$freq_lambda2 <- NA
-    }
-    else{
+    } else{
       res$conf$low$freq_lambda2 <- quantile(lambda2_obj, probs = (1 - interval)/2, na.rm = T)
       res$conf$up$freq_lambda2 <- quantile(lambda2_obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
@@ -80,8 +77,7 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
     if (length(unique(round(lambda4_obj, 4))) == 1){
       res$conf$low$freq_lambda4 <- NA
       res$conf$up$freq_lambda4 <- NA
-    }
-    else{
+    } else{
       res$conf$low$freq_lambda4 <- quantile(lambda4_obj, probs = (1 - interval)/2, na.rm = T)
       res$conf$up$freq_lambda4 <- quantile(lambda4_obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
@@ -97,8 +93,7 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
     if (length(unique(round(lambda6_obj, 4))) == 1){
       res$conf$low$freq_lambda6 <- NA
       res$conf$up$freq_lambda6 <- NA
-    }
-    else{
+    } else{
       res$conf$low$freq_lambda6 <- quantile(lambda6_obj, probs = (1 - interval)/2, na.rm = T)
       res$conf$up$freq_lambda6 <- quantile(lambda6_obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
@@ -113,8 +108,7 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
     if (length(unique(round(glb_obj, 4))) == 1){
       res$conf$low$freq_glb <- NA
       res$conf$up$freq_glb <- NA
-    }
-    else{
+    } else{
       res$conf$low$freq_glb <- quantile(glb_obj, probs = (1 - interval)/2, na.rm = T)
       res$conf$up$freq_glb <- quantile(glb_obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
@@ -127,20 +121,41 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
   #omega --------------------------------------------------------------------------
   if ("omega" %in% estimates){
     if (omega.freq.method == "cfa"){
-      out <- omegaFreqData(data, pairwise)
-      res$est$freq_omega <- out$omega
-      res$loadings <- out$loadings
-      res$resid_var <- out$errors
-      res$conf$low$freq_omega <- out$omega_low
-      res$conf$up$freq_omega <- out$omega_up
-      res$omega_fit <- out$indices
+      out <- omegaFreqData(data, interval, pairwise)
+      if (any(is.na(out))) {
+        res$est$freq_omega <- applyomega_pfa(cc)
+        omega_obj <- apply(boot_cov, 1, applyomega_pfa)
+        if (length(unique(round(omega_obj, 4))) == 1){
+          res$conf$low$freq_omega <- NA
+          res$conf$up$freq_omega <- NA
+        }
+        else{
+          res$conf$low$freq_omega <- quantile(omega_obj, probs = (1 - interval)/2, na.rm = T)
+          res$conf$up$freq_omega <- quantile(omega_obj, probs = interval + (1 - interval)/2, na.rm = T)
+        }
+        res$boot$omega <- omega_obj
+        res$omega.error <- TRUE
+        res$omega.pfa <- TRUE
 
-      if (item.dropped){
-        res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data, pairwise)
+        if (item.dropped){
+          res$ifitem$omega <- apply(Ctmp, 1, applyomega_pfa)
+        }
+      } else {
+        res$est$freq_omega <- out$omega
+        res$loadings <- out$loadings
+        res$resid_var <- out$errors
+        res$conf$low$freq_omega <- out$omega_low
+        res$conf$up$freq_omega <- out$omega_up
+        res$omega_fit <- out$indices
+
+        if (item.dropped){
+          res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data, pairwise)
+        }
       }
     } else if (omega.freq.method == "pfa"){
       res$est$freq_omega <- applyomega_pfa(cc)
       omega_obj <- apply(boot_cov, 1, applyomega_pfa)
+      res$omega.pfa <- TRUE
       if (length(unique(round(omega_obj, 4))) == 1){
         res$conf$low$freq_omega <- NA
         res$conf$up$freq_omega <- NA

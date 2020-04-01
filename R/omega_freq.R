@@ -23,14 +23,14 @@ omegaFreqData <- function(data, interval, pairwise){
                  "\n", sum_loads, sum_errs, omega)
 
   if (pairwise) {
-    fit <- try(lavaan::cfa(mod, data, std.lv = T, missing = "ML"), silent = TRUE)
+    fit <- fitmodel_mis(mod, data)
   } else {
-    fit <- try(lavaan::cfa(mod, data, std.lv = T), silent = TRUE)
+    fit <- fitmodel(mod, data)
   }
-  params <- try(lavaan::parameterestimates(fit, level = interval), silent = TRUE)
-  if ("try-error" %in% class(params)) {
+  if (is.na(fit)) {
     load <- resid <- omega <- om_low <- om_up <- fit_tmp <- indic <- NA
   } else {
+    params <- lavaan::parameterestimates(fit, level = interval)
     omega <- params$est[params$lhs=="omega"]
     om_low <- params$ci.lower[params$lhs=="omega"]
     om_up <- params$ci.upper[params$lhs=="omega"]
@@ -45,3 +45,35 @@ omegaFreqData <- function(data, interval, pairwise){
   return(list(omega = omega, omega_lower = om_low, omega_upper = om_up, indices = indic))
 }
 
+
+fitmodel <- function(mod, data) {
+  out <- tryCatch(
+    {
+      lavaan::cfa(mod, data, std.lv = T)
+    },
+    error = function(cond) {
+      return(NA)
+    },
+    warning = function(cond) {
+      return(NA)
+    },
+    finally = {}
+  )
+  return(out)
+}
+
+fitmodel_mis <- function(mod, data) {
+  out <- tryCatch(
+    {
+      lavaan::cfa(mod, data, std.lv = T, missing = "ML")
+    },
+    error = function(cond) {
+      return(NA)
+    },
+    warning = function(cond) {
+      return(NA)
+    },
+    finally = {}
+  )
+  return(out)
+}

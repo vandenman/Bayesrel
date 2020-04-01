@@ -48,8 +48,7 @@ summary.strel <- function(object, ...){
     out_matrix$ifitem$bay_cred <- object$Bayes$ifitem$cred
     out_matrix$ifitem$freq_tab <- object$freq$ifitem
 
-  }
-  else if (!is.null(object$Bayes)) {
+  } else if (!is.null(object$Bayes)) {
     out_matrix$est <- as.data.frame(as.matrix(object$Bayes$est))
     out_matrix$int$low <- as.data.frame(as.matrix(object$Bayes$cred$low))
     out_matrix$int$up <- as.data.frame(as.matrix(object$Bayes$cred$up))
@@ -60,8 +59,7 @@ summary.strel <- function(object, ...){
     out_matrix$ifitem$bay_est <- object$Bayes$ifitem$est
     out_matrix$ifitem$bay_cred <- object$Bayes$ifitem$cred
 
-  }
-  else if (!is.null(object$freq)) {
+  } else if (!is.null(object$freq)) {
     out_matrix$est <- as.data.frame(as.matrix(object$freq$est))
     out_matrix$int$low <- as.data.frame(as.matrix(object$freq$conf$low))
     out_matrix$int$up <- as.data.frame(as.matrix(object$freq$conf$up))
@@ -129,8 +127,11 @@ print.summary.strel <- function(x, ...){
       cat("frequentist omega method is: ")
       cat(x$omega.freq.method, "\n")
       cat("omega confidence interval is estimated with: ")
-      if (x$omega.freq.method == "pfa") {cat("bootstrap \n")}
-      if (x$omega.freq.method == "cfa") {cat("maximum likelihood z-value \n")}
+      if (x$omega.freq.method == "cfa") {
+        cat("maximum likelihood z-value \n")
+      } else {
+        cat("bootstrap \n")
+      }
     }
 
   }
