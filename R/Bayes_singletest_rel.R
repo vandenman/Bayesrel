@@ -5,7 +5,7 @@
 #' The estimates supported are Cronbach alpha, lambda2/4/6, the glb, and Mcdonald omega. Beware of lambda4 with many indicators,
 #' the computational effort is considerable
 #'
-#' @param x A dataset or covariance matrix
+#' @param data A dataset or covariance matrix
 #' @param estimates A character vector containing the estimands, we recommend using lambda4 with only a few items due to the computation time
 #' @param interval A number specifying the uncertainty interval
 #' @param n.iter A number for the iterations of the Gibbs Sampler
@@ -42,7 +42,7 @@
 #' @importFrom Rdpack reprompt
 #'
 #' @export
-strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
+strel <- function(data, estimates = c("alpha", "lambda2", "glb", "omega"),
                interval = .95, n.iter = 500, n.burnin = 50, thin = 1, n.chains = 3,
                n.boot = 1000,
                omega.freq.method = "cfa",
@@ -63,28 +63,27 @@ strel <- function(x, estimates = c("alpha", "lambda2", "glb", "omega"),
   sum_res$call <- match.call()
 
   pairwise <- FALSE
-  if (any(is.na(x))) {
+  if (any(is.na(data))) {
     if (missing == "listwise") {
-      pos <- which(is.na(x), arr.ind = T)[, 1]
-      x <- x[-pos, ]
-      ncomp <- nrow(x)
+      pos <- which(is.na(data), arr.ind = T)[, 1]
+      data <- data[-pos, ]
+      ncomp <- nrow(data)
       sum_res$complete <- ncomp
     } else if (missing == "pairwise") {
       pairwise = T
       sum_res$miss_pairwise <- T
     } else return("missing values in data detected, please remove and run again")
   }
-  data <- NULL
   sigma <- NULL
-  if (ncol(x) == nrow(x)){
+  if (ncol(data) == nrow(data)){
     if (is.null(n.obs) & "omega" %in% estimates) {
       return("number of observations (n.obs) needs to be specified when entering a covariance matrix")}
-    if (sum(x[lower.tri(x)] != t(x)[lower.tri(x)]) > 0) {return("input matrix is not symmetric")}
-    if (sum(eigen(x)$values < 0) > 0) {return("input matrix is not positive definite")}
-    sigma <- x
+    if (sum(data[lower.tri(data)] != t(data)[lower.tri(data)]) > 0) {return("input matrix is not symmetric")}
+    if (sum(eigen(data)$values < 0) > 0) {return("input matrix is not positive definite")}
+    sigma <- data
     data <- MASS::mvrnorm(n.obs, rep(0, ncol(sigma)), sigma, empirical = TRUE)
   } else{
-    data <- scale(x, scale = F)
+    data <- scale(data, scale = F)
     # sigma <- cov(data)
   }
 

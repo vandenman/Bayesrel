@@ -5,7 +5,7 @@
 \title{calculate single test reliability estimates}
 \usage{
 strel(
-  x,
+  data,
   estimates = c("alpha", "lambda2", "glb", "omega"),
   interval = 0.95,
   n.iter = 500,
@@ -24,7 +24,7 @@ strel(
 )
 }
 \arguments{
-\item{x}{A dataset or covariance matrix}
+\item{data}{A dataset or covariance matrix}
 
 \item{estimates}{A character vector containing the estimands, we recommend using lambda4 with only a few items due to the computation time}
 
