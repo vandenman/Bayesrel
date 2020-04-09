@@ -40,8 +40,8 @@ applyglb <- function(M){
   return(gl)
 }
 
-applyomega_cfa_data <- function(data, pairwise){
-  out <- omegaFreqData(data, pairwise)
+applyomega_cfa_data <- function(data, interval, pairwise){
+  out <- omegaFreqData(data, interval, pairwise)
   om <- out$omega
   return(om)
 }

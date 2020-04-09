@@ -153,7 +153,7 @@ freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method
         res$omega_fit <- out$indices
 
         if (item.dropped){
-          res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data, pairwise)
+          res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data, interval, pairwise)
         }
       }
     } else if (omega.freq.method == "pfa"){
