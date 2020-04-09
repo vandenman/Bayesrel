@@ -4,7 +4,7 @@
 # and non-parametric bootstrapped confidence intervals, now calculated with SEs and z-values
 
 freqFun_nonpara <- function(data, boot.n, estimates, interval, omega.freq.method,
-                            item.dropped, alpha.int.analytic, pairwise = FALSE){
+                            item.dropped, alpha.int.analytic, pairwise){
   p <- ncol(data)
   n <- nrow(data)
   if (pairwise) {
