@@ -202,16 +202,20 @@ plot_strel_id <- function(x, estimate, ordering = FALSE, distance = "kl"){
   dat_del <- t(as.matrix(as.data.frame(chainSmoker(x$Bayes$ifitem$samp[[posi]]))))
 
   names <- NULL
-  for(i in 1:(n_row)){
-    names[i] <- paste0("x", i)
+  z <- 1
+  for(i in n_row:1){
+    names[z] <- paste0("x", i)
+    z <- z+1
   }
 
-  for (i in 1:n_row){
+  z <- 1
+  for (i in n_row:1){
     tmp <- as.data.frame(dat_del[i, ])
     colnames(tmp) <- "value"
-    tmp$var <- names[i]
+    tmp$var <- names[z]
     tmp$colos <- "2"
     dat <- rbind(dat, tmp)
+    z <- z+1
   }
   dat$var <- factor(dat$var, levels = unique(dat$var))
 
@@ -247,9 +251,9 @@ plot_strel_id <- function(x, estimate, ordering = FALSE, distance = "kl"){
     ggplot2::theme_linedraw() +
     ggplot2::theme(strip.background = ggplot2::element_rect(fill = "white"),
                    strip.text = ggplot2::element_text(colour = "black")) +
-    ggplot2::xlab("\n Reliability") +
+    ggplot2::xlab(estimate) +
     ggplot2::ylab("Item Dropped") +
-    ggplot2::scale_y_discrete(expand = ggplot2::expand_scale(add = c(0.25, 1.5))) +
+    ggplot2::scale_y_discrete(expand = ggplot2::expansion(mult = c(0.1, 0.25))) +
     ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5, vjust = 4, size = 20),
                    axis.title = ggplot2::element_text(size = 16),
                    axis.text = ggplot2::element_text(size = 12),
