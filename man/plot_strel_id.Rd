@@ -4,17 +4,16 @@
 \alias{plot_strel_id}
 \title{plots posterior distributions of chosen estimate and the item-dropped cases in one plot}
 \usage{
-plot_strel_id(x, estimate, ordering = FALSE, distance = "kl")
+plot_strel_id(x, estimate, distance = NULL)
 }
 \arguments{
 \item{x}{A strel output object (list)}
 
 \item{estimate}{A character string indicating what estimate to plot from the strel output object}
 
-\item{ordering}{A logical indicating if the densities in the plot should be ordered by a distance measure}
-
-\item{distance}{A string indicating what distance measure is to be used for the ordering,
-can be either "mean" for the differences between the point estimates; "ks" for the Kolmogorov Smirnov distance;
+\item{distance}{A string indicating what distance measure is to be used for ordering, if NULL then no ordering,
+otherwise ca be either "mean" for the differences between the point estimates;
+"ks" for the Kolmogorov Smirnov distance;
 or "kl" for the Kublack Leibler divergence}
 }
 \description{

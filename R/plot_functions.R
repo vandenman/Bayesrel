@@ -177,14 +177,14 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 #'
 #' @param x A strel output object (list)
 #' @param estimate A character string indicating what estimate to plot from the strel output object
-#' @param ordering A logical indicating if the densities in the plot should be ordered by a distance measure
-#' @param distance A string indicating what distance measure is to be used for the ordering,
-#' can be either "mean" for the differences between the point estimates; "ks" for the Kolmogorov Smirnov distance;
+#' @param distance A string indicating what distance measure is to be used for ordering, if NULL then no ordering,
+#' otherwise ca be either "mean" for the differences between the point estimates;
+#' "ks" for the Kolmogorov Smirnov distance;
 #' or "kl" for the Kublack Leibler divergence
 #' @examples plot_strel_id(strel(asrm, "lambda2", freq = FALSE, item.dropped = TRUE, n.chains = 2), "lambda2")
 #'
 #' @export
-plot_strel_id <- function(x, estimate, ordering = FALSE, distance = "kl"){
+plot_strel_id <- function(x, estimate, distance = NULL){
 
   if (is.null(x$Bayes$ifitem$samp)) {return("please run the analysis again with item.dropped = TRUE")}
 
@@ -202,32 +202,29 @@ plot_strel_id <- function(x, estimate, ordering = FALSE, distance = "kl"){
   dat_del <- t(as.matrix(as.data.frame(chainSmoker(x$Bayes$ifitem$samp[[posi]]))))
 
   names <- NULL
-  z <- 1
   for(i in n_row:1){
-    names[z] <- paste0("x", i)
-    z <- z+1
+    names[i] <- paste0("x", i)
   }
 
-  z <- 1
   for (i in n_row:1){
     tmp <- as.data.frame(dat_del[i, ])
     colnames(tmp) <- "value"
-    tmp$var <- names[z]
+    tmp$var <- names[i]
     tmp$colos <- "2"
     dat <- rbind(dat, tmp)
-    z <- z+1
   }
   dat$var <- factor(dat$var, levels = unique(dat$var))
 
-  if (ordering){
-    est <- as.data.frame(x$Bayes$ifitem$est[[posi]])
+  if (!is.null((distance))){
+    est <- (as.data.frame(x$Bayes$ifitem$est[[posi]]))
     est[n_row + 1, ] <- 1
     colnames(est) <- "value"
     est$name <- c(names, "original")
 
     if (distance == "mean") {
-      dists <- est$value
-      est <- est[order(dists, decreasing = T), ]
+      dists <- abs(x$Bayes$est[[posi]] - x$Bayes$ifitem$est[[posi]])
+      dists[length(dists)+1] <- 0
+      est <- est[order(dists, decreasing = F), ]
     } else if (distance == "ks") {
        samps <- chainSmoker(x$Bayes$ifitem$samp[[posi]])
        og_samp <- chainSmoker(x$Bayes$samp[[posi]])
@@ -241,7 +238,6 @@ plot_strel_id <- function(x, estimate, ordering = FALSE, distance = "kl"){
       dists[length(dists)+1] <- 0
       est <- est[order(dists), ]
     } else return("please supply a valid distance method")
-
     dat$var <- factor(dat$var, levels = c(est$name))
   }
 
