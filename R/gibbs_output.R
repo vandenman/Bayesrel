@@ -109,7 +109,7 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
         om_samp_ifitem[, , i] <- omegaSampler(tmp, n.iter, n.burnin, thin, n.chains, pairwise)$omega
       }
       res$ifitem$samp$omega <- (om_samp_ifitem)
-      res$ifitem$est$omega <- apply(chainSmoker(om_samp_ifitem), 2, mean)
+      res$ifitem$est$omega <- apply(om_samp_ifitem, 3, mean)
       res$ifitem$cred$omega <- coda::HPDinterval(chainSmoker(res$ifitem$samp$omega), prob = interval)
 
     }
