@@ -128,14 +128,14 @@ print.summary.strel <- function(x, ...){
     # }
     if ("omega" %in% x$estimates){
       if (!is.null(x$omega.pfa)) {
-        cat("frequentist omega method is a pfa ")
+        cat("frequentist omega method: pfa ")
         if (!is.null(x$omega.error)) {
           cat("because the cfa did not find a solution")
         }
       } else {
-        cat("frequentist omega method is a cfa ")
+        cat("frequentist omega method: cfa ")
       }
-      cat("\nomega confidence interval is estimated with ")
+      cat("\nomega confidence interval is estimated with: ")
       if (!is.null(x$omega.pfa)) {
         cat("bootstrap \n")
       } else {
@@ -146,11 +146,11 @@ print.summary.strel <- function(x, ...){
   }
 
   if (!is.null(x$complete)) {
-    cat("using listwise deletion the number of complete cases is: ")
+    cat("Missing data handling: using listwise deletion the number of complete cases is ")
     cat(x$complete)
   }
   if (!is.null(x$pairwise)) {
-    cat("using pairwise complete cases")
+    cat("Missing data handling: using pairwise complete cases")
   }
 
 

@@ -186,7 +186,7 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 #' @export
 plot_strel_id <- function(x, estimate, distance = NULL){
 
-  if (is.null(x$Bayes$ifitem$samp)) {return("please run the analysis again with item.dropped = TRUE")}
+  if (is.null(x$Bayes$ifitem$samp)) {return(warning("please run the analysis again with item.dropped = TRUE"))}
 
   n_row <- length(unlist(x$Bayes$ifitem$est[1]))
   posi <- grep(estimate, x$estimates, ignore.case = T)
@@ -237,7 +237,7 @@ plot_strel_id <- function(x, estimate, distance = NULL){
       dists <- apply(samps, 2, KLD.statistic, y = og_samp) # kl divergence
       dists[length(dists)+1] <- 0
       est <- est[order(dists), ]
-    } else return("please supply a valid distance method")
+    } else return(warning("please supply a valid distance method"))
     dat$var <- factor(dat$var, levels = c(est$name))
   }
 

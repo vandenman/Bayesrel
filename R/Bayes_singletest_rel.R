@@ -70,16 +70,16 @@ strel <- function(data, estimates = c("alpha", "lambda2", "glb", "omega"),
       ncomp <- nrow(data)
       sum_res$complete <- ncomp
     } else if (missing == "pairwise") {
-      pairwise = T
+      pairwise <- T
       sum_res$miss_pairwise <- T
-    } else return("missing values in data detected, please remove and run again")
+    } else return(warning("missing values in data detected, please remove and run again"))
   }
   sigma <- NULL
   if (ncol(data) == nrow(data)){
     if (is.null(n.obs) & "omega" %in% estimates) {
-      return("number of observations (n.obs) needs to be specified when entering a covariance matrix")}
-    if (sum(data[lower.tri(data)] != t(data)[lower.tri(data)]) > 0) {return("input matrix is not symmetric")}
-    if (sum(eigen(data)$values < 0) > 0) {return("input matrix is not positive definite")}
+      return(warning("number of observations (n.obs) needs to be specified when entering a covariance matrix"))}
+    if (sum(data[lower.tri(data)] != t(data)[lower.tri(data)]) > 0) {return(warning("input matrix is not symmetric"))}
+    if (sum(eigen(data)$values < 0) > 0) {return(warning("input matrix is not positive definite"))}
     sigma <- data
     data <- MASS::mvrnorm(n.obs, rep(0, ncol(sigma)), sigma, empirical = TRUE)
   } else{
@@ -87,8 +87,6 @@ strel <- function(data, estimates = c("alpha", "lambda2", "glb", "omega"),
     # sigma <- cov(data)
   }
 
-  if (omega.freq.method != "cfa" & omega.freq.method != "pfa") {
-    return("enter a valid omega method, either 'cfa' or 'pfa'")}
 
   if (Bayes) {
     sum_res$Bayes <- gibbsFun(data, estimates, n.iter, n.burnin, thin, n.chains, interval, item.dropped, pairwise)

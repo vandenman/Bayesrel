@@ -13,10 +13,15 @@
 #' @export
 #'
 omega_fit <- function(x){
-  if (!("omega" %in% x$estimates)) {return("please run the analysis with omega as an estimate")}
+  if (!("omega" %in% x$estimates)) {return(warning("please run the analysis with omega as an estimate"))}
+  if (!is.null(x$freq$omega.pfa)) {warning("cannot compute fit.measures for the pfa method")}
 
   if (!is.null(x$Bayes)) {
-    sigma <- cov(x$data)
+    if (!is.null(x$miss_pairwise)) {
+      sigma <- cov(x$data, use = "pairwise.complete.obs")
+    } else {
+      sigma <- cov(x$data, use = "complete.obs")
+    }
     lambda <- x$Bayes$loadings
     psi <- x$Bayes$resid_var
     cimpl <- lambda %*% t(lambda) + diag(psi)
