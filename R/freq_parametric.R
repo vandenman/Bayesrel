@@ -122,6 +122,7 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
   if ("omega" %in% estimates){
     if (omega.freq.method == "cfa"){
       out <- omegaFreqData(data, interval, pairwise)
+      res$fit.object <- out$fit.object
       if (any(is.na(out))) {
         res$est$freq_omega <- applyomega_pfa(cc)
         omega_obj <- apply(boot_cov, 1, applyomega_pfa)

@@ -42,7 +42,7 @@ omegaFreqData <- function(data, interval, pairwise){
                fit_tmp["srmr"])
   }
 
-  return(list(omega = omega, omega_lower = om_low, omega_upper = om_up, indices = indic))
+  return(list(omega = omega, omega_lower = om_low, omega_upper = om_up, indices = indic, fit.object = fit))
 }
 
 
