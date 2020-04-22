@@ -38,7 +38,7 @@
 #' @importFrom grDevices adjustcolor recordPlot
 #' @importFrom graphics arrows axis legend lines par plot text title
 #' @importFrom methods is
-#' @importFrom stats cov cov2cor density ecdf median qnorm quantile rchisq rgamma rnorm runif sd var
+#' @importFrom stats cov cov2cor density ecdf qnorm quantile rchisq rgamma rnorm runif sd var
 #' @importFrom Rdpack reprompt
 #'
 #' @export

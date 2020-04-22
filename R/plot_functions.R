@@ -28,7 +28,7 @@ plot_strel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = 
       font.lab = 2, cex.axis = 1.8, bty = "n", las = 1)
 
   hdi <- coda::HPDinterval(samp)
-  med <- median(samp)
+  med <- mean(samp)
   peak <- max(density(samp)$y)
   rad <- .04
 
@@ -91,7 +91,7 @@ plot_strel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = 
 
     t1 <- legend(x = .95, y = peak*1.33, legend=c("", "", ""), cex = 1.2, bty ="n", xjust = 0, yjust = 1)
     text(t1$rect$left + t1$rect$w, t1$text$y*.99,
-         c("", paste("median = ", round(med, 3), sep =""),
+         c("", paste("mean = ", round(med, 3), sep =""),
            paste("95% HDI: [", round(hdi[1], 3), ", ", round(hdi[2], 3),"]", sep ="")),
          cex = 1.2, pos = 2)
 
@@ -124,7 +124,7 @@ plot_strel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = 
 
     t1 <- legend(x = .95, y = peak*1.33, legend=c("", "", ""), cex = 1.2, bty ="n", xjust = 0, yjust = 1)
     text(t1$rect$left + t1$rect$w, t1$text$y*.99,
-         c("", paste("median = ", round(med, 3), sep =""),
+         c("", paste("mean = ", round(med, 3), sep =""),
            paste("95% HDI: [", round(hdi[1], 3), ", ", round(hdi[2], 3),"]", sep ="")),
          cex = 1.2, pos = 2)
 

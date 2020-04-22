@@ -24,10 +24,10 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
     int <- coda::HPDinterval(chainSmoker(res$samp$Bayes_alpha), prob = interval)
     res$cred$low$Bayes_alpha <- int[1]
     res$cred$up$Bayes_alpha <- int[2]
-    res$est$Bayes_alpha<- median(res$samp$Bayes_alpha)
+    res$est$Bayes_alpha<- mean(res$samp$Bayes_alpha)
     if (item.dropped){
       res$ifitem$samp$alpha <- (apply(Ctmp, c(1, 2, 3), applyalpha))
-      res$ifitem$est$alpha <- apply(res$ifitem$samp$alpha, 3, median)
+      res$ifitem$est$alpha <- apply(res$ifitem$samp$alpha, 3, mean)
       res$ifitem$cred$alpha <- coda::HPDinterval(chainSmoker(res$ifitem$samp$alpha), prob = interval)
     }
   }
@@ -37,10 +37,10 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
     int <- coda::HPDinterval(chainSmoker(res$samp$Bayes_lambda2), prob = interval)
     res$cred$low$Bayes_lambda2 <- int[1]
     res$cred$up$Bayes_lambda2 <- int[2]
-    res$est$Bayes_lambda2<- median(res$samp$Bayes_lambda2)
+    res$est$Bayes_lambda2<- mean(res$samp$Bayes_lambda2)
     if (item.dropped){
       res$ifitem$samp$lambda2 <- apply(Ctmp, c(1, 2, 3), applylambda2)
-      res$ifitem$est$lambda2 <- apply(res$ifitem$samp$lambda2, 3, median)
+      res$ifitem$est$lambda2 <- apply(res$ifitem$samp$lambda2, 3, mean)
       res$ifitem$cred$lambda2 <- coda::HPDinterval(chainSmoker(res$ifitem$samp$lambda2), prob = interval)
     }
   }
@@ -50,10 +50,10 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
     int <- coda::HPDinterval(chainSmoker(res$samp$Bayes_lambda4), prob = interval)
     res$cred$low$Bayes_lambda4 <- int[1]
     res$cred$up$Bayes_lambda4 <- int[2]
-    res$est$Bayes_lambda4<- median(res$samp$Bayes_lambda4)
+    res$est$Bayes_lambda4<- mean(res$samp$Bayes_lambda4)
     if (item.dropped){
       res$ifitem$samp$lambda4 <- (apply(Ctmp, c(1, 2, 3), applylambda4))
-      res$ifitem$est$lambda4 <- apply(res$ifitem$samp$lambda4, 3, median)
+      res$ifitem$est$lambda4 <- apply(res$ifitem$samp$lambda4, 3, mean)
       res$ifitem$cred$lambda4 <- coda::HPDinterval(chainSmoker(res$ifitem$samp$lambda4), prob = interval)
     }
   }
@@ -63,10 +63,10 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
     int <- coda::HPDinterval(chainSmoker(res$samp$Bayes_lambda6), prob = interval)
     res$cred$low$Bayes_lambda6 <- int[1]
     res$cred$up$Bayes_lambda6 <- int[2]
-    res$est$Bayes_lambda6<- median(res$samp$Bayes_lambda6)
+    res$est$Bayes_lambda6<- mean(res$samp$Bayes_lambda6)
     if (item.dropped){
       res$ifitem$samp$lambda6 <- (apply(Ctmp, c(1, 2, 3), applylambda6))
-      res$ifitem$est$lambda6 <- apply(res$ifitem$samp$lambda6, 3, median)
+      res$ifitem$est$lambda6 <- apply(res$ifitem$samp$lambda6, 3, mean)
       res$ifitem$cred$lambda6 <- coda::HPDinterval(chainSmoker(res$ifitem$samp$lambda6), prob = interval)
     }
   }
@@ -80,10 +80,10 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
     }
     res$cred$low$Bayes_glb <- int[1]
     res$cred$up$Bayes_glb <- int[2]
-    res$est$Bayes_glb<- median(res$samp$Bayes_glb)
+    res$est$Bayes_glb<- mean(res$samp$Bayes_glb)
     if (item.dropped){
       res$ifitem$samp$glb <- (apply(Ctmp, c(1, 2, 3), glbOnArray))
-      res$ifitem$est$glb <- apply(res$ifitem$samp$glb, 3, median)
+      res$ifitem$est$glb <- apply(res$ifitem$samp$glb, 3, mean)
       res$ifitem$cred$glb <- coda::HPDinterval(chainSmoker(res$ifitem$samp$glb), prob = interval)
 
     }
