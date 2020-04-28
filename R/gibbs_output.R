@@ -2,12 +2,13 @@
 # and the credible intervals together with the posterior distribution objects
 # to be passed on for forther analysis
 
-gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval, item.dropped, pairwise){
+gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval, item.dropped, pairwise, callback){
   p <- ncol(data)
   res <- list()
   if ("alpha" %in% estimates || "lambda2" %in% estimates || "lambda4" %in% estimates || "lambda6" %in% estimates ||
       "glb" %in% estimates){
     tmp_out <- covSamp(data, n.iter, n.burnin, thin, n.chains, pairwise)
+    callback()
     C <- tmp_out$cov_mat
     res$covsamp <- C
     res$data_mis_samp_cov <- tmp_out$dat_mis_samp_cov
@@ -30,6 +31,7 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
       res$ifitem$est$alpha <- apply(res$ifitem$samp$alpha, 3, mean)
       res$ifitem$cred$alpha <- coda::HPDinterval(chainSmoker(res$ifitem$samp$alpha), prob = interval)
     }
+    callback()
   }
 
   if ("lambda2" %in% estimates){
@@ -43,6 +45,7 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
       res$ifitem$est$lambda2 <- apply(res$ifitem$samp$lambda2, 3, mean)
       res$ifitem$cred$lambda2 <- coda::HPDinterval(chainSmoker(res$ifitem$samp$lambda2), prob = interval)
     }
+    callback()
   }
 
   if ("lambda4" %in% estimates){
@@ -56,6 +59,7 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
       res$ifitem$est$lambda4 <- apply(res$ifitem$samp$lambda4, 3, mean)
       res$ifitem$cred$lambda4 <- coda::HPDinterval(chainSmoker(res$ifitem$samp$lambda4), prob = interval)
     }
+    callback()
   }
 
   if ("lambda6" %in% estimates){
@@ -69,10 +73,12 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
       res$ifitem$est$lambda6 <- apply(res$ifitem$samp$lambda6, 3, mean)
       res$ifitem$cred$lambda6 <- coda::HPDinterval(chainSmoker(res$ifitem$samp$lambda6), prob = interval)
     }
+    callback()
   }
 
   if ("glb" %in% estimates){
     res$samp$Bayes_glb <- coda::mcmc(apply(C, c(1, 2), glbOnArray))
+    callback()
     if (sum(is.na(res$samp$Bayes_glb) > 0)) {
       int <- c(NA, NA)
     } else {
@@ -80,13 +86,13 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
     }
     res$cred$low$Bayes_glb <- int[1]
     res$cred$up$Bayes_glb <- int[2]
-    res$est$Bayes_glb<- mean(res$samp$Bayes_glb)
+    res$est$Bayes_glb <- mean(res$samp$Bayes_glb)
     if (item.dropped){
       res$ifitem$samp$glb <- (apply(Ctmp, c(1, 2, 3), glbOnArray))
       res$ifitem$est$glb <- apply(res$ifitem$samp$glb, 3, mean)
       res$ifitem$cred$glb <- coda::HPDinterval(chainSmoker(res$ifitem$samp$glb), prob = interval)
-
     }
+    callback()
   }
 
   # special case omega -----------------------------------------------------------------
@@ -111,8 +117,8 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
       res$ifitem$samp$omega <- (om_samp_ifitem)
       res$ifitem$est$omega <- apply(om_samp_ifitem, 3, mean)
       res$ifitem$cred$omega <- coda::HPDinterval(chainSmoker(res$ifitem$samp$omega), prob = interval)
-
     }
+    callback()
   }
 
   return(res)

@@ -20,7 +20,8 @@ strel(
   Bayes = TRUE,
   para.boot = FALSE,
   item.dropped = FALSE,
-  missing = "pairwise"
+  missing = "pairwise",
+  callback = function() { }
 )
 }
 \arguments{
@@ -59,6 +60,8 @@ and the factor model is calculated}
 'pairwise' in the Bayesian paradigm means sampling the missing values as additional parameters
 from the joint conditional distribution, in the frequentist paradigm this means using the 'pairwise' covariance
 matrix and the full information ML method for omega}
+
+\item{callback}{step count for external use}
 }
 \description{
 calculate Bayesian and frequentist single test reliability measures.

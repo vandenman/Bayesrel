@@ -25,6 +25,7 @@
 #' 'pairwise' in the Bayesian paradigm means sampling the missing values as additional parameters
 #' from the joint conditional distribution, in the frequentist paradigm this means using the 'pairwise' covariance
 #' matrix and the full information ML method for omega
+#' @param callback step count for external use
 #'
 #' @examples
 #' summary(strel(asrm, estimates = "lambda2", n.chains = 1))
@@ -51,7 +52,8 @@ strel <- function(data, estimates = c("alpha", "lambda2", "glb", "omega"),
                freq = TRUE, Bayes = TRUE,
                para.boot = FALSE,
                item.dropped = FALSE,
-               missing = "pairwise") {
+               missing = "pairwise",
+               callback = function(){}) {
 
   default <- c("alpha", "lambda2", "lambda4", "lambda6", "glb", "omega")
   # estimates <- match.arg(arg = estimates, several.ok = T)
@@ -89,7 +91,8 @@ strel <- function(data, estimates = c("alpha", "lambda2", "glb", "omega"),
 
 
   if (Bayes) {
-    sum_res$Bayes <- gibbsFun(data, estimates, n.iter, n.burnin, thin, n.chains, interval, item.dropped, pairwise)
+    sum_res$Bayes <- gibbsFun(data, estimates, n.iter, n.burnin, thin, n.chains, interval, item.dropped, pairwise,
+                              callback)
     sum_res$n.iter <- n.iter
     sum_res$n.burnin <- n.burnin
     sum_res$thin <- thin
