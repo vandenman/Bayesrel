@@ -47,7 +47,7 @@ strel <- function(data, estimates = c("alpha", "lambda2", "glb", "omega"),
                interval = .95, n.iter = 500, n.burnin = 50, thin = 1, n.chains = 3,
                n.boot = 1000,
                omega.freq.method = "cfa",
-               n.obs = NULL,
+               n.obs = 500,
                alpha.int.analytic = TRUE,
                freq = TRUE, Bayes = TRUE,
                para.boot = FALSE,
@@ -78,13 +78,14 @@ strel <- function(data, estimates = c("alpha", "lambda2", "glb", "omega"),
   }
   sigma <- NULL
   if (ncol(data) == nrow(data)){
-    if (is.null(n.obs) & "omega" %in% estimates) {
+    if (("omega" %in% estimates) & is.null(n.obs)) {
       return(warning("number of observations (n.obs) needs to be specified when entering a covariance matrix"))}
     if (sum(data[lower.tri(data)] != t(data)[lower.tri(data)]) > 0) {return(warning("input matrix is not symmetric"))}
     if (sum(eigen(data)$values < 0) > 0) {return(warning("input matrix is not positive definite"))}
     sigma <- data
     data <- MASS::mvrnorm(n.obs, rep(0, ncol(sigma)), sigma, empirical = TRUE)
-  } else{
+
+  } else {
     data <- scale(data, scale = F)
     # sigma <- cov(data)
   }

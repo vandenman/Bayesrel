@@ -129,3 +129,4 @@ createUnidimCovMat <- function(avg, p) {
   return(tmpCov)
 }
 
+
