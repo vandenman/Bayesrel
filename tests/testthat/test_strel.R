@@ -60,3 +60,29 @@ test_that("Bayes prior and posterior probability for Alpha >.8 is correct", {
   expect_equal(as.numeric(ee), c(0.1552618, 0.3480000), tolerance = 1e-3)
 
 })
+
+
+test_that("Omega results with missing data are correct", {
+
+  data(asrm_mis, package = "Bayesrel")
+  set.seed(1234)
+  ee <- Bayesrel::strel(asrm_mis, estimates = c("omega"), n.iter = 300, n.chains = 1, n.boot = 300)
+  expect_equal(as.numeric(ee$Bayes$cred$low$Bayes_omega), c(0.6803034),
+               tolerance = 1e-3)
+  expect_equal(as.numeric(ee$freq$est$freq_omega), c(0.7943602),
+               tolerance = 1e-3)
+
+})
+
+test_that("Results with input cov matrix are correct", {
+
+  data(asrm, package = "Bayesrel")
+  cc <- cov(asrm)
+  set.seed(1234)
+  ee <- Bayesrel::strel(cc, estimates = c("lambda2"), n.iter = 300, n.chains = 1, n.boot = 300)
+  expect_equal(as.numeric(ee$Bayes$cred$up$Bayes_lambda2), c(0.8148953),
+               tolerance = 1e-3)
+  expect_equal(as.numeric(ee$freq$conf$low$freq_lambda2), c(0.767236),
+               tolerance = 1e-3)
+
+})
