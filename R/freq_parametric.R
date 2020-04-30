@@ -4,7 +4,7 @@
 # and parametric bootstrapped confidence intervals, sampling from a multivariate normal distribution
 
 freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
-                         item.dropped, alpha.int.analytic, omega.int.analytic, pairwise, parametric = T){
+                         item.dropped, alpha.int.analytic, omega.int.analytic, pairwise, callback, parametric = T){
   p <- ncol(data)
   n <- nrow(data)
   if (pairwise) {
@@ -34,6 +34,8 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       Dtmp[i, , ] <- data[, -i]
     }
   }
+  callback()
+
   if ("alpha" %in% estimates){
     res$est$freq_alpha <- applyalpha(cc)
     if (alpha.int.analytic){
@@ -55,6 +57,8 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       res$ifitem$alpha <- apply(Ctmp, 1, applyalpha)
     }
   }
+  callback()
+
   if ("lambda2" %in% estimates){
     res$est$freq_lambda2 <- applylambda2(cc)
     lambda2_obj <- apply(boot_cov, 1, applylambda2)
@@ -70,6 +74,7 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       res$ifitem$lambda2 <- apply(Ctmp, 1, applylambda2)
     }
   }
+  callback()
 
   if ("lambda4" %in% estimates){
     res$est$freq_lambda4 <- applylambda4(cc)
@@ -86,6 +91,7 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       res$ifitem$lambda4 <- apply(Ctmp, 1, applylambda4)
     }
   }
+  callback()
 
   if ("lambda6" %in% estimates){
     res$est$freq_lambda6 <- applylambda6(cc)
@@ -102,6 +108,8 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       res$ifitem$lambda6 <- apply(Ctmp, 1, applylambda6)
     }
   }
+  callback()
+
   if ("glb" %in% estimates){
     res$est$freq_glb <- glbOnArray(cc)
     glb_obj <- glbOnArray(boot_cov)
@@ -117,6 +125,7 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       res$ifitem$glb <- glbOnArray(Ctmp)
     }
   }
+  callback()
 
   #omega --------------------------------------------------------------------------
   if ("omega" %in% estimates){
@@ -173,5 +182,7 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       }
     }
   }
+  callback()
+
   return(res)
 }

@@ -107,10 +107,10 @@ strel <- function(data, estimates = c("alpha", "lambda2", "glb", "omega"),
 
     if (para.boot){
       sum_res$freq <- freqFun_para(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
-                                   alpha.int.analytic, omega.int.analytic, pairwise)
+                                   alpha.int.analytic, omega.int.analytic, pairwise, callback)
     } else {
       sum_res$freq <- freqFun_nonpara(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
-                                    alpha.int.analytic, omega.int.analytic, pairwise)
+                                    alpha.int.analytic, omega.int.analytic, pairwise, callback)
     }
 
     if(alpha.int.analytic) {sum_res$alpha.interval = "analytic"}
