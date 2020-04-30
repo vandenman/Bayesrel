@@ -37,7 +37,7 @@ summary.strel <- function(object, ...){
                                 as.data.frame(as.matrix(object$freq$conf$low)))
     out_matrix$int$up <- rbind(as.data.frame(as.matrix(object$Bayes$cred$up)),
                                as.data.frame(as.matrix(object$freq$conf$up)))
-    out_matrix$alpha.interval <- object$alpha.interval
+    out_matrix$omega.interval <- object$omega.interval
     out_matrix$omega.pfa <- object$freq$omega.pfa
     out_matrix$omega.error <- object$freq$omega.error
     out_matrix$n.iter <- object$n.iter
@@ -67,7 +67,7 @@ summary.strel <- function(object, ...){
     out_matrix$int$up <- as.data.frame(as.matrix(object$freq$conf$up))
     out_matrix$n.boot <- object$n.boot
     out_matrix$ifitem$freq_tab <- object$freq$ifitem
-    out_matrix$alpha.interval <- object$alpha.interval
+    out_matrix$omega.interval <- object$omega.interval
     out_matrix$omega.pfa <- object$freq$omega.pfa
     out_matrix$omega.error <- object$freq$omega.error
     out_matrix$para.boot <- object$para.boot
@@ -119,7 +119,8 @@ print.summary.strel <- function(x, ...){
   if (length(grep("freq", x$est)) > 0) {
     if (("alpha" %in% x$estimates & is.null(x$alpha.interval)) |
         "lambda2" %in% x$estimates | "lambda4" %in% x$estimates | "lambda6" %in% x$estimates |
-        "glb" %in% x$estimates | ("omega" %in% x$estimates & !is.null(x$omega.pfa))){
+        "glb" %in% x$estimates | ("omega" %in% x$estimates & !is.null(x$omega.pfa)) |
+        ("omega" %in% x$estimates & is.null(x$omega.interval))){
         cat("bootstrap samples: ")
         cat(x$n.boot, "\n")
     }
@@ -139,7 +140,11 @@ print.summary.strel <- function(x, ...){
       if (!is.null(x$omega.pfa)) {
         cat("bootstrap \n")
       } else {
-        cat("maximum likelihood z-value \n")
+        if (!is.null(x$omega.interval)) {
+          cat("maximum likelihood z-value \n")
+        } else {
+          cat("bootstrap \n")
+        }
       }
     }
 

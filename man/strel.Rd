@@ -16,6 +16,7 @@ strel(
   omega.freq.method = "cfa",
   n.obs = 500,
   alpha.int.analytic = TRUE,
+  omega.int.analytic = TRUE,
   freq = TRUE,
   Bayes = TRUE,
   para.boot = FALSE,
@@ -47,6 +48,8 @@ strel(
 and the factor model is calculated}
 
 \item{alpha.int.analytic}{A logical for calculating the alpha confidence interval analytically}
+
+\item{omega.int.analytic}{A logical for calculating the omega confidence interval analytically}
 
 \item{freq}{A logical for calculating the frequentist estimates}
 

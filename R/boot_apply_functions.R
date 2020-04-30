@@ -41,11 +41,17 @@ applyglb <- function(M){
 }
 
 applyomega_cfa_data <- function(data, interval, pairwise){
-  out <- omegaFreqData(data, interval, pairwise)
+  out <- omegaFreqData(data, interval=interval, omega.int.analytic=T, pairwise=pairwise)
   om <- out$omega
   return(om)
 }
 
+applyomega_cfa_cov <- function(cv, interval, omega.int.analytic, pairwise, n.boot){
+  data <- MASS::mvrnorm(500, numeric(ncol(cv)), cv)
+  out <- omegaFreqData(data, interval, omega.int.analytic, pairwise, n.boot)
+  om <- out$omega
+  return(om)
+}
 
 applyomega_pfa <- function(m){
   f <- princFac(m)

@@ -3,8 +3,8 @@
 # this function calls on other functions in order to return the frequentist estimates
 # and parametric bootstrapped confidence intervals, sampling from a multivariate normal distribution
 
-freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
-                         item.dropped, alpha.int.analytic, pairwise){
+freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
+                         item.dropped, alpha.int.analytic, omega.int.analytic, pairwise, parametric = T){
   p <- ncol(data)
   n <- nrow(data)
   if (pairwise) {
@@ -18,9 +18,9 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
       "lambda2" %in% estimates | "lambda4" %in% estimates | "lambda6" %in% estimates |
       "glb" %in% estimates | ("omega" %in% estimates & omega.freq.method == "pfa")){
 
-    boot_data <- array(0, c(boot.n, n, p))
-    boot_cov <- array(0, c(boot.n, p, p))
-    for (i in 1:boot.n){
+    boot_data <- array(0, c(n.boot, n, p))
+    boot_cov <- array(0, c(n.boot, p, p))
+    for (i in 1:n.boot){
       boot_data[i, , ] <- MASS::mvrnorm(n, colMeans(data, na.rm = T), cc)
       boot_cov[i, , ] <- cov(boot_data[i, , ])
     }
@@ -121,7 +121,7 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
   #omega --------------------------------------------------------------------------
   if ("omega" %in% estimates){
     if (omega.freq.method == "cfa"){
-      out <- omegaFreqData(data, interval, pairwise)
+      out <- omegaFreqData(data, interval, omega.int.analytic, pairwise, n.boot, parametric)
       res$fit.object <- out$fit.object
       if (any(is.na(out))) {
         res$est$freq_omega <- applyomega_pfa(cc)
@@ -148,9 +148,11 @@ freqFun_para <- function(data, boot.n, estimates, interval, omega.freq.method,
         res$conf$low$freq_omega <- out$omega_low
         res$conf$up$freq_omega <- out$omega_up
         res$omega_fit <- out$indices
+        res$boot$omega <- out$omega_boot
+
 
         if (item.dropped){
-          res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data, interval, pairwise)
+          res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data, interval=interval, pairwise=pairwise)
         }
       }
     } else if (omega.freq.method == "pfa"){

@@ -17,6 +17,7 @@
 #' @param n.obs A number for the sample observations when a covariance matrix is supplied
 #' and the factor model is calculated
 #' @param alpha.int.analytic A logical for calculating the alpha confidence interval analytically
+#' @param omega.int.analytic A logical for calculating the omega confidence interval analytically
 #' @param freq A logical for calculating the frequentist estimates
 #' @param Bayes A logical for calculating the Bayesian estimates
 #' @param para.boot A logical for calculating the parametric bootstrap, the default is the non-parametric
@@ -49,6 +50,7 @@ strel <- function(data, estimates = c("alpha", "lambda2", "glb", "omega"),
                omega.freq.method = "cfa",
                n.obs = 500,
                alpha.int.analytic = TRUE,
+               omega.int.analytic = TRUE,
                freq = TRUE, Bayes = TRUE,
                para.boot = FALSE,
                item.dropped = FALSE,
@@ -105,13 +107,14 @@ strel <- function(data, estimates = c("alpha", "lambda2", "glb", "omega"),
 
     if (para.boot){
       sum_res$freq <- freqFun_para(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
-                                   alpha.int.analytic, pairwise)
+                                   alpha.int.analytic, omega.int.analytic, pairwise)
     } else {
       sum_res$freq <- freqFun_nonpara(data, n.boot, estimates, interval, omega.freq.method, item.dropped,
-                                    alpha.int.analytic, pairwise)
+                                    alpha.int.analytic, omega.int.analytic, pairwise)
     }
 
     if(alpha.int.analytic) {sum_res$alpha.interval = "analytic"}
+    if(omega.int.analytic) {sum_res$omega.interval = "analytic"}
 
     sum_res$n.boot <- n.boot
     sum_res$para.boot <- para.boot
