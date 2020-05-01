@@ -14,7 +14,7 @@ strel(
   n.chains = 3,
   n.boot = 1000,
   omega.freq.method = "cfa",
-  n.obs = 500,
+  n.obs = NULL,
   alpha.int.analytic = TRUE,
   omega.int.analytic = TRUE,
   freq = TRUE,

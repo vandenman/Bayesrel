@@ -48,7 +48,6 @@ omegaFreqData <- function(data, interval, omega.int.analytic, pairwise, n.boot =
         suml <- apply(bb[, 1:p], 1, sum)
         sume <- apply(bb[, (p+1):(p*2)], 1, sum)
         om_obj <- suml^2 / (suml^2 + sume)
-        print("para")
       } else {
         bb <- lavaan::bootstrapLavaan(fit, type = "nonparametric", R = n.boot)
         llow <- apply(bb[, 1:p], 2, quantile, prob = (1-interval)/2)
@@ -60,7 +59,6 @@ omegaFreqData <- function(data, interval, omega.int.analytic, pairwise, n.boot =
         suml <- apply(bb[, 1:p], 1, sum)
         sume <- apply(bb[, (p+1):(p*2)], 1, sum)
         om_obj <- suml^2 / (suml^2 + sume)
-        print("nonpara")
       }
     }
 
