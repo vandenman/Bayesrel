@@ -24,7 +24,7 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       boot_data[i, , ] <- MASS::mvrnorm(n, colMeans(data, na.rm = T), cc)
       boot_cov[i, , ] <- cov(boot_data[i, , ])
     }
-    res$boot_data <- boot_data
+    res$covsamp <- boot_cov
   }
   if (item.dropped){
     Ctmp <- array(0, c(p, p - 1, p - 1))
