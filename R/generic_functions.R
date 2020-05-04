@@ -105,48 +105,48 @@ print.summary.strel <- function(x, ...){
   cat("uncertainty interval: ")
   cat(x$interval, "\n")
 
-  if (!is.null(x$n.iter) & !is.null(x$n.burnin)) {
-    cat("iterations: ")
-    cat(x$n.iter, "\n")
-    cat("burnin: ")
-    cat(x$n.burnin, "\n")
-    cat("thinning interval: ")
-    cat(x$thin, "\n")
-    cat("chains: ")
-    cat(x$n.chains, "\n")
-  }
+  # if (!is.null(x$n.iter) & !is.null(x$n.burnin)) {
+  #   cat("iterations: ")
+  #   cat(x$n.iter, "\n")
+  #   cat("burnin: ")
+  #   cat(x$n.burnin, "\n")
+  #   cat("thinning interval: ")
+  #   cat(x$thin, "\n")
+  #   cat("chains: ")
+  #   cat(x$n.chains, "\n")
+  # }
 
   if (length(grep("freq", x$est)) > 0) {
-    if (("alpha" %in% x$estimates & is.null(x$alpha.interval)) |
-        "lambda2" %in% x$estimates | "lambda4" %in% x$estimates | "lambda6" %in% x$estimates |
-        "glb" %in% x$estimates | ("omega" %in% x$estimates & !is.null(x$omega.pfa)) |
-        ("omega" %in% x$estimates & is.null(x$omega.interval))){
-        cat("bootstrap samples: ")
-        cat(x$n.boot, "\n")
-    }
+    # if (("alpha" %in% x$estimates & is.null(x$alpha.interval)) |
+    #     "lambda2" %in% x$estimates | "lambda4" %in% x$estimates | "lambda6" %in% x$estimates |
+    #     "glb" %in% x$estimates | ("omega" %in% x$estimates & !is.null(x$omega.pfa)) |
+    #     ("omega" %in% x$estimates & is.null(x$omega.interval))){
+    #     cat("bootstrap samples: ")
+    #     cat(x$n.boot, "\n")
+    # }
     # if ("alpha" %in% x$estimates & !is.null(x$alpha.interval)) {
     #   cat("alpha confidence interval is estimated analytically \n")
     # }
     if ("omega" %in% x$estimates){
-      if (!is.null(x$omega.pfa)) {
+      if (!is.null(x$omega.pfa) & !is.null(x$omega.error)) {
         cat("frequentist omega method: pfa ")
-        if (!is.null(x$omega.error)) {
-          cat("because the cfa did not find a solution")
-        }
-      } else {
-        cat("frequentist omega method: cfa ")
-      }
-      cat("\nomega confidence interval is estimated with: ")
-      if (!is.null(x$omega.pfa)) {
-        cat("bootstrap \n")
-      } else {
-        if (!is.null(x$omega.interval)) {
-          cat("maximum likelihood z-value \n")
-        } else {
-          cat("bootstrap \n")
-        }
+        cat("\n and omega confidence interval is estimated with: bootstrap")
+        cat("\n because the cfa did not find a solution")
       }
     }
+      # } else {
+      #   # cat("frequentist omega method: cfa ")
+      # }
+      # cat("\nomega confidence interval is estimated with: ")
+      # if (!is.null(x$omega.pfa)) {
+      #   cat("bootstrap \n")
+      # } else {
+      #   if (!is.null(x$omega.interval)) {
+      #     cat("maximum likelihood z-value \n")
+      #   } else {
+      #     cat("bootstrap \n")
+      #   }
+      # }
 
   }
 
