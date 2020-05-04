@@ -38,7 +38,6 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
       Ctmp[i, , ] <- cc[-i, -i]
       Dtmp[i, , ] <- data[, -i]
     }
-    res$ifitem_array <- Ctmp
   }
   callback()
 

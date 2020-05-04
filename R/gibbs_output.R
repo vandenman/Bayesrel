@@ -25,7 +25,7 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
     int <- coda::HPDinterval(chainSmoker(res$samp$Bayes_alpha), prob = interval)
     res$cred$low$Bayes_alpha <- int[1]
     res$cred$up$Bayes_alpha <- int[2]
-    res$est$Bayes_alpha<- mean(res$samp$Bayes_alpha)
+    res$est$Bayes_alpha <- mean(res$samp$Bayes_alpha)
     if (item.dropped){
       res$ifitem$samp$alpha <- (apply(Ctmp, c(1, 2, 3), applyalpha))
       res$ifitem$est$alpha <- apply(res$ifitem$samp$alpha, 3, mean)
