@@ -5,8 +5,11 @@
 #' The estimates supported are Cronbach alpha, lambda2/4/6, the glb, and Mcdonald omega. Beware of lambda4 with many indicators,
 #' the computational effort is considerable
 #'
-#' @param data A dataset or covariance matrix
-#' @param estimates A character vector containing the estimands, we recommend using lambda4 with only a few items due to the computation time
+#' @param data The dataset to be analyzed, observations are rows, items are columns
+#' @param estimates A character vector containing the estimands, we recommend using lambda4 with only a few items
+#' due to the computation time
+#' @param cov.mat A covariance matrix can be supplied instead of a dataset,
+#' but number of observations needs to be specified
 #' @param interval A number specifying the uncertainty interval
 #' @param n.iter A number for the iterations of the Gibbs Sampler
 #' @param n.burnin A number for the burnin in the Gibbs Sampler
@@ -46,18 +49,19 @@
 #' @importFrom Rdpack reprompt
 #'
 #' @export
-strel <- function(data, estimates = c("alpha", "lambda2", "glb", "omega"),
-               interval = .95, n.iter = 500, n.burnin = 50, thin = 1, n.chains = 3,
-               n.boot = 1000,
-               omega.freq.method = "cfa",
-               n.obs = NULL,
-               alpha.int.analytic = TRUE,
-               omega.int.analytic = TRUE,
-               freq = TRUE, Bayes = TRUE,
-               para.boot = FALSE,
-               item.dropped = FALSE,
-               missing = "pairwise",
-               callback = function(){}) {
+strel <- function(data = NULL, estimates = c("alpha", "lambda2", "glb", "omega"),
+                  cov.mat = NULL,
+                  interval = .95, n.iter = 500, n.burnin = 50, thin = 1, n.chains = 3,
+                  n.boot = 1000,
+                  omega.freq.method = "cfa",
+                  n.obs = NULL,
+                  alpha.int.analytic = TRUE,
+                  omega.int.analytic = TRUE,
+                  freq = TRUE, Bayes = TRUE,
+                  para.boot = FALSE,
+                  item.dropped = FALSE,
+                  missing = "pairwise",
+                  callback = function(){}) {
 
   default <- c("alpha", "lambda2", "lambda4", "lambda6", "glb", "omega")
   # estimates <- match.arg(arg = estimates, several.ok = T)
@@ -80,14 +84,13 @@ strel <- function(data, estimates = c("alpha", "lambda2", "glb", "omega"),
       sum_res$miss_pairwise <- T
     } else return(warning("missing values in data detected, please remove and run again"))
   }
-  sigma <- NULL
-  if (ncol(data) == nrow(data)){
-    if (("omega" %in% estimates) & is.null(n.obs)) {
+
+  if (!is.null(cov.mat)){
+    if (is.null(n.obs)) {
       return(warning("number of observations (n.obs) needs to be specified when entering a covariance matrix"))}
-    if (sum(data[lower.tri(data)] != t(data)[lower.tri(data)]) > 0) {return(warning("input matrix is not symmetric"))}
-    if (sum(eigen(data)$values < 0) > 0) {return(warning("input matrix is not positive definite"))}
-    sigma <- data
-    data <- MASS::mvrnorm(n.obs, rep(0, ncol(sigma)), sigma, empirical = TRUE)
+    if (sum(cov.mat[lower.tri(cov.mat)] != t(cov.mat)[lower.tri(cov.mat)]) > 0) {return(warning("input matrix is not symmetric"))}
+    if (sum(eigen(cov.mat)$values < 0) > 0) {return(warning("input matrix is not positive definite"))}
+    data <- MASS::mvrnorm(n.obs, rep(0, ncol(cov.mat)), cov.mat, empirical = TRUE)
 
   } else {
     data <- scale(data, scale = F)
