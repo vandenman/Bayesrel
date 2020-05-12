@@ -1,6 +1,6 @@
 
 # adjusted code from Rcsdp package:
-glbOnArray <- function(Cov) {
+glbOnArray <- function(Cov, callback = function(){}) {
 
   d <- dim(Cov)
   if (length(d) == 2L) { # turn it into an array if it is a matrix
@@ -79,7 +79,7 @@ glbOnArray <- function(Cov) {
     # y <- vector_csdp2R(ret[[3L]])
 
     glbs[i] <- (scv - sum(Var) + sum(ret[[3L]][-1L])) / scv
-
+    callback()
   }
   return(glbs)
 }

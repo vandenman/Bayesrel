@@ -1,7 +1,9 @@
 # gives freq omega, and loadings and errors
 #
 
-omegaFreqData <- function(data, interval, omega.int.analytic, pairwise, n.boot = 1e3, parametric = F){
+omegaFreqData <- function(data, interval, omega.int.analytic, pairwise, n.boot = 1e3, callback = function(){},
+                          parametric = F
+                          ){
   p <- ncol(data)
   file <- lavOneFile(data)
   colnames(data) <- file$names
@@ -67,7 +69,7 @@ omegaFreqData <- function(data, interval, omega.int.analytic, pairwise, n.boot =
                fit_tmp["rmsea"], fit_tmp["rmsea.ci.lower"], fit_tmp["rmsea.ci.upper"],
                fit_tmp["srmr"])
   }
-
+  callback()
   return(list(omega = omega, omega_lower = om_low, omega_upper = om_up, indices = indic, fit.object = fit,
               omega_boot = om_obj))
 }

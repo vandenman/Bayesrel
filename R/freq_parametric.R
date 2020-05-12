@@ -4,7 +4,8 @@
 # and parametric bootstrapped confidence intervals, sampling from a multivariate normal distribution
 
 freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
-                         item.dropped, alpha.int.analytic, omega.int.analytic, pairwise, callback, parametric = T){
+                         item.dropped, alpha.int.analytic, omega.int.analytic, pairwise, callback = function(){},
+                         parametric = T){
   p <- ncol(data)
   n <- nrow(data)
   if (pairwise) {
@@ -23,6 +24,7 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
     for (i in 1:n.boot){
       boot_data[i, , ] <- MASS::mvrnorm(n, colMeans(data, na.rm = T), cc)
       boot_cov[i, , ] <- cov(boot_data[i, , ])
+      callback()
     }
     res$covsamp <- boot_cov
   }
@@ -34,7 +36,6 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       Dtmp[i, , ] <- data[, -i]
     }
   }
-  callback()
 
   if ("alpha" %in% estimates){
     res$est$freq_alpha <- applyalpha(cc)
@@ -43,7 +44,7 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       res$conf$low$freq_alpha <- int[1]
       res$conf$up$freq_alpha <- int[2]
     } else{
-      alpha_obj <- apply(boot_cov, 1, applyalpha)
+      alpha_obj <- apply(boot_cov, 1, applyalpha, callback)
       if (length(unique(round(alpha_obj, 4))) == 1){
         res$conf$low$freq_alpha <- 1
         res$conf$up$freq_alpha <- 1
@@ -57,11 +58,10 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       res$ifitem$alpha <- apply(Ctmp, 1, applyalpha)
     }
   }
-  callback()
 
   if ("lambda2" %in% estimates){
     res$est$freq_lambda2 <- applylambda2(cc)
-    lambda2_obj <- apply(boot_cov, 1, applylambda2)
+    lambda2_obj <- apply(boot_cov, 1, applylambda2, callback)
     if (length(unique(round(lambda2_obj, 4))) == 1){
       res$conf$low$freq_lambda2 <- NA
       res$conf$up$freq_lambda2 <- NA
@@ -74,11 +74,10 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       res$ifitem$lambda2 <- apply(Ctmp, 1, applylambda2)
     }
   }
-  callback()
 
   if ("lambda4" %in% estimates){
     res$est$freq_lambda4 <- applylambda4(cc)
-    lambda4_obj <- apply(boot_cov, 1, applylambda4)
+    lambda4_obj <- apply(boot_cov, 1, applylambda4, callback)
     if (length(unique(round(lambda4_obj, 4))) == 1){
       res$conf$low$freq_lambda4 <- NA
       res$conf$up$freq_lambda4 <- NA
@@ -91,11 +90,10 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       res$ifitem$lambda4 <- apply(Ctmp, 1, applylambda4)
     }
   }
-  callback()
 
   if ("lambda6" %in% estimates){
     res$est$freq_lambda6 <- applylambda6(cc)
-    lambda6_obj <- apply(boot_cov, 1, applylambda6)
+    lambda6_obj <- apply(boot_cov, 1, applylambda6, callback)
     if (length(unique(round(lambda6_obj, 4))) == 1){
       res$conf$low$freq_lambda6 <- NA
       res$conf$up$freq_lambda6 <- NA
@@ -108,11 +106,10 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       res$ifitem$lambda6 <- apply(Ctmp, 1, applylambda6)
     }
   }
-  callback()
 
   if ("glb" %in% estimates){
     res$est$freq_glb <- glbOnArray(cc)
-    glb_obj <- glbOnArray(boot_cov)
+    glb_obj <- glbOnArray(boot_cov, callback)
     if (length(unique(round(glb_obj, 4))) == 1){
       res$conf$low$freq_glb <- NA
       res$conf$up$freq_glb <- NA
@@ -125,12 +122,11 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       res$ifitem$glb <- glbOnArray(Ctmp)
     }
   }
-  callback()
 
   #omega --------------------------------------------------------------------------
   if ("omega" %in% estimates){
     if (omega.freq.method == "cfa"){
-      out <- omegaFreqData(data, interval, omega.int.analytic, pairwise, n.boot, parametric)
+      out <- omegaFreqData(data, interval, omega.int.analytic, pairwise, n.boot, callback, parametric)
       res$fit.object <- out$fit.object
       if (any(is.na(out))) {
         res$est$freq_omega <- applyomega_pfa(cc)
@@ -166,7 +162,7 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       }
     } else if (omega.freq.method == "pfa"){
       res$est$freq_omega <- applyomega_pfa(cc)
-      omega_obj <- apply(boot_cov, 1, applyomega_pfa)
+      omega_obj <- apply(boot_cov, 1, applyomega_pfa, callback)
       res$omega.pfa <- TRUE
       if (length(unique(round(omega_obj, 4))) == 1){
         res$conf$low$freq_omega <- NA
@@ -182,7 +178,6 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       }
     }
   }
-  callback()
 
   return(res)
 }

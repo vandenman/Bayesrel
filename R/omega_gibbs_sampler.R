@@ -3,7 +3,7 @@
 # it returns the posterior distribution sample of omegas calculated from those parameters
 # source: Lee, S.-Y. (2007). Structural equation modeling: A bayesian approach(Vol. 711). JohnWiley & Sons.
 # p. 81 ff.
-omegaSampler <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
+omegaSampler <- function(data, n.iter, n.burnin, thin, n.chains, pairwise, callback = function(){}){
 
   n <- nrow(data)
   p <- ncol(data)
@@ -56,6 +56,7 @@ omegaSampler <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
         dat_imp[z, i, ] <- dat_complete[inds]
         lll[z, i, ] <- out$lambda
         ppp[z, i, ] <- out$psi
+        callback()
       }
 
     } else { # no missing data
@@ -68,6 +69,7 @@ omegaSampler <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
 
         wi <- oo$wi
         phi <- oo$phi
+        callback()
       }
     }
   }

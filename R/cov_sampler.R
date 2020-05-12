@@ -3,7 +3,7 @@
 # sources: https://en.wikipedia.org/wiki/Normal-inverse-Wishart_distribution,
 # Murphy, K. P. (2007). Conjugate bayesian analysis of the gaussian distribution (Tech. Rep.). University of British Columbia.
 
-covSamp <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
+covSamp <- function(data, n.iter, n.burnin, thin, n.chains, pairwise, callback = function(){}){
   n <- nrow(data)
   p <- ncol(data)
 
@@ -39,6 +39,7 @@ covSamp <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
             dat_complete[r, ccc] <- rnorm(1, muq, sqrt(ccq))
           }
         }
+        callback()
         dat_imp[z, i, ] <- dat_complete[inds]
       }
 
@@ -62,6 +63,7 @@ covSamp <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
       utz <- upper.tri(matrix(0, p, p))
       for (i in 1:n.iter){
         c_post[z, i, , ] <- rinvwishart2(vn, Tn, p, dfChisq, utz) # sample from inverse Wishart
+        callback()
       }
     }
   }
@@ -71,6 +73,7 @@ covSamp <- function(data, n.iter, n.burnin, thin, n.chains, pairwise){
 
   dat_imp_burned <- dat_imp[, (n.burnin + 1):n.iter, , drop = F]
   dat_out <- dat_imp_burned[, seq(1, dim(dat_imp_burned)[2], thin), , drop = F]
+
 
   return(list(cov_mat = c_post_out, dat_mis_samp_cov = coda::mcmc(dat_out)))
 }
