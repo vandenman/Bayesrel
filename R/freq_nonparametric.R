@@ -23,7 +23,7 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
     boot_data <- array(0, c(n.boot, n, p))
     boot_cov <- array(0, c(n.boot, p, p))
     for (i in 1:n.boot){
-      boot_data[i, , ] <- as.matrix(data[sample.int(nrow(data), size = n, replace = TRUE), ])
+      boot_data[i, , ] <- as.matrix(data[sample.int(n, size = n, replace = TRUE), ])
       if (pairwise) {
         boot_cov[i, , ] <- cov(boot_data[i, , ], use = "pairwise.complete.obs")
       } else {
