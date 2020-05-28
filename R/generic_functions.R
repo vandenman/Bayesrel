@@ -130,8 +130,8 @@ print.summary.strel <- function(x, ...){
     if ("omega" %in% x$estimates){
       if (!is.null(x$omega.pfa) & !is.null(x$omega.error)) {
         cat("frequentist omega method: pfa ")
-        cat("\n and omega confidence interval is estimated with: bootstrap")
-        cat("\n because the cfa did not find a solution")
+        cat("\nomega confidence interval is estimated with: bootstrap")
+        cat("\nbecause the cfa did not find a solution")
       }
     }
       # } else {
