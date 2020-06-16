@@ -54,7 +54,7 @@ covSamp <- function(data, n.iter, n.burnin, thin, n.chains, pairwise, callback =
 
       ym <- .colMeans(data, n, p)
       mun <- (k0 * mu0 + n * ym) / (k0 + n)
-      S <-cov(sweep(data, 2L, ym, `-`)) * (n - 1)
+      S <- cov(sweep(data, 2L, ym, `-`)) * (n - 1)
 
       Tn <- T0 + S + (k0 * n / (k0 + n)) * (ym - mu0) %*% t(ym - mu0)
       # drawing samples from posterior:
@@ -138,10 +138,10 @@ rinvwishart2 <- function(nu, S, k = nrow(S), dfChisq = nu:(nu-k+1), utz = upper.
 #   kn <- k0 + n
 #   vn <- v0 + n
 #   S <- 0
-#   for (i in 1:n){
-#     M <- (data[i, ] - ym) %*% t(data[i, ] - ym)
-#     S <- S + M
-#   }
+  # for (i in 1:n){
+  #   M <- (data[i, ] - ym) %*% t(data[i, ] - ym)
+  #   S <- S + M
+  # }
 #   Tn <- T0 + S + (k0 * n / (k0 + n)) * (ym - mu0) %*% t(ym - mu0)
 #   # drawing samples from posterior:
 #   c_post <- array(0, c(n.iter, p, p))

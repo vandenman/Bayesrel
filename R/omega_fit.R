@@ -43,10 +43,10 @@ omega_fit <- function(x){
     lines(eigen(sigma)$values, type = "p")
     axis(side = 1, at = seq(1:ncol(sigma)))
     axis(side = 2)
-    title(main = "Posterior Predictive Check for Omega 1-Factor-Model")
+    # title(main = "Posterior Predictive Check for Omega 1-Factor-Model")
 
     legend(ncol(sigma)/3*1.1, ymax*(2/3),
-           legend = c("Dataset Covariance Matrix", "Model Implied Covariance Matrix"),
+           legend = c("Dataset Covariance Matrix", "Model-Implied Covariance Matrix"),
            col=c("black", "gray"), lwd = c(2, 2), box.lwd = 0, lty = c(1, 2), cex = .8)
   }
   if (!is.null(x$freq$omega_fit)){
