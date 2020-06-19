@@ -40,6 +40,7 @@ summary.strel <- function(object, ...){
     out_matrix$omega.interval <- object$omega.interval
     out_matrix$omega.pfa <- object$freq$omega.pfa
     out_matrix$omega.error <- object$freq$omega.error
+    out_matrix$omega.item.error <- object$freq$omega.item.error
     out_matrix$n.iter <- object$n.iter
     out_matrix$n.burnin <- object$n.burnin
     out_matrix$n.boot <- object$n.boot
@@ -70,6 +71,7 @@ summary.strel <- function(object, ...){
     out_matrix$omega.interval <- object$omega.interval
     out_matrix$omega.pfa <- object$freq$omega.pfa
     out_matrix$omega.error <- object$freq$omega.error
+    out_matrix$omega.item.error <- object$freq$omega.item.error
     out_matrix$para.boot <- object$para.boot
 
   } else {
@@ -202,6 +204,13 @@ print.summary.strel <- function(x, ...){
       cat("\n")
       cat("Frequentist point estimate if item dropped: \n")
       print(mat_ifitem_freq)
+
+      if ("omega" %in% x$estimates){
+        if (!is.null(x$omega.item.error)) {
+          cat("\nfrequentist omega method for item.dropped statistic: pfa ")
+          cat("\nbecause the cfa did not find a solution")
+        }
+      }
   }
 
 }
