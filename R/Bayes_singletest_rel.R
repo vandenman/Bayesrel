@@ -51,7 +51,8 @@
 #' @export
 strel <- function(data = NULL, estimates = c("alpha", "lambda2", "glb", "omega"),
                   cov.mat = NULL,
-                  interval = .95, n.iter = 500, n.burnin = 50, thin = 1, n.chains = 3,
+                  interval = .95,
+                  n.iter = 1000, n.burnin = 50, thin = 1, n.chains = 3,
                   n.boot = 1000,
                   omega.freq.method = "cfa",
                   n.obs = NULL,

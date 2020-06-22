@@ -9,7 +9,7 @@ strel(
   estimates = c("alpha", "lambda2", "glb", "omega"),
   cov.mat = NULL,
   interval = 0.95,
-  n.iter = 500,
+  n.iter = 1000,
   n.burnin = 50,
   thin = 1,
   n.chains = 3,
