@@ -50,6 +50,7 @@ summary.strel <- function(object, ...){
     out_matrix$ifitem$bay_cred <- object$Bayes$ifitem$cred
     out_matrix$ifitem$freq_tab <- object$freq$ifitem
     out_matrix$para.boot <- object$para.boot
+    out_matrix$inv.mat <- object$freq$inv.mat
 
   } else if (!is.null(object$Bayes)) {
     out_matrix$est <- as.data.frame(as.matrix(object$Bayes$est))
@@ -73,6 +74,8 @@ summary.strel <- function(object, ...){
     out_matrix$omega.error <- object$freq$omega.error
     out_matrix$omega.item.error <- object$freq$omega.item.error
     out_matrix$para.boot <- object$para.boot
+    out_matrix$inv.mat <- object$freq$inv.mat
+
 
   } else {
     return(warning("no estimates calculated"))
@@ -129,6 +132,11 @@ print.summary.strel <- function(x, ...){
     # if ("alpha" %in% x$estimates & !is.null(x$alpha.interval)) {
     #   cat("alpha confidence interval is estimated analytically \n")
     # }
+    if (!is.null(x$inv.mat)) {
+      cat("the number of bootstrap samples reduced to ")
+      cat(x$inv.mat)
+      cat("\nbecause some bootstrapped matrices were singular")
+    }
     if ("omega" %in% x$estimates){
       if (!is.null(x$omega.pfa) & !is.null(x$omega.error)) {
         cat("frequentist omega method: pfa ")

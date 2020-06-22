@@ -9,11 +9,15 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
                             ){
   p <- ncol(data)
   n <- nrow(data)
+
   if (pairwise) {
-    cc <- cov(data, use = "pairwise.complete.obs")
+    use.cases <- "pairwise.complete.obs"
   } else {
-    cc <- cov(data)
+    use.cases = "everything"
   }
+
+  cc <- cov(data, use = use.cases)
+
   res <- list()
   res$covsamp <- NULL
   if (("alpha" %in% estimates & !alpha.int.analytic) |
@@ -24,12 +28,15 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
     boot_cov <- array(0, c(n.boot, p, p))
     for (i in 1:n.boot){
       boot_data[i, , ] <- as.matrix(data[sample.int(n, size = n, replace = TRUE), ])
-      if (pairwise) {
-        boot_cov[i, , ] <- cov(boot_data[i, , ], use = "pairwise.complete.obs")
-      } else {
-        boot_cov[i, , ] <- cov(boot_data[i, , ])
-      }
+      boot_cov[i, , ] <- cov(boot_data[i, , ], use = use.cases)
       callback()
+    }
+    inds <- apply(boot_cov, 1, checkInvertM) # check for singular matrices
+    boot_cov <- boot_cov[inds, , ] # delete the singular matrices
+
+    if (dim(boot_cov)[1] < n.boot) {
+      res$inv.mats <- dim(boot_cov)[1]
+      n.boot <- dim(boot_cov)[1]
     }
     res$covsamp <- boot_cov
   }

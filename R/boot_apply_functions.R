@@ -68,4 +68,11 @@ applyomega_pfa <- function(m, callback = function(){}){
   return(om)
 }
 
+checkInvertM <- function(M) {
+  if (abs(det(M)) < 1e-08)
+    return(FALSE)
+  else
+    return(TRUE)
+}
+
 
