@@ -135,13 +135,12 @@ print.summary.strel <- function(x, ...){
     if (!is.null(x$inv.mat)) {
       cat("the number of bootstrap samples reduced to ")
       cat(x$inv.mat)
-      cat("\nbecause some bootstrapped matrices were singular")
+      cat(" because some bootstrapped matrices were singular\n")
     }
     if ("omega" %in% x$estimates){
       if (!is.null(x$omega.pfa) & !is.null(x$omega.error)) {
-        cat("frequentist omega method: pfa ")
-        cat("\nomega confidence interval is estimated with: bootstrap")
-        cat("\nbecause the cfa did not find a solution")
+        cat("frequentist omega method is pfa\n")
+        cat("omega confidence interval is estimated with bootstrap because the cfa did not find a solution\n")
       }
     }
       # } else {
@@ -161,11 +160,11 @@ print.summary.strel <- function(x, ...){
   }
 
   if (!is.null(x$complete)) {
-    cat("Missing data handling: using listwise deletion the number of complete cases is ")
+    cat("Missing data handling: using listwise deletion the number of complete cases is\n")
     cat(x$complete)
   }
   if (!is.null(x$pairwise)) {
-    cat("Missing data handling: using pairwise complete cases")
+    cat("Missing data handling: using pairwise complete cases\n")
   }
 
 
@@ -215,8 +214,7 @@ print.summary.strel <- function(x, ...){
 
       if ("omega" %in% x$estimates){
         if (!is.null(x$omega.item.error)) {
-          cat("\nfrequentist omega method for item.dropped statistic: pfa ")
-          cat("\nbecause the cfa did not find a solution")
+          cat("frequentist omega method for item.dropped statistic is pfa because the cfa did not find a solution\n")
         }
       }
   }
