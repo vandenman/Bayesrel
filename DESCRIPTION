@@ -1,7 +1,7 @@
 Package: Bayesrel
 Type: Package
 Title: Bayesian Reliability Estimation
-Version: 0.6.5.1
+Version: 0.6.5.2
 Author: Julius M. Pfadt and Don van den Bergh
 Maintainer: Julius M. Pfadt <julius.pfadt@gmail.com>
 Description: Functionality for the most common single test reliability estimates is provided:  

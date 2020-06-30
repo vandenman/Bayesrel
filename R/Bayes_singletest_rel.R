@@ -74,26 +74,36 @@ strel <- function(data = NULL, estimates = c("alpha", "lambda2", "glb", "omega")
   sum_res$call <- match.call()
 
   pairwise <- FALSE
+  use.cases <- "everything"
   if (any(is.na(data))) {
     if (missing == "listwise") {
       pos <- which(is.na(data), arr.ind = T)[, 1]
       data <- data[-pos, ]
       ncomp <- nrow(data)
       sum_res$complete <- ncomp
+      use.cases <- "complete.obs"
     } else if (missing == "pairwise") {
       pairwise <- T
       sum_res$miss_pairwise <- T
+      use.cases <- "pairwise.complete.obs"
     } else return(warning("missing values in data detected, please remove and run again"))
   }
+
+
 
   if (!is.null(cov.mat)){
     if (is.null(n.obs)) {
       return(warning("number of observations (n.obs) needs to be specified when entering a covariance matrix"))}
-    if (sum(cov.mat[lower.tri(cov.mat)] != t(cov.mat)[lower.tri(cov.mat)]) > 0) {return(warning("input matrix is not symmetric"))}
-    if (sum(eigen(cov.mat)$values < 0) > 0) {return(warning("input matrix is not positive definite"))}
+    if (sum(cov.mat[lower.tri(cov.mat)] != t(cov.mat)[lower.tri(cov.mat)]) > 0)
+      return(warning("input matrix is not symmetric"))
+    if (!("matrix" %in% class(try(solve(cov.mat),silent=TRUE))))
+      return(warning("Data covariance matrix is not invertible"))
     data <- MASS::mvrnorm(n.obs, rep(0, ncol(cov.mat)), cov.mat, empirical = TRUE)
 
   } else {
+    if (!("matrix" %in% class(try(solve(cov(data, use = use.cases)),silent=TRUE))))
+      return(warning("Data covariance matrix is not invertible"))
+
     data <- scale(data, scale = F)
     # sigma <- cov(data)
   }

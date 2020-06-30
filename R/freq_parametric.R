@@ -26,6 +26,13 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       boot_cov[i, , ] <- cov(boot_data[i, , ])
       callback()
     }
+    # inds <- apply(boot_cov, 1, checkInvertM) # check for singular matrices
+    # boot_cov <- boot_cov[inds, , ] # delete the singular matrices
+    #
+    # if (dim(boot_cov)[1] < n.boot) {
+    #   res$inv.mats <- dim(boot_cov)[1]
+    #   n.boot <- dim(boot_cov)[1]
+    # }
     res$covsamp <- boot_cov
   }
   if (item.dropped){
