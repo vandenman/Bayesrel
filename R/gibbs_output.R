@@ -75,7 +75,6 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
 
   if ("glb" %in% estimates){
     res$samp$Bayes_glb <- coda::mcmc(t(apply(C, c(1), glbOnArray, callback)))
-    callback()
     if (sum(is.na(res$samp$Bayes_glb) > 0)) {
       int <- c(NA, NA)
     } else {

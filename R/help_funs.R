@@ -130,9 +130,8 @@ createUnidimCovMat <- function(avg, p) {
 }
 
 # check if Matrix is invertible
-# this is quite crude, there are more conditions to check
 checkInvertM <- function(M) {
-  if (abs(det(M)) < 1e-08)
+  if (!("matrix" %in% class(try(solve(M),silent=TRUE))))
     return(FALSE)
   else
     return(TRUE)

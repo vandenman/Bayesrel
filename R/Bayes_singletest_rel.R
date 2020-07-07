@@ -101,7 +101,7 @@ strel <- function(data = NULL, estimates = c("alpha", "lambda2", "glb", "omega")
     data <- MASS::mvrnorm(n.obs, rep(0, ncol(cov.mat)), cov.mat, empirical = TRUE)
 
   } else {
-    if (!("matrix" %in% class(try(solve(cov(data, use = use.cases)),silent=TRUE))))
+    if (!("matrix" %in% class(try(solve(cov(data, use = use.cases)), silent=TRUE))))
       return(warning("Data covariance matrix is not invertible"))
 
     data <- scale(data, scale = F)

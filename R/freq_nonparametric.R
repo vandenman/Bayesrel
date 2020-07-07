@@ -31,13 +31,17 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
       boot_cov[i, , ] <- cov(boot_data[i, , ], use = use.cases)
       callback()
     }
-    inds <- apply(boot_cov, 1, checkInvertM) # check for singular matrices
-    boot_cov <- boot_cov[inds, , ] # delete the singular matrices
 
-    if (dim(boot_cov)[1] < n.boot) {
-      res$inv.mats <- dim(boot_cov)[1]
-      n.boot <- dim(boot_cov)[1]
+    if ("lambda6" %in% estimates) {
+      inds <- apply(boot_cov, 1, checkInvertM) # check for singular matrices
+      boot_cov <- boot_cov[inds, , ] # delete the singular matrices
+
+      if (dim(boot_cov)[1] < n.boot) {
+        res$inv.mats <- dim(boot_cov)[1]
+        n.boot <- dim(boot_cov)[1]
+      }
     }
+
     res$covsamp <- boot_cov
   }
   if (item.dropped){
@@ -125,7 +129,7 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
     if (length(unique(round(glb_obj, 4))) == 1){
       res$conf$low$freq_glb <- NA
       res$conf$up$freq_glb <- NA
-    } else{
+    } else {
       res$conf$low$freq_glb <- quantile(glb_obj, probs = (1 - interval)/2, na.rm = T)
       res$conf$up$freq_glb <- quantile(glb_obj, probs = interval + (1 - interval)/2, na.rm = T)
     }
