@@ -129,10 +129,10 @@ createUnidimCovMat <- function(avg, p) {
   return(tmpCov)
 }
 
-# check if Matrix is invertible
-checkInvertM <- function(M) {
-  if (!("matrix" %in% class(try(solve(M),silent=TRUE))))
-    return(FALSE)
-  else
-    return(TRUE)
-}
+# # check if Matrix is invertible
+# checkInvertM <- function(M) {
+#   if (!("matrix" %in% class(try(solve(M),silent=TRUE))))
+#     return(FALSE)
+#   else
+#     return(TRUE)
+# }

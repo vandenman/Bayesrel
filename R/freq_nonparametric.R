@@ -32,15 +32,15 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
       callback()
     }
 
-    if ("lambda6" %in% estimates) {
-      inds <- apply(boot_cov, 1, checkInvertM) # check for singular matrices
-      boot_cov <- boot_cov[inds, , ] # delete the singular matrices
-
-      if (dim(boot_cov)[1] < n.boot) {
-        res$inv.mats <- dim(boot_cov)[1]
-        n.boot <- dim(boot_cov)[1]
-      }
-    }
+    # if ("lambda6" %in% estimates) {
+    #   inds <- apply(boot_cov, 1, checkInvertM) # check for singular matrices
+    #   boot_cov <- boot_cov[inds, , ] # delete the singular matrices
+    #
+    #   if (dim(boot_cov)[1] < n.boot) {
+    #     res$inv.mats <- dim(boot_cov)[1]
+    #     n.boot <- dim(boot_cov)[1]
+    #   }
+    # }
 
     res$covsamp <- boot_cov
   }
@@ -140,7 +140,7 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
   }
 
   #omega --------------------------------------------------------------------------
-  if ("omega" %in% estimates){
+  if ("omega" %in% estimates) {
     if (omega.freq.method == "cfa"){
       out <- omegaFreqData(data, interval, omega.int.analytic, pairwise, n.boot, callback, parametric)
       res$fit.object <- out$fit.object
