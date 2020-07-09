@@ -15,6 +15,7 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
   }
   res <- list()
   res$covsamp <- NULL
+  boot_cov <- NULL
   if (("alpha" %in% estimates & !alpha.int.analytic) |
       "lambda2" %in% estimates | "lambda4" %in% estimates | "lambda6" %in% estimates |
       "glb" %in% estimates | ("omega" %in% estimates & omega.freq.method == "pfa")){
@@ -26,13 +27,7 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       boot_cov[i, , ] <- cov(boot_data[i, , ])
       callback()
     }
-    # inds <- apply(boot_cov, 1, checkInvertM) # check for singular matrices
-    # boot_cov <- boot_cov[inds, , ] # delete the singular matrices
-    #
-    # if (dim(boot_cov)[1] < n.boot) {
-    #   res$inv.mats <- dim(boot_cov)[1]
-    #   n.boot <- dim(boot_cov)[1]
-    # }
+
     res$covsamp <- boot_cov
   }
   if (item.dropped){
@@ -136,6 +131,15 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       out <- omegaFreqData(data, interval, omega.int.analytic, pairwise, n.boot, callback, parametric)
       res$fit.object <- out$fit.object
       if (any(is.na(out))) {
+        if (is.null(boot_cov)) {
+          boot_data <- array(0, c(n.boot, n, p))
+          boot_cov <- array(0, c(n.boot, p, p))
+          for (i in 1:n.boot){
+            boot_data[i, , ] <- MASS::mvrnorm(n, colMeans(data, na.rm = T), cc)
+            boot_cov[i, , ] <- cov(boot_data[i, , ])
+            callback()
+          }
+        }
         res$est$freq_omega <- applyomega_pfa(cc)
         omega_obj <- apply(boot_cov, 1, applyomega_pfa)
         if (length(unique(round(omega_obj, 4))) == 1){

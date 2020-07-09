@@ -5,7 +5,11 @@
 princFac <- function(m, max_iter = 50){
   # r <- cov2cor(m)
   r <- m
-  r_smc <- (1 - 1 / diag(try(solve(cov2cor(r)))))
+  r_smc <- try_smc(r)
+  if (class(r_smc) == "try-error") {
+    warning("singular bootstrapped covariance matrices encountered")
+    return(list(loadings = NA, err_var = NA))
+  }
   diag(r) <- r_smc
   min_error <- .001
   com_iter <- c()

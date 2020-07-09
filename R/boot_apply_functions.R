@@ -27,12 +27,11 @@ applylambda4 <- function(M, callback = function(){}){
 
 
 applylambda6 <- function(M, callback = function(){}){
-  M <- cov2cor(M)
-  smc <- try(1 - (1 / diag(solve(M))), silent = T)
+  smc <- try_smc(M)
   if (class(smc) == "try-error") {
     lambda6 <- NA; warning("singular bootstrapped covariance matrices encountered")
   } else {
-    lambda6 <- 1 - (sum(1 - (smc)) / sum(M))
+    lambda6 <- 1 - (sum(1 - (smc)) / sum(cov2cor(M)))
   }
   callback()
   return(lambda6)

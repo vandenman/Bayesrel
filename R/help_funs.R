@@ -129,6 +129,10 @@ createUnidimCovMat <- function(avg, p) {
   return(tmpCov)
 }
 
+try_smc <- function(M) {
+  return(try(1 - 1 / diag(solve(cov2cor(M))), silent = T))
+}
+
 # # check if Matrix is invertible
 # checkInvertM <- function(M) {
 #   if (!("matrix" %in% class(try(solve(M),silent=TRUE))))

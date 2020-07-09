@@ -66,17 +66,15 @@ test_that("Omega results with missing data are correct", {
 
   data(asrm_mis, package = "Bayesrel")
   set.seed(1234)
-  ee <- Bayesrel::strel(asrm_mis, estimates = c("lambda6", "omega"), n.iter = 200, n.chains = 1, n.boot = 200)
-  expect_equal(as.numeric(ee$Bayes$cred$low$Bayes_omega), c(0.6754381),
+  ee <- Bayesrel::strel(asrm_mis, estimates = c("omega"), n.iter = 200, n.chains = 1, n.boot = 200)
+  expect_equal(as.numeric(ee$Bayes$cred$low$Bayes_omega), c(0.69692),
                tolerance = 1e-3)
   expect_equal(as.numeric(ee$freq$est$freq_omega), c(0.7943602),
-               tolerance = 1e-3)
-  expect_equal(as.numeric(ee$freq$conf$up$freq_lambda6), c(0.8812883),
                tolerance = 1e-3)
 
 })
 
-test_that(" Frequentist Lambda6 results with missing data are correct", {
+test_that("Frequentist Lambda6 results with missing data are correct", {
 
   data(asrm_mis, package = "Bayesrel")
   set.seed(1234)

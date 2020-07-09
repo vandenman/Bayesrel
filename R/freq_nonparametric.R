@@ -20,6 +20,7 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
 
   res <- list()
   res$covsamp <- NULL
+  boot_cov <- NULL
   if (("alpha" %in% estimates & !alpha.int.analytic) |
       "lambda2" %in% estimates | "lambda4" %in% estimates | "lambda6" %in% estimates |
       "glb" %in% estimates | ("omega" %in% estimates & omega.freq.method == "pfa")){
@@ -145,6 +146,14 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
       out <- omegaFreqData(data, interval, omega.int.analytic, pairwise, n.boot, callback, parametric)
       res$fit.object <- out$fit.object
       if (any(is.na(out))) {
+        if (is.null(boot_cov)) {
+          boot_data <- array(0, c(n.boot, n, p))
+          boot_cov <- array(0, c(n.boot, p, p))
+          for (i in 1:n.boot){
+            boot_data[i, , ] <- as.matrix(data[sample.int(n, size = n, replace = TRUE), ])
+            boot_cov[i, , ] <- cov(boot_data[i, , ], use = use.cases)
+          }
+        }
         res$est$freq_omega <- applyomega_pfa(cc)
         omega_obj <- apply(boot_cov, 1, applyomega_pfa)
         if (length(unique(round(omega_obj, 4))) == 1){
