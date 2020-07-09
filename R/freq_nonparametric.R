@@ -145,7 +145,7 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
     if (omega.freq.method == "cfa"){
       out <- omegaFreqData(data, interval, omega.int.analytic, pairwise, n.boot, callback, parametric)
       res$fit.object <- out$fit.object
-      if (any(is.na(out))) {
+      if (any(is.null(out))) {
         if (is.null(boot_cov)) {
           boot_data <- array(0, c(n.boot, n, p))
           boot_cov <- array(0, c(n.boot, p, p))
@@ -183,7 +183,7 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
 
         if (item.dropped){
           res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data, interval = interval, pairwise = pairwise)
-          if (any(is.na(res$ifitem$omega))) {
+          if (any(is.null(res$ifitem$omega))) {
             res$ifitem$omega <- apply(Ctmp, 1, applyomega_pfa)
             res$omega.item.error <- TRUE
           }

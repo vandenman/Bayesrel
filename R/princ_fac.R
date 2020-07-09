@@ -8,7 +8,7 @@ princFac <- function(m, max_iter = 50){
   r_smc <- try_smc(r)
   if (class(r_smc) == "try-error") {
     warning("singular bootstrapped covariance matrices encountered")
-    return(list(loadings = NA, err_var = NA))
+    return(list(loadings = NaN, err_var = NaN))
   }
   diag(r) <- r_smc
   min_error <- .001

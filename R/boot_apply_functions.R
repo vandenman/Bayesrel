@@ -29,7 +29,7 @@ applylambda4 <- function(M, callback = function(){}){
 applylambda6 <- function(M, callback = function(){}){
   smc <- try_smc(M)
   if (class(smc) == "try-error") {
-    lambda6 <- NA; warning("singular bootstrapped covariance matrices encountered")
+    lambda6 <- NaN; warning("singular bootstrapped covariance matrices encountered")
   } else {
     lambda6 <- 1 - (sum(1 - (smc)) / sum(cov2cor(M)))
   }
@@ -66,7 +66,7 @@ applyomega_pfa <- function(m, callback = function(){}){
   l_fa <- f$loadings
   er_fa <- f$err_var
   om <- sum(l_fa)^2 / (sum(l_fa)^2 + sum(er_fa))
-  if (om < 0 || om > 1 || is.na(om)) om <- NA
+  if (om < 0 || om > 1 || is.na(om)) om <- NaN
   callback()
   return(om)
 }

@@ -30,37 +30,50 @@ omegaFreqData <- function(data, interval, omega.int.analytic, pairwise, n.boot =
     fit <- fitmodel(mod, data)
   }
   if (is.null(fit)) {
-    load <- resid <- omega <- om_low <- om_up <- fit_tmp <- indic <- om_obj <- NA
+    return(list(omega = NULL, fit.object = NULL))
   } else {
     params <- lavaan::parameterestimates(fit, level = interval)
     omega <- params$est[params$lhs=="omega"]
     if (omega.int.analytic) {
       om_low <- params$ci.lower[params$lhs=="omega"]
       om_up <- params$ci.upper[params$lhs=="omega"]
-      om_obj <- NULL
+      om_obj <- NA
     } else {
       if (parametric) {
         bb <- lavaan::bootstrapLavaan(fit, type = "parametric", R = n.boot)
-        llow <- apply(bb[, 1:p], 2, quantile, prob = (1-interval)/2)
-        elow <- apply(bb[, (p+1):(p*2)], 2, quantile, prob = (1-interval)/2)
-        lup <- apply(bb[, 1:p], 2, quantile, prob = interval+(1-interval)/2)
-        eup <- apply(bb[, (p+1):(p*2)], 2, quantile, prob = interval+(1-interval)/2)
-        om_low <- omegaBasic(llow, elow)
-        om_up <- omegaBasic(lup, eup)
-        suml <- apply(bb[, 1:p], 1, sum)
-        sume <- apply(bb[, (p+1):(p*2)], 1, sum)
-        om_obj <- suml^2 / (suml^2 + sume)
+        if (dim(bb)[1] < 2) {
+          om_low <- NA
+          om_up <- NA
+          om_obj <- NA
+        } else {
+          llow <- apply(bb[, 1:p], 2, quantile, prob = (1-interval)/2)
+          elow <- apply(bb[, (p+1):(p*2)], 2, quantile, prob = (1-interval)/2)
+          lup <- apply(bb[, 1:p], 2, quantile, prob = interval+(1-interval)/2)
+          eup <- apply(bb[, (p+1):(p*2)], 2, quantile, prob = interval+(1-interval)/2)
+          om_low <- omegaBasic(llow, elow)
+          om_up <- omegaBasic(lup, eup)
+          suml <- apply(bb[, 1:p], 1, sum)
+          sume <- apply(bb[, (p+1):(p*2)], 1, sum)
+          om_obj <- suml^2 / (suml^2 + sume)
+        }
+
       } else {
         bb <- lavaan::bootstrapLavaan(fit, type = "nonparametric", R = n.boot)
-        llow <- apply(bb[, 1:p], 2, quantile, prob = (1-interval)/2)
-        elow <- apply(bb[, (p+1):(p*2)], 2, quantile, prob = (1-interval)/2)
-        lup <- apply(bb[, 1:p], 2, quantile, prob = interval+(1-interval)/2)
-        eup <- apply(bb[, (p+1):(p*2)], 2, quantile, prob = interval+(1-interval)/2)
-        om_low <- omegaBasic(llow, elow)
-        om_up <- omegaBasic(lup, eup)
-        suml <- apply(bb[, 1:p], 1, sum)
-        sume <- apply(bb[, (p+1):(p*2)], 1, sum)
-        om_obj <- suml^2 / (suml^2 + sume)
+        if (dim(bb)[1] < 2) {
+          om_low <- NA
+          om_up <- NA
+          om_obj <- NA
+        } else {
+          llow <- apply(bb[, 1:p], 2, quantile, prob = (1-interval)/2)
+          elow <- apply(bb[, (p+1):(p*2)], 2, quantile, prob = (1-interval)/2)
+          lup <- apply(bb[, 1:p], 2, quantile, prob = interval+(1-interval)/2)
+          eup <- apply(bb[, (p+1):(p*2)], 2, quantile, prob = interval+(1-interval)/2)
+          om_low <- omegaBasic(llow, elow)
+          om_up <- omegaBasic(lup, eup)
+          suml <- apply(bb[, 1:p], 1, sum)
+          sume <- apply(bb[, (p+1):(p*2)], 1, sum)
+          om_obj <- suml^2 / (suml^2 + sume)
+        }
       }
     }
 
