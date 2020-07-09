@@ -30,7 +30,7 @@ omegaFreqData <- function(data, interval, omega.int.analytic, pairwise, n.boot =
     fit <- fitmodel(mod, data)
   }
   if (is.null(fit)) {
-    return(list(omega = NULL, fit.object = NULL))
+    return(list(omega = NA, fit.object = NULL))
   } else {
     params <- lavaan::parameterestimates(fit, level = interval)
     omega <- params$est[params$lhs=="omega"]

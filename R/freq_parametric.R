@@ -169,7 +169,7 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
 
         if (item.dropped){
           res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data, interval=interval, pairwise=pairwise)
-          if (any(is.null(res$ifitem$omega))) {
+          if (any(is.na(res$ifitem$omega))) {
             res$ifitem$omega <- apply(Ctmp, 1, applyomega_pfa)
             res$omega.item.error <- TRUE
           }
