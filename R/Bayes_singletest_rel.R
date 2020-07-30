@@ -90,24 +90,20 @@ strel <- function(data = NULL, estimates = c("alpha", "lambda2", "glb", "omega")
   }
 
 
-
   if (!is.null(cov.mat)){
-    if (is.null(n.obs)) {
-      return(warning("number of observations (n.obs) needs to be specified when entering a covariance matrix"))}
+    if (is.null(n.obs))
+      return(warning("number of observations (n.obs) needs to be specified when entering a covariance matrix"))
     if (sum(cov.mat[lower.tri(cov.mat)] != t(cov.mat)[lower.tri(cov.mat)]) > 0)
       return(warning("input matrix is not symmetric"))
     if (!("matrix" %in% class(try(solve(cov.mat),silent=TRUE))))
       return(warning("Data covariance matrix is not invertible"))
     data <- MASS::mvrnorm(n.obs, rep(0, ncol(cov.mat)), cov.mat, empirical = TRUE)
-
-  } else {
-    if (!("matrix" %in% class(try(solve(cov(data, use = use.cases)), silent=TRUE))))
-      return(warning("Data covariance matrix is not invertible"))
-
-    data <- scale(data, scale = F)
-    # sigma <- cov(data)
   }
 
+  if (!("matrix" %in% class(try(solve(cov(data, use = use.cases)), silent=TRUE))))
+      return(warning("Data covariance matrix is not invertible"))
+
+  data <- scale(data, scale = F) # needed for Bayes omega
 
   if (Bayes) {
     sum_res$Bayes <- gibbsFun(data, estimates, n.iter, n.burnin, thin, n.chains, interval, item.dropped, pairwise,
