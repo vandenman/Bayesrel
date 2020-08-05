@@ -14,7 +14,7 @@
 plot_strel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80)){
 
   posi <- grep(estimate, x$estimates, ignore.case = T)
-  samp <- chainSmoker(x$Bayes$samp[[posi]])
+  samp <- coda::mcmc(as.vector(x$Bayes$samp[[posi]]))
   n_item <- ncol(x$data)
 
   if (n_item > 50) {
@@ -199,12 +199,9 @@ plot_strel_id <- function(x, estimate, distance = NULL){
   dat$colos <- "1"
   dat$var <- "original"
 
-  dat_del <- t(as.matrix(as.data.frame(chainSmoker(x$Bayes$ifitem$samp[[posi]]))))
+  dat_del <- t(as.matrix(as.data.frame(apply(x$Bayes$ifitem$samp[[posi]], 3, as.vector))))
 
-  names <- NULL
-  for(i in n_row:1){
-    names[i] <- paste0("x", i)
-  }
+  names <- colnames(x$data)
 
   for (i in n_row:1){
     tmp <- as.data.frame(dat_del[i, ])
@@ -226,14 +223,14 @@ plot_strel_id <- function(x, estimate, distance = NULL){
       dists[length(dists)+1] <- 0
       est <- est[order(dists, decreasing = F), ]
     } else if (distance == "ks") {
-       samps <- chainSmoker(x$Bayes$ifitem$samp[[posi]])
-       og_samp <- chainSmoker(x$Bayes$samp[[posi]])
+       samps <- apply(x$Bayes$ifitem$samp[[posi]], 3, as.vector)
+       og_samp <- as.vector(x$Bayes$samp[[posi]])
        dists <- apply(samps, 2, ks.test.statistic, y = og_samp) # ks distance
        dists[length(dists)+1] <- 0
        est <- est[order(dists), ]
     } else if (distance == "kl") {
-      samps <- chainSmoker(x$Bayes$ifitem$samp[[posi]])
-      og_samp <- chainSmoker(x$Bayes$samp[[posi]])
+      samps <- apply(x$Bayes$ifitem$samp[[posi]], 3, as.vector)
+      og_samp <- as.vector(x$Bayes$samp[[posi]])
       dists <- apply(samps, 2, KLD.statistic, y = og_samp) # kl divergence
       dists[length(dists)+1] <- 0
       est <- est[order(dists), ]

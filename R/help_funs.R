@@ -77,19 +77,6 @@ omegaBasic <- function(l, e){
   return(o)
 }
 
-
-# aggregate mutliple chains
-chainSmoker <- function(A) {
-  d <- dim(A)
-  if (length(d) == 2) {
-    Av <- as.vector(A)
-  } else{
-    Av <- apply(A, seq(3, length(d), 1), as.vector)
-  }
-  return(coda::mcmc(Av))
-}
-
-
 # calculate the kolomogorov smirnov distances between some samples and the original sample
 ks.test.statistic <- function(x, y) {
   t <- stats::ks.test(x, y)

@@ -15,7 +15,7 @@
 
 p_strel <- function(x, estimate, low.bound){
   posi1 <- grep(estimate, x$estimates, ignore.case = T)
-  samp <- chainSmoker(x$Bayes$samp[[posi1]])
+  samp <- as.vector(x$Bayes$samp[[posi1]])
   obj <- ecdf(samp)
   post_prob <- 1 - obj(low.bound)
 
