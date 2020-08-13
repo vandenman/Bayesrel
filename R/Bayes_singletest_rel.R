@@ -34,9 +34,8 @@
 #' @param callback step count for external use
 #'
 #' @examples
-#' summary(strel(asrm, estimates = "lambda2", n.chains = 2, n.iter = 200, n.boot = 200))
-#' summary(strel(asrm, estimates = "lambda2", item.dropped = TRUE, n.chains = 2,
-#' n.iter = 100, n.boot = 200))
+#' summary(strel(asrm, estimates = "lambda2", n.chains = 1))
+#' summary(strel(asrm, estimates = "lambda2", item.dropped = TRUE, n.chains = 1))
 #'
 #'
 #' @references{

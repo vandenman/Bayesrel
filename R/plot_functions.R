@@ -8,7 +8,7 @@
 #' @param criteria A logical indicating if cutoff criteria should be drawn
 #' @param cuts A two element vector indicating what the cutoffs should be
 #'
-#' @examples plot_strel(strel(asrm, "lambda2", n.chains = 2, freq = FALSE, n.iter = 200), "lambda2")
+#' @examples plot_strel(strel(asrm, "lambda2", n.chains = 2, freq = FALSE), "lambda2")
 #'
 #' @export
 plot_strel <- function(x, estimate, blackwhite = FALSE, criteria = TRUE, cuts = c(.70, .80)){
@@ -181,8 +181,7 @@ plotShadePrior <- function(dens, xx, cols, criteria, blackwhite){
 #' otherwise ca be either "mean" for the differences between the point estimates;
 #' "ks" for the Kolmogorov Smirnov distance;
 #' or "kl" for the Kublack Leibler divergence
-#' @examples plot_strel_id(strel(asrm, "lambda2", freq = FALSE, item.dropped = TRUE, n.chains = 2,
-#' n.iter = 200), "lambda2")
+#' @examples plot_strel_id(strel(asrm, "lambda2", freq = FALSE, item.dropped = TRUE, n.chains = 2), "lambda2")
 #'
 #' @export
 plot_strel_id <- function(x, estimate, distance = NULL){

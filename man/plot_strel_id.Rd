@@ -22,7 +22,6 @@ items deleted. Can be ordered for the change item deleting brings about. The met
 the items are ordered in from top to bottom from most change to least change in the posterior
 }
 \examples{
-plot_strel_id(strel(asrm, "lambda2", freq = FALSE, item.dropped = TRUE, n.chains = 2,
-n.iter = 200), "lambda2")
+plot_strel_id(strel(asrm, "lambda2", freq = FALSE, item.dropped = TRUE, n.chains = 2), "lambda2")
 
 }

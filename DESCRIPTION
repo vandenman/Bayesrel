@@ -1,7 +1,7 @@
 Package: Bayesrel
 Type: Package
 Title: Bayesian Reliability Estimation
-Version: 0.6.6
+Version: 0.6.5.3
 Authors@R: c(person("Julius M.", "Pfadt", email = "julius.pfadt@gmail.com",
                   role = c("aut", "cre")),
              person("Don", "van den Bergh",
@@ -26,8 +26,7 @@ BugReports: https://github.com/juliuspf/Bayesrel/issues
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: LaplacesDemon, Rcsdp, MASS, ggplot2, ggridges, lavaan, plotrix, coda, methods, stats, graphics, Rdpack, Rcpp (>= 1.0.4.6)
-LinkingTo: Rcpp, RcppArmadillo
+Imports: LaplacesDemon, Rcsdp, MASS, ggplot2, ggridges, lavaan, plotrix, coda, methods, stats, graphics, Rdpack
 RdMacros: Rdpack
 RoxygenNote: 7.1.0
 Depends: R (>= 2.10)
