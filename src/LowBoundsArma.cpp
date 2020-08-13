@@ -1,12 +1,11 @@
-//' @exportPattern "^[[:alpha:]]+"
 //' @importFrom Rcpp evalCpp
 //' @useDynLib Bayesrel, .registration=TRUE
 //'
 #include <RcppArmadillo.h>
 //[[Rcpp::depends(RcppArmadillo)]]
 using namespace Rcpp;
+using namespace arma;
 //[[Rcpp::export]]
-
 double alphaArma(arma::mat X) {
     double k = X.n_cols;
 	double tr = arma::trace(X);
@@ -14,10 +13,6 @@ double alphaArma(arma::mat X) {
 	return out;
 }
 
-#include <RcppArmadillo.h>
-//[[Rcpp::depends(RcppArmadillo)]]
-using namespace Rcpp;
-using namespace arma;
 //[[Rcpp::export]]
 double l2Arma(arma::mat X) {
   double k = X.n_cols;
@@ -27,10 +22,6 @@ double l2Arma(arma::mat X) {
   return out;
 }
 
-#include <RcppArmadillo.h>
-//[[Rcpp::depends(RcppArmadillo)]]
-using namespace Rcpp;
-using namespace arma;
 //[[Rcpp::export]]
 double l6Arma(arma::mat X) {
   // correlation matrix from covariance matrix:
