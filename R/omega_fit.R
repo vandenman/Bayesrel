@@ -8,7 +8,7 @@
 #'
 #' @param x A strel output object (list)
 #'
-#' @examples omega_fit(strel(asrm, "omega", n.chains = 1))
+#' @examples omega_fit(strel(asrm, "omega", n.chains = 2, n.iter = 100))
 #'
 #' @export
 #'

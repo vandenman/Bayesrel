@@ -9,7 +9,7 @@
 #' @param low.bound A number for the threshold to be tested against
 #'
 #' @examples
-#' p_strel(strel(asrm, "lambda2", n.chains = 1), "lambda2", .80)
+#' p_strel(strel(asrm, "lambda2", n.chains = 2, n.iter = 100, freq = FALSE), "lambda2", .80)
 #' @export
 
 

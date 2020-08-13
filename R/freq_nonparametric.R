@@ -142,7 +142,7 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
 
   #omega --------------------------------------------------------------------------
   if ("omega" %in% estimates) {
-    if (omega.freq.method == "cfa"){
+    if (omega.freq.method == "cfa") {
       out <- omegaFreqData(data, interval, omega.int.analytic, pairwise, n.boot, callback, parametric)
       res$fit.object <- out$fit.object
       if (is.null(res$fit.object)) {
