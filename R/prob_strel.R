@@ -8,11 +8,8 @@
 #' @param estimate A character string indicating what estimate to plot from the strel output object
 #' @param low.bound A number for the threshold to be tested against
 #'
-#' @examples
-#' p_strel(strel(asrm, "lambda2", n.chains = 1), "lambda2", .80)
+#' @examples p_strel(strel(asrm, "lambda2", n.chains = 2, n.iter = 100, freq = FALSE), "lambda2", .80)
 #' @export
-
-
 p_strel <- function(x, estimate, low.bound){
   posi1 <- grep(estimate, x$estimates, ignore.case = T)
   samp <- as.vector(x$Bayes$samp[[posi1]])
