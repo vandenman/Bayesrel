@@ -7,45 +7,45 @@
 using namespace Rcpp;
 
 // alphaArma
-double alphaArma(arma::mat X);
+double alphaArma(const arma::mat& X);
 RcppExport SEXP _Bayesrel_alphaArma(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
     rcpp_result_gen = Rcpp::wrap(alphaArma(X));
     return rcpp_result_gen;
 END_RCPP
 }
 // l2Arma
-double l2Arma(arma::mat X);
+double l2Arma(const arma::mat& X);
 RcppExport SEXP _Bayesrel_l2Arma(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
     rcpp_result_gen = Rcpp::wrap(l2Arma(X));
     return rcpp_result_gen;
 END_RCPP
 }
 // l6Arma
-double l6Arma(arma::mat X);
+double l6Arma(const arma::mat& X);
 RcppExport SEXP _Bayesrel_l6Arma(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
     rcpp_result_gen = Rcpp::wrap(l6Arma(X));
     return rcpp_result_gen;
 END_RCPP
 }
 // pfaArma
-List pfaArma(arma::mat X);
+List pfaArma(const arma::mat& X);
 RcppExport SEXP _Bayesrel_pfaArma(SEXP XSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< arma::mat >::type X(XSEXP);
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
     rcpp_result_gen = Rcpp::wrap(pfaArma(X));
     return rcpp_result_gen;
 END_RCPP

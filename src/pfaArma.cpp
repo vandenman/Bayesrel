@@ -9,7 +9,7 @@
 using namespace Rcpp;
 using namespace arma;
 //[[Rcpp::export]]
-List pfaArma(arma::mat X) {
+List pfaArma(const arma::mat& X) {
     int k = X.n_cols;
     mat R = X;
     vec sds = 1/sqrt(X.diag());
