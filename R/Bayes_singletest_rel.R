@@ -99,6 +99,7 @@ strel <- function(data = NULL, estimates = c("alpha", "lambda2", "glb", "omega")
     if (!("matrix" %in% class(try(solve(cov.mat),silent=TRUE))))
       return(warning("Data covariance matrix is not invertible"))
     data <- MASS::mvrnorm(n.obs, rep(0, ncol(cov.mat)), cov.mat, empirical = TRUE)
+    colnames(data) <- colnames(cov.mat)
   }
 
   if (!("matrix" %in% class(try(solve(cov(data, use = use.cases)), silent=TRUE))))

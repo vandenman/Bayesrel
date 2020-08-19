@@ -202,6 +202,12 @@ plot_strel_id <- function(x, estimate, distance = NULL){
   dat_del <- t(as.matrix(as.data.frame(apply(x$Bayes$ifitem$samp[[posi]], 3, as.vector))))
 
   names <- colnames(x$data)
+  if (is.null(names)) {
+    names <- NULL
+    for(i in n_row:1){
+      names[i] <- paste0("x", i)
+    }
+  }
 
   for (i in n_row:1){
     tmp <- as.data.frame(dat_del[i, ])

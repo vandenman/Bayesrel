@@ -85,7 +85,12 @@ ks.test.statistic <- function(x, y) {
 
 # calculate the kublack leibler distance between two samples
 KLD.statistic <- function(x, y) {
-  t <- LaplacesDemon::KLD(x, y)
+  # transform the samples to PDFs:
+  xdf <- get_approx_density(x)
+  ydf <- get_approx_density(y)
+
+  xx <- seq(0, 1, length.out = 1e3)
+  t <- LaplacesDemon::KLD(xdf(xx), ydf(xx))
   t$sum.KLD.py.px
 }
 
@@ -127,3 +132,15 @@ try_smc <- function(M) {
 #   else
 #     return(TRUE)
 # }
+
+
+get_approx_density <- function(x) {
+  d <- density(x, n = 2^12)
+  f <- approxfun(d$x, d$y, yleft = 0, yright = 0)
+  c <- integrate(f, 0, 1)$value
+  return(
+    function(x) {
+      return(f(x) / c)
+    }
+  )
+}
