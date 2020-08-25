@@ -15,6 +15,21 @@ extern "C"
 #include "declarations.h"
 }
 
+/*
+extern "C" void alloc_mat(A,pB);
+extern "C" void makefill(k,C,constraints,pfill,work1,printlevel);
+extern "C" int structnnz(n,k,C,constraints);
+extern "C" void sort_entries(k,C,constraints);
+extern "C" int sdp(n,k,C,a,constant_offset,constraints,byblocks,fill,*pX,*py,*pZ,
+    cholxinv,cholzinv,ppobj,pdobj,work1,work2,work3,workvec1,
+    workvec2,workvec3,workvec4,workvec5,workvec6,workvec7,workvec8,
+    diagO,bestx,besty,bestz,Zi,O,rhs,dZ,dX,dy,dy1,Fp,
+    printlevel,params);
+extern "C" void op_at(k,*py,constraints,work1);
+extern "C" void addscaledmat(A,scale,B,C);
+extern "C" void op_a(k,constraints,X,result);
+ */
+
 extern "C" int custom_sdpCpp(
       int n,
       int k,
