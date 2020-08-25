@@ -1,0 +1,10 @@
+PKG_CFLAGS=-DNOSHORTS 
+PKG_CPPFLAGS=-ICsdp/include
+PKG_LIBS=-LCsdp/lib -lsdp -L/Library/Frameworks/R.framework/Resources/lib -lRlapack -L/Library/Frameworks/R.framework/Resources/lib -lRblas -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin18/8.2.0 -L/usr/local/gfortran/lib -lgfortran -lquadmath -lm -lm
+
+$(SHLIB): Csdp.ts
+
+Csdp.ts:
+	(cd Csdp/lib && \
+	($(MAKE) libsdp.a CC="$(CC)" CFLAGS="$(CFLAGS) $(CPICFLAGS) -DNOSHORTS -I../include" AR="$(AR)" RANLIB="$(RANLIB)") && \
+	touch $@)
