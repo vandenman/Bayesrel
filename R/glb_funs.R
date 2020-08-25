@@ -94,11 +94,11 @@ get.prob.info2 <- function(K, m) {
   return(ret)
 }
 
-# write.control.file2 <- function(control) {
-#   fileptr <- file("param.csdp", "w")
-#   for (i in 1:length(control)) cat(names(control)[i], "=", control[[i]], "\n", sep = "", file = fileptr)
-#   close(fileptr)
-# }
+write.control.file2 <- function(control) {
+  fileptr <- file("param.csdp", "w")
+  for (i in 1:length(control)) cat(names(control)[i], "=", control[[i]], "\n", sep = "", file = fileptr)
+  close(fileptr)
+}
 
 
 vector_R2csdp <- function(x) c(0, x)
