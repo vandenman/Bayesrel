@@ -15,6 +15,20 @@ SEXP constraints_csdp2R(int, struct constraintmatrix *);
 struct constraintmatrix *constraints_R2csdp(SEXP);
 
 void free_constraints(int, struct constraintmatrix *);
+/*
+ int custom_sdpCpp(
+ int n,
+ int k,
+ struct blockmatrix C,
+ double *a,
+ struct constraintmatrix *constraints,
+ double constant_offset,
+ struct blockmatrix *pX,
+ double **py,
+ struct blockmatrix *pZ,
+ double *ppobj,
+ double *pdobj);
+ */
 
 SEXP csdp(SEXP n_p,
 	  SEXP nconstraints_p,
@@ -68,7 +82,7 @@ SEXP csdp(SEXP n_p,
   /*
    * Solve the problem
    */
-  status = custom_sdpCpp(n,nconstraints,C,b,constraints,0.0,&X,&y,&Z,&pobj,&dobj);
+  status = custom_sdp(n,nconstraints,C,b,constraints,0.0,&X,&y,&Z,&pobj,&dobj);
 
   /*
    * Grab the results
