@@ -1,9 +1,4 @@
-CXX_STD = CXX11
-
-PKG_CXXFLAGS = $(SHLIB_OPENMP_CXXFLAGS)
-PKG_LIBS = $(SHLIB_OPENMP_CXXFLAGS) $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
-
-PKG_CFLAGS=-DNOSHORTS
+PKG_CFLAGS=-DNOSHORTS 
 PKG_CPPFLAGS=-ICsdp/include
 PKG_LIBS=-LCsdp/lib -lsdp -L/Library/Frameworks/R.framework/Resources/lib -lRlapack -L/Library/Frameworks/R.framework/Resources/lib -lRblas -L/usr/local/gfortran/lib/gcc/x86_64-apple-darwin18/8.2.0 -L/usr/local/gfortran/lib -lgfortran -lquadmath -lm -lm
 
