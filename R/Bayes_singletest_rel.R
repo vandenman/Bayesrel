@@ -48,7 +48,10 @@
 #' @importFrom methods is
 #' @importFrom stats cov cov2cor density ecdf qnorm quantile rchisq rgamma rnorm runif sd var
 #' @importFrom Rdpack reprompt
+#'
 #' @useDynLib Bayesrel, .registration=TRUE, .fixes="C_"
+#' @importFrom Rcpp evalCpp
+#'
 #' @export
 strel <- function(data = NULL, estimates = c("alpha", "lambda2", "glb", "omega"),
                   cov.mat = NULL,

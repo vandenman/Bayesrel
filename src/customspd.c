@@ -7,39 +7,23 @@
  *
  */
 
-#include <cstdlib>
-#include <cstdio>
-#include <cmath>
-extern "C"
-{
+#include <stdlib.h>
+#include <stdio.h>
+#include <math.h>
 #include "declarations.h"
-}
 
-extern "C" int custom_sdpCpp(
-      int n,
-      int k,
-      struct blockmatrix C,
-      double *a,
-      struct constraintmatrix *constraints,
-      double constant_offset,
-      struct blockmatrix *pX,
-      double **py,
-      struct blockmatrix *pZ,
-      double *ppobj,
-      double *pdobj);
-
-int custom_sdpCpp(
-     int n,
-     int k,
-     struct blockmatrix C,
-     double *a,
-     struct constraintmatrix *constraints,
-     double constant_offset,
-     struct blockmatrix *pX,
-     double **py,
-     struct blockmatrix *pZ,
-     double *ppobj,
-     double *pdobj)
+int custom_sdp(n,k,C,a,constraints,constant_offset,pX,py,pZ,ppobj,pdobj)
+     int n;
+     int k;
+     struct blockmatrix C;
+     double *a;
+     struct constraintmatrix *constraints;
+     double constant_offset;
+     struct blockmatrix *pX;
+     double **py;
+     struct blockmatrix *pZ;
+     double *ppobj;
+     double *pdobj;
 {
   int ret;
   struct constraintmatrix fill;
@@ -253,28 +237,28 @@ int custom_sdpCpp(
 
 
 
-   rhs=static_cast<double*>(malloc(sizeof(double)*(k+1)));
+   rhs=malloc(sizeof(double)*(k+1));
    if (rhs == NULL)
      {
        printf("Storage Allocation Failed!\n");
        exit(10);
      };
 
-   dy=static_cast<double*>(malloc(sizeof(double)*(k+1)));
+   dy=malloc(sizeof(double)*(k+1));
    if (dy == NULL)
      {
        printf("Storage Allocation Failed!\n");
        exit(10);
      };
 
-   dy1=static_cast<double*>(malloc(sizeof(double)*(k+1)));
+   dy1=malloc(sizeof(double)*(k+1));
    if (dy1 == NULL)
      {
        printf("Storage Allocation Failed!\n");
        exit(10);
      };
 
-   Fp=static_cast<double*>(malloc(sizeof(double)*(k+1)));
+   Fp=malloc(sizeof(double)*(k+1));
    if (Fp == NULL)
      {
        printf("Storage Allocation Failed!\n");
@@ -290,7 +274,7 @@ int custom_sdpCpp(
    else
      ldam=k;
 
-   O=static_cast<double*>(malloc(sizeof(double)*ldam*ldam));
+   O=malloc(sizeof(double)*ldam*ldam);
    if (O == NULL)
      {
        printf("Storage Allocation Failed!\n");
@@ -319,29 +303,29 @@ int custom_sdpCpp(
      {
        p=constraints[i].blocks;
        while (p != NULL)
-     {
-       /*
-        * First, set issparse.
-        */
-       if (((p->numentries) > 0.25*(p->blocksize)) && ((p->numentries) > 15))
-         {
-           p->issparse=0;
-         }
-       else
-         {
-           p->issparse=1;
-         };
+	 {
+	   /*
+	    * First, set issparse.
+	    */
+	   if (((p->numentries) > 0.25*(p->blocksize)) && ((p->numentries) > 15))
+	     {
+	       p->issparse=0;
+	     }
+	   else
+	     {
+	       p->issparse=1;
+	     };
 
-       if (C.blocks[p->blocknum].blockcategory == DIAG)
-         p->issparse=1;
+	   if (C.blocks[p->blocknum].blockcategory == DIAG)
+	     p->issparse=1;
 
-       /*
-        * Setup the cross links.
-        */
+	   /*
+	    * Setup the cross links.
+	    */
 
-       p->nextbyblock=NULL;
-       p=p->next;
-     };
+	   p->nextbyblock=NULL;
+	   p=p->next;
+	 };
      };
 
    /*
@@ -351,42 +335,42 @@ int custom_sdpCpp(
      {
        p=constraints[i].blocks;
        while (p != NULL)
-     {
-       if (p->nextbyblock == NULL)
-         {
-           blk=p->blocknum;
+	 {
+	   if (p->nextbyblock == NULL)
+	     {
+	       blk=p->blocknum;
 
-           /*
-        * link in the remaining blocks.
-        */
-           for (j=i+1; j<=k; j++)
-         {
-           q=constraints[j].blocks;
+	       /*
+		* link in the remaining blocks.
+		*/
+	       for (j=i+1; j<=k; j++)
+		 {
+		   q=constraints[j].blocks;
 
-           while (q != NULL)
-             {
-               if (q->blocknum == p->blocknum)
-             {
-               if (p->nextbyblock == NULL)
-                 {
-                   p->nextbyblock=q;
-                   q->nextbyblock=NULL;
-                   prev=q;
-                 }
-               else
-                 {
-                   prev->nextbyblock=q;
-                   q->nextbyblock=NULL;
-                   prev=q;
-                 };
-               break;
-             };
-               q=q->next;
-             };
-         };
-         };
-       p=p->next;
-     };
+		   while (q != NULL)
+		     {
+		       if (q->blocknum == p->blocknum)
+			 {
+			   if (p->nextbyblock == NULL)
+			     {
+			       p->nextbyblock=q;
+			       q->nextbyblock=NULL;
+			       prev=q;
+			     }
+			   else
+			     {
+			       prev->nextbyblock=q;
+			       q->nextbyblock=NULL;
+			       prev=q;
+			     };
+			   break;
+			 };
+		       q=q->next;
+		     };
+		 };
+	     };
+	   p=p->next;
+	 };
      };
 
    /*
@@ -396,14 +380,14 @@ int custom_sdpCpp(
    if (printlevel >= 4)
      {
        for (i=1; i<=k; i++)
-     {
-       p=constraints[i].blocks;
-       while (p != NULL)
-         {
-           printf("%d,%d,%d,%d \n",i,p->blocknum,p->issparse,p->numentries);
-           p=p->next;
-         };
-     };
+	 {
+	   p=constraints[i].blocks;
+	   while (p != NULL)
+	     {
+	       printf("%d,%d,%d,%d \n",i,p->blocknum,p->issparse,p->numentries);
+	       p=p->next;
+	     };
+	 };
      };
 
    /*
@@ -427,13 +411,13 @@ int custom_sdpCpp(
      {
        ptr=constraints[i].blocks;
        while (ptr != NULL)
-     {
-       if (byblocks[ptr->blocknum]==NULL)
-         {
-           byblocks[ptr->blocknum]=ptr;
-         };
-       ptr=ptr->next;
-     };
+	 {
+	   if (byblocks[ptr->blocknum]==NULL)
+	     {
+	       byblocks[ptr->blocknum]=ptr;
+	     };
+	   ptr=ptr->next;
+	 };
      };
 
    /*
@@ -465,69 +449,69 @@ int custom_sdpCpp(
     */
 
    ret=sdp(n,k,C,a,constant_offset,constraints,byblocks,fill,*pX,*py,*pZ,
-       cholxinv,cholzinv,ppobj,pdobj,work1,work2,work3,workvec1,
-       workvec2,workvec3,workvec4,workvec5,workvec6,workvec7,workvec8,
-       diagO,bestx,besty,bestz,Zi,O,rhs,dZ,dX,dy,dy1,Fp,
-       printlevel,params);
+	   cholxinv,cholzinv,ppobj,pdobj,work1,work2,work3,workvec1,
+	   workvec2,workvec3,workvec4,workvec5,workvec6,workvec7,workvec8,
+	   diagO,bestx,besty,bestz,Zi,O,rhs,dZ,dX,dy,dy1,Fp,
+	   printlevel,params);
 
    if (printlevel >= 1)
      {
        if (ret==0)
-     printf("Success: SDP solved\n");
+	 printf("Success: SDP solved\n");
        if (ret==1)
-     printf("Success: SDP is primal infeasible\n");
+	 printf("Success: SDP is primal infeasible\n");
        if (ret==2)
-     printf("Success: SDP is dual infeasible\n");
+	 printf("Success: SDP is dual infeasible\n");
        if (ret==3)
-     printf("Partial Success: SDP solved with reduced accuracy\n");
+	 printf("Partial Success: SDP solved with reduced accuracy\n");
        if (ret >= 4)
-     printf("Failure: return code is %d \n",ret);
+	 printf("Failure: return code is %d \n",ret);
 
        if (ret==1)
-     {
-       op_at(k,*py,constraints,work1);
-       addscaledmat(work1,-1.0,*pZ,work1);
-       printf("Certificate of primal infeasibility: a'*y=%.5e, ||A'(y)-Z||=%.5e\n",-1.0,Fnorm(work1));
-     };
+	 {
+	   op_at(k,*py,constraints,work1);
+	   addscaledmat(work1,-1.0,*pZ,work1);
+	   printf("Certificate of primal infeasibility: a'*y=%.5e, ||A'(y)-Z||=%.5e\n",-1.0,Fnorm(work1));
+	 };
 
        if (ret==2)
-     {
-       op_a(k,constraints,*pX,workvec1);
-       printf("Certificate of dual infeasibility: tr(CX)=%.5e, ||A(X)||=%.5e\n",trace_prod(C,*pX),norm2(k,workvec1+1));
-     };
+	 {
+	   op_a(k,constraints,*pX,workvec1);
+	   printf("Certificate of dual infeasibility: tr(CX)=%.5e, ||A(X)||=%.5e\n",trace_prod(C,*pX),norm2(k,workvec1+1));
+	 };
 
        if ((ret==0) || (ret>=3))
-     {
-       if (printlevel >= 3)
-         {
-           printf("XZ Gap: %.7e \n",trace_prod(*pZ,*pX));
-           gap=*pdobj-*ppobj;
-           printf("Real Gap: %.7e \n",gap);
-         };
+	 {
+	   if (printlevel >= 3)
+	     {
+	       printf("XZ Gap: %.7e \n",trace_prod(*pZ,*pX));
+	       gap=*pdobj-*ppobj;
+	       printf("Real Gap: %.7e \n",gap);
+	     };
 
-       if (printlevel >= 1)
-         {
+	   if (printlevel >= 1)
+	     {
                gap=*pdobj-*ppobj;
 
-           printf("Primal objective value: %.7e \n",*ppobj);
-           printf("Dual objective value: %.7e \n",*pdobj);
-           printf("Relative primal infeasibility: %.2e \n",
-              pinfeas(k,constraints,*pX,a,workvec1));
-           printf("Relative dual infeasibility: %.2e \n",
-              dinfeas(k,C,constraints,*py,*pZ,work1));
-           printf("Real Relative Gap: %.2e \n",gap/(1+fabs(*pdobj)+fabs(*ppobj)));
-           printf("XZ Relative Gap: %.2e \n",trace_prod(*pZ,*pX)/(1+fabs(*pdobj)+fabs(*ppobj)));
+	       printf("Primal objective value: %.7e \n",*ppobj);
+	       printf("Dual objective value: %.7e \n",*pdobj);
+	       printf("Relative primal infeasibility: %.2e \n",
+		      pinfeas(k,constraints,*pX,a,workvec1));
+	       printf("Relative dual infeasibility: %.2e \n",
+		      dinfeas(k,C,constraints,*py,*pZ,work1));
+	       printf("Real Relative Gap: %.2e \n",gap/(1+fabs(*pdobj)+fabs(*ppobj)));
+	       printf("XZ Relative Gap: %.2e \n",trace_prod(*pZ,*pX)/(1+fabs(*pdobj)+fabs(*ppobj)));
 
-           printf("DIMACS error measures: %.2e %.2e %.2e %.2e %.2e %.2e\n",
-              pinfeas(k,constraints,*pX,a,workvec1)*(1+norm2(k,a+1))/
-              (1+norminf(k,a+1)),
-              0.0,
-              dimacserr3(k,C,constraints,*py,*pZ,work1),
-              0.0,
-              gap/(1+fabs(*pdobj)+fabs(*ppobj)),
-              trace_prod(*pZ,*pX)/(1+fabs(*pdobj)+fabs(*ppobj)));
-         };
-     };
+	       printf("DIMACS error measures: %.2e %.2e %.2e %.2e %.2e %.2e\n",
+		      pinfeas(k,constraints,*pX,a,workvec1)*(1+norm2(k,a+1))/
+		      (1+norminf(k,a+1)),
+		      0.0,
+		      dimacserr3(k,C,constraints,*py,*pZ,work1),
+		      0.0,
+		      gap/(1+fabs(*pdobj)+fabs(*ppobj)),
+		      trace_prod(*pZ,*pX)/(1+fabs(*pdobj)+fabs(*ppobj)));
+	     };
+	 };
 
      };
 
