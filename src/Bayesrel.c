@@ -68,7 +68,7 @@ SEXP csdp(SEXP n_p,
   /*
    * Solve the problem
    */
-  status = custom_sdp(n,nconstraints,C,b,constraints,0.0,&X,&y,&Z,&pobj,&dobj);
+  status = custom_sdpCpp(n,nconstraints,C,b,constraints,0.0,&X,&y,&Z,&pobj,&dobj);
 
   /*
    * Grab the results
