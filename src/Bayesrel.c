@@ -68,7 +68,7 @@ SEXP csdp(SEXP n_p,
   /*
    * Solve the problem
    */
-  status = easy_sdp(n,nconstraints,C,b,constraints,0.0,&X,&y,&Z,&pobj,&dobj);
+  status = custom_sdp(n,nconstraints,C,b,constraints,0.0,&X,&y,&Z,&pobj,&dobj);
 
   /*
    * Grab the results
@@ -340,7 +340,7 @@ static const R_CallMethodDef CallEntries[] = {
   {NULL, NULL, 0}
 };
 
-void R_init_Rcsdp(DllInfo *dll)
+void R_init_Bayesrel(DllInfo *dll)
 {
   R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
