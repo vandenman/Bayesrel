@@ -13,8 +13,19 @@ struct blockmatrix blkmatrix_R2csdp(SEXP);
 SEXP blkmatrix_csdp2R(struct blockmatrix);
 SEXP constraints_csdp2R(int, struct constraintmatrix *);
 struct constraintmatrix *constraints_R2csdp(SEXP);
-
 void free_constraints(int, struct constraintmatrix *);
+int custom_sdp(
+    int,
+    int,
+    struct blockmatrix,
+    double *,
+    struct constraintmatrix *,
+    double,
+    struct blockmatrix *,
+    double **,
+    struct blockmatrix *,
+    double *,
+    double *);
 /*
  int custom_sdpCpp(
  int n,
