@@ -203,11 +203,12 @@ csdp_minimal <- function(sum.block.sizes, nconstraints, nblocks, block.types, bl
 }
 
 
-# code from psych Package:
+# adjusted code from Rcsdp package and from psych Package, small adjustment to easy_spd function from CSDP library:
 # Revelle, W. (2018) psych: Procedures for Personality and Psychological Research,
 # Northwestern University, Evanston, Illinois, USA, https://CRAN.R-project.org/package=psych Version = 1.8.4.
-# and from the Rcsdp Package of Hector Corrada Bravo
-glbOnArray2 <- function(Cov, callback = function(){}) {
+# Rcsdp Package of Hector Corrada Bravo
+# CSDP Library by Brian Borchers
+glbOnArray_custom <- function(Cov, callback = function(){}) {
 
   d <- dim(Cov)
   if (length(d) == 2L) { # turn it into an array if it is a matrix
