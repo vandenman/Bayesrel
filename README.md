@@ -21,7 +21,8 @@ Functionality for the most common single test reliability estimates is provided:
     both for the prior and posterior.
     There is also the functionality to plot the posterior with the prior for a chosen estimator with cutoffs. 
     The PFA method for omega is from Aaron Schlegel (https://www.r-bloggers.com/iterated-principal-factor-method-of-factor-analysis-with-r/). 
-    The glb method is adjusted code from the Rcsdp package by Hector Corrada Bravo (https://CRAN.R-project.org/package=Rcsdp) 
+    The glb method is adjusted code from the Rcsdp package by Hector Corrada Bravo (https://CRAN.R-project.org/package=Rcsdp), 
+    now using a slightly adjusted solving algorithm from the CSDP library by 'Brian Borchers' (https://github.com/coin-or/Csdp/wiki>)
     The Lambda4 method is from Tom Benton (https://dx.doi.org/10.1007/978-3-319-07503-7_19). 
     Missing data can be handled both listwise and pairwise for both the Bayesian and frequentist cases.
     

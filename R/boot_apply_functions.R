@@ -45,10 +45,6 @@ applylambda6 <- function(M, callback = function(){}){
 #   return(gl)
 # }
 
-applyglb <- function(M){
-  gl <- glb.algebraic2(M)
-  return(gl)
-}
 
 applyomega_cfa_data <- function(data, interval, pairwise, callback = function(){}){
   out <- omegaFreqData(data, interval=interval, omega.int.analytic=T, pairwise=pairwise)

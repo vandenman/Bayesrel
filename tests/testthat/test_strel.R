@@ -82,12 +82,12 @@ test_that("Omega results with missing data are correct", {
 
 })
 
-test_that("Frequentist Lambda6 results with missing data are correct", {
+test_that("Frequentist Lambda6 results with missing data and parametric bootstrap are correct", {
 
   data(asrm_mis, package = "Bayesrel")
   set.seed(1234)
-  ee <- Bayesrel::strel(asrm_mis, estimates = c("lambda6"), Bayes = F, n.boot = 100)
-  expect_equal(as.numeric(ee$freq$conf$low$freq_lambda6), c(0.7005416),
+  ee <- Bayesrel::strel(asrm_mis, estimates = c("lambda6"), Bayes = F, n.boot = 100, para.boot = T)
+  expect_equal(as.numeric(ee$freq$conf$low$freq_lambda6), c(0.7188984),
                tolerance = 1e-3)
 
 })
