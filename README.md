@@ -2,6 +2,7 @@
 # Bayesrel
 
 <!-- badges: start -->
+[![Travis build status](https://travis-ci.org/juliuspf/Bayesrel.svg?branch=Cpp)](https://travis-ci.org/juliuspf/Bayesrel)
 <!-- badges: end -->
 
 The goal of Bayesrel is to provide popular single-test reliability coefficients in the Bayesian statistis framework.
@@ -14,7 +15,7 @@ You can install the released version of Bayesrel from [CRAN](https://CRAN.R-proj
 ``` r
 install.packages("Bayesrel")
 ```
-or install the latest version from [github] (https:://github.com) with the help of the devtools-package:
+or install the latest version of Bayesrel from [github] (https:://github.com) with the help of the devtools-package:
 
 ```r
 devtools::install_github("juliuspf/Bayesrel")
@@ -22,7 +23,7 @@ devtools::install_github("juliuspf/Bayesrel")
 
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+This is a basic example which shows you how to compute alpha, lambda2, the glb, and omega for an example data set:
 
 ``` r
 library(Bayesrel)
