@@ -23,7 +23,7 @@ devtools::install_github("juliuspf/Bayesrel")
 
 ## Example
 
-This is a basic example which shows you how to compute alpha, lambda2, the glb, and omega for an example data set:
+This is a basic example which shows you how to compute alpha, lambda2, the glb, and omega for an example real data set:
 
 ``` r
 library(Bayesrel)
