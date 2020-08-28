@@ -4,7 +4,8 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of Bayesrel is to ...
+The goal of Bayesrel is to provide popular single-test reliability coefficients in the Bayesian statistis framework.
+These coefficients include alpha, lambda2, lambda6, the glb, and omega.
 
 ## Installation
 
@@ -12,6 +13,11 @@ You can install the released version of Bayesrel from [CRAN](https://CRAN.R-proj
 
 ``` r
 install.packages("Bayesrel")
+```
+or install the latest version from [github] (https:://github.com) with the help of the devtools-package:
+
+```r
+devtools::install_github("juliuspf/Bayesrel")
 ```
 
 ## Example
@@ -21,5 +27,15 @@ This is a basic example which shows you how to solve a common problem:
 ``` r
 library(Bayesrel)
 ## basic example code
+## load example data set from the package
+data <- asrm
+## run the main reliability function
+res <- strel(asrm)
+## get a full result output
+summary(strel)
+## plot the results for the coefficient omega
+plot_strel(res, estimate = "omega")
+## return the probability that coefficient alpha is larger than .70
+p_strel(res, estimate = "alpha", low.bound = .70)
 ```
 
