@@ -17,7 +17,7 @@ Description: Functionality for the most common single test reliability estimates
     See 'Lee' (2007, <doi:10.1002/9780470024737>). 
     The glb method is adjusted code from the 'Rcsdp' package by 'Hector Corrada Bravo', 
     <https://CRAN.R-project.org/package=Rcsdp>, which now uses a slightly adjusted solving algorithm 
-    from the CSDP library by 'Brian Borchers' <https://github.com/coin-or/Csdp/wiki>, <https://doi.org/10.1080/10556789908805765>
+    from the 'CSDP' library by 'Brian Borchers' <https://github.com/coin-or/Csdp/wiki>, <doi.org/10.1080/10556789908805765>
     lambda-4 is from 'Benton' (2015) <doi:10.1007/978-3-319-07503-7_19>; 
     the principal factor analysis for the frequentist omega is from 'Schlegel' (2017) 
     <https://www.r-bloggers.com/iterated-principal-factor-method-of-factor-analysis-with-r/>; 
@@ -32,4 +32,7 @@ RdMacros: Rdpack
 RoxygenNote: 7.1.1
 Depends: R (>= 2.10)
 Suggests: 
-    testthat (>= 2.1.0)
+    testthat (>= 2.1.0),
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
