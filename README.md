@@ -2,6 +2,7 @@
 # Bayesrel
 
 <!-- badges: start -->
+[![Travis build status](https://travis-ci.org/juliuspf/Bayesrel.svg?branch=master)](https://travis-ci.org/juliuspf/Bayesrel)
 <!-- badges: end -->
 
 The goal of Bayesrel is to provide popular single-test reliability coefficients in the Bayesian statistis framework.
@@ -14,7 +15,7 @@ You can install the released version of Bayesrel from [CRAN](https://CRAN.R-proj
 ``` r
 install.packages("Bayesrel")
 ```
-or install the latest version from [github] (https:://github.com) with the help of the devtools-package:
+or install the latest version of Bayesrel from [github] (https:://github.com) with the help of the devtools-package:
 
 ```r
 devtools::install_github("juliuspf/Bayesrel")
