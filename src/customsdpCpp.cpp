@@ -10,20 +10,84 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+extern "C"
+{
 #include "declarations.h"
+}
 
-int custom_sdp(n,k,C,a,constraints,constant_offset,pX,py,pZ,ppobj,pdobj)
-     int n;
-     int k;
-     struct blockmatrix C;
-     double *a;
-     struct constraintmatrix *constraints;
-     double constant_offset;
-     struct blockmatrix *pX;
-     double **py;
-     struct blockmatrix *pZ;
-     double *ppobj;
-     double *pdobj;
+//
+//extern "C" {
+//   void alloc_mat_packed(struct blockmatrix, struct blockmatrix *);
+//   void free_mat_packed(struct blockmatrix);
+//   int structnnz(int, int, struct blockmatrix, struct constraintmatrix *);
+//   void sort_entries(int, struct blockmatrix, struct constraintmatrix *);
+//   double norm2(int, double *);
+//   double norminf(int, double *);
+//   double Fnorm(struct blockmatrix);
+//   double trace_prod(struct blockmatrix, struct blockmatrix);
+//   double pinfeas(int, struct constraintmatrix *,
+//                  struct blockmatrix, double *, double *);
+//   double dinfeas(int, struct blockmatrix,
+//                  struct constraintmatrix *, double *,
+//                  struct blockmatrix, struct blockmatrix);
+//   double dimacserr3(int, struct blockmatrix,
+//                     struct constraintmatrix *, double *,
+//                     struct blockmatrix, struct blockmatrix);
+//   void op_a(int, struct constraintmatrix *,
+//             struct blockmatrix, double *);
+//   void op_at(int, double *, struct constraintmatrix *,
+//              struct blockmatrix);
+//   void makefill(int, struct blockmatrix,
+//                 struct constraintmatrix *,
+//                 struct constraintmatrix *, struct blockmatrix,
+//                 int);
+//   void addscaledmat(struct blockmatrix, double, struct blockmatrix,
+//                     struct blockmatrix);
+//   void alloc_mat(struct blockmatrix, struct blockmatrix *);
+//   void free_mat(struct blockmatrix);
+//   int sdp(int, int, struct blockmatrix, double *, double,
+//           struct constraintmatrix *, struct sparseblock **,
+//           struct constraintmatrix, struct blockmatrix, double *,
+//           struct blockmatrix, struct blockmatrix,
+//           struct blockmatrix, double *, double *,
+//           struct blockmatrix, struct blockmatrix,
+//           struct blockmatrix,
+//           double *, double *,
+//           double *, double *, double *,
+//           double *, double *, double *,
+//           double *, struct blockmatrix, double *,
+//           struct blockmatrix, struct blockmatrix, double *,
+//           double *, struct blockmatrix, struct blockmatrix,
+//           double *, double *, double *, int,
+//           struct paramstruc);
+//}
+
+
+//extern "C" int custom_sdpCpp(
+//      int,
+//      int,
+//      struct blockmatrix,
+//      double*,
+//      struct constraintmatrix *,
+//      double,
+//      struct blockmatrix *,
+//      double **,
+//      struct blockmatrix *,
+//      double *,
+//      double *);
+
+int custom_sdpCpp(
+     int n,
+     int k,
+     struct blockmatrix C,
+     double *a,
+     struct constraintmatrix *constraints,
+     double constant_offset,
+     struct blockmatrix *pX,
+     double **py,
+     struct blockmatrix *pZ,
+     double *ppobj,
+     double *pdobj)
 {
   int ret;
   struct constraintmatrix fill;
@@ -64,6 +128,7 @@ int custom_sdp(n,k,C,a,constraints,constant_offset,pX,py,pZ,ppobj,pdobj)
   struct sparseblock *p;
   struct sparseblock *q;
   struct sparseblock *prev=NULL;
+  double gap;
   int nnz;
 
    /*
@@ -226,25 +291,25 @@ int custom_sdp(n,k,C,a,constraints,constant_offset,pX,py,pZ,ppobj,pdobj)
 
 
 
-   rhs=malloc(sizeof(double)*(k+1));
+   rhs=static_cast<double*>(malloc(sizeof(double)*(k+1)));
    if (rhs == NULL)
      {
        return(10);
      };
 
-   dy=malloc(sizeof(double)*(k+1));
+   dy=static_cast<double*>(malloc(sizeof(double)*(k+1)));
    if (dy == NULL)
      {
        return(10);
      };
 
-   dy1=malloc(sizeof(double)*(k+1));
+   dy1=static_cast<double*>(malloc(sizeof(double)*(k+1)));
    if (dy1 == NULL)
      {
        return(10);
      };
 
-   Fp=malloc(sizeof(double)*(k+1));
+   Fp=static_cast<double*>(malloc(sizeof(double)*(k+1)));
    if (Fp == NULL)
      {
        return(10);
@@ -259,7 +324,7 @@ int custom_sdp(n,k,C,a,constraints,constant_offset,pX,py,pZ,ppobj,pdobj)
    else
      ldam=k;
 
-   O=malloc(sizeof(double)*ldam*ldam);
+   O=static_cast<double*>(malloc(sizeof(double)*ldam*ldam));
    if (O == NULL)
      {
        return(10);
@@ -287,29 +352,29 @@ int custom_sdp(n,k,C,a,constraints,constant_offset,pX,py,pZ,ppobj,pdobj)
      {
        p=constraints[i].blocks;
        while (p != NULL)
-	 {
-	   /*
-	    * First, set issparse.
-	    */
-	   if (((p->numentries) > 0.25*(p->blocksize)) && ((p->numentries) > 15))
-	     {
-	       p->issparse=0;
-	     }
-	   else
-	     {
-	       p->issparse=1;
-	     };
+     {
+       /*
+        * First, set issparse.
+        */
+       if (((p->numentries) > 0.25*(p->blocksize)) && ((p->numentries) > 15))
+         {
+           p->issparse=0;
+         }
+       else
+         {
+           p->issparse=1;
+         };
 
-	   if (C.blocks[p->blocknum].blockcategory == DIAG)
-	     p->issparse=1;
+       if (C.blocks[p->blocknum].blockcategory == DIAG)
+         p->issparse=1;
 
-	   /*
-	    * Setup the cross links.
-	    */
+       /*
+        * Setup the cross links.
+        */
 
-	   p->nextbyblock=NULL;
-	   p=p->next;
-	 };
+       p->nextbyblock=NULL;
+       p=p->next;
+     };
      };
 
    /*
@@ -319,59 +384,48 @@ int custom_sdp(n,k,C,a,constraints,constant_offset,pX,py,pZ,ppobj,pdobj)
      {
        p=constraints[i].blocks;
        while (p != NULL)
-	 {
-	   if (p->nextbyblock == NULL)
-	     {
-	       blk=p->blocknum;
+     {
+       if (p->nextbyblock == NULL)
+         {
+           blk=p->blocknum;
 
-	       /*
-		* link in the remaining blocks.
-		*/
-	       for (j=i+1; j<=k; j++)
-		 {
-		   q=constraints[j].blocks;
+           /*
+        * link in the remaining blocks.
+        */
+           for (j=i+1; j<=k; j++)
+         {
+           q=constraints[j].blocks;
 
-		   while (q != NULL)
-		     {
-		       if (q->blocknum == p->blocknum)
-			 {
-			   if (p->nextbyblock == NULL)
-			     {
-			       p->nextbyblock=q;
-			       q->nextbyblock=NULL;
-			       prev=q;
-			     }
-			   else
-			     {
-			       prev->nextbyblock=q;
-			       q->nextbyblock=NULL;
-			       prev=q;
-			     };
-			   break;
-			 };
-		       q=q->next;
-		     };
-		 };
-	     };
-	   p=p->next;
-	 };
+           while (q != NULL)
+             {
+               if (q->blocknum == p->blocknum)
+             {
+               if (p->nextbyblock == NULL)
+                 {
+                   p->nextbyblock=q;
+                   q->nextbyblock=NULL;
+                   prev=q;
+                 }
+               else
+                 {
+                   prev->nextbyblock=q;
+                   q->nextbyblock=NULL;
+                   prev=q;
+                 };
+               break;
+             };
+               q=q->next;
+             };
+         };
+         };
+       p=p->next;
+     };
      };
 
    /*
     * If necessary, print out information on sparsity of blocks.
     */
 
-   if (printlevel >= 4)
-     {
-       for (i=1; i<=k; i++)
-	 {
-	   p=constraints[i].blocks;
-	   while (p != NULL)
-	     {
-	       p=p->next;
-	     };
-	 };
-     };
 
    /*
     * Allocate space for byblocks pointers.
@@ -393,13 +447,13 @@ int custom_sdp(n,k,C,a,constraints,constant_offset,pX,py,pZ,ppobj,pdobj)
      {
        ptr=constraints[i].blocks;
        while (ptr != NULL)
-	 {
-	   if (byblocks[ptr->blocknum]==NULL)
-	     {
-	       byblocks[ptr->blocknum]=ptr;
-	     };
-	   ptr=ptr->next;
-	 };
+     {
+       if (byblocks[ptr->blocknum]==NULL)
+         {
+           byblocks[ptr->blocknum]=ptr;
+         };
+       ptr=ptr->next;
+     };
      };
 
    /*
@@ -428,10 +482,10 @@ int custom_sdp(n,k,C,a,constraints,constant_offset,pX,py,pZ,ppobj,pdobj)
     */
 
    ret=sdp(n,k,C,a,constant_offset,constraints,byblocks,fill,*pX,*py,*pZ,
-	   cholxinv,cholzinv,ppobj,pdobj,work1,work2,work3,workvec1,
-	   workvec2,workvec3,workvec4,workvec5,workvec6,workvec7,workvec8,
-	   diagO,bestx,besty,bestz,Zi,O,rhs,dZ,dX,dy,dy1,Fp,
-	   printlevel,params);
+       cholxinv,cholzinv,ppobj,pdobj,work1,work2,work3,workvec1,
+       workvec2,workvec3,workvec4,workvec5,workvec6,workvec7,workvec8,
+       diagO,bestx,besty,bestz,Zi,O,rhs,dZ,dX,dy,dy1,Fp,
+       printlevel,params);
 
 
    /*
