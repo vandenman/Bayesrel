@@ -64,7 +64,6 @@ int custom_sdp(n,k,C,a,constraints,constant_offset,pX,py,pZ,ppobj,pdobj)
   struct sparseblock *p;
   struct sparseblock *q;
   struct sparseblock *prev=NULL;
-  double gap;
   int nnz;
 
    /*
