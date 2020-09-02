@@ -260,7 +260,7 @@ glbOnArray_custom <- function(Cov, callback = function(){}) {
     prob.data$C$blocks[[2L]]$data <- as.double(c(0, -Var))
 
 
-    ret <- csdp_minimal(
+    ret <- csdpArma(
       arg1,
       arg2,
       arg3,
