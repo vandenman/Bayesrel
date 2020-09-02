@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <RcppArmadillo.h>
 #include <Rcpp.h>
+#include <blockmat.h>
+
 //[[Rcpp::depends(RcppArmadillo)]]
 using namespace Rcpp;
 using namespace arma;
@@ -150,6 +152,4 @@ struct constraintmatrix *constraints_R2csdpArma(List A)
     }
   return constraints;
 }
-
-
 

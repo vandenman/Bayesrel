@@ -24,3 +24,13 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+static const R_CallMethodDef CallEntries[] = {
+    {"_Bayesrel_csdpArma", (DL_FUNC) &_Bayesrel_csdpArma, 8},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_Bayesrel(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}

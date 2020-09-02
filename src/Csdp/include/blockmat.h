@@ -23,7 +23,7 @@ union blockdatarec {
 };
 
 /*
-  A block record describes an individual block within a matrix. 
+  A block record describes an individual block within a matrix.
 */
 
 struct blockrec {
@@ -56,6 +56,7 @@ struct sparseblock {
   struct sparseblock *next;
   struct sparseblock *nextbyblock;
   double *entries;
+#define NOSHORTS 1
 #ifndef NOSHORTS
   unsigned short *iindices;
   unsigned short *jindices;
@@ -78,7 +79,7 @@ struct sparseblock {
 
 /*
  * A constraint matrix is just an array of pointers to linked lists of
- * the constraint blocks.  
+ * the constraint blocks.
  */
 
 struct constraintmatrix {

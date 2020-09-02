@@ -1,11 +1,15 @@
 
-#include <R.h>
-#include <Rinternals.h>
+//#include <R.h>
+//#include <Rinternals.h>
+//#include <stdlib.h> // for NULL
+//#include <R_ext/Rdynload.h>
 #include <declarations.h>
-#include <stdlib.h> // for NULL
-#include <R_ext/Rdynload.h>
+#include <stdio.h>
 #include <RcppArmadillo.h>
+#include <Rcpp.h>
 #include "customsdp.h"
+
+
 //[[Rcpp::depends(RcppArmadillo)]]
 using namespace Rcpp;
 using namespace arma;
@@ -102,13 +106,13 @@ Rcpp::List csdpArma(
 }
 
 
-static const R_CallMethodDef CallEntries[] = {
-  {"csdp",          (DL_FUNC) &csdp,          8},
-  {NULL, NULL, 0}
-};
-
-void R_init_Bayesrel(DllInfo *dll)
-{
-  R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
-  R_useDynamicSymbols(dll, FALSE);
-}
+//static const R_CallMethodDef CallEntries[] = {
+//  {"csdpArma",          (DL_FUNC) &csdpArma,          8},
+//  {NULL, NULL, 0}
+//};
+//
+//void R_init_Bayesrel(DllInfo *dll)
+//{
+//  R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+//  R_useDynamicSymbols(dll, FALSE);
+//}

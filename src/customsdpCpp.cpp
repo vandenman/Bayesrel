@@ -10,10 +10,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-extern "C"
-{
-#include "declarations.h"
-}
+#include <declarations.h>
 
 //
 //extern "C" {
@@ -128,7 +125,6 @@ int custom_sdpCpp(
   struct sparseblock *p;
   struct sparseblock *q;
   struct sparseblock *prev=NULL;
-  double gap;
   int nnz;
 
    /*
