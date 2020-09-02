@@ -8,7 +8,6 @@
 #ifndef customsdp_h
 #define customsdp_h
 
-#include "blockmat.h"
 
 arma::ivec int_vector_csdp2RArma(int n, int *y);
 
@@ -35,7 +34,7 @@ int custom_sdpCpp(
     double **py,
     struct blockmatrix *pZ,
     double *ppobj,
-    double *pdobj)
+    double *pdobj);
 
 
 #endif /* customsdp_h */

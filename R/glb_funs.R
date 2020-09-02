@@ -1,6 +1,10 @@
 
-# adjusted code from Rcsdp package:
-glbOnArray <- function(Cov, callback = function(){}) {
+# adjusted code from Rcsdp package and from psych Package, small adjustment to easy_spd function from CSDP library:
+# Revelle, W. (2018) psych: Procedures for Personality and Psychological Research,
+# Northwestern University, Evanston, Illinois, USA, https://CRAN.R-project.org/package=psych Version = 1.8.4.
+# Rcsdp Package of Hector Corrada Bravo
+# CSDP Library by Brian Borchers
+glbOnArray_custom <- function(Cov, callback = function(){}) {
 
   d <- dim(Cov)
   if (length(d) == 2L) { # turn it into an array if it is a matrix
@@ -19,10 +23,6 @@ glbOnArray <- function(Cov, callback = function(){}) {
     A[[i]] <- list(diag(b), -b, b)
   }
   K <- list(type = c("s", "l", "l"), size = rep(p, 3))
-
-  control <- Rcsdp::csdp.control(printlevel = 0)
-  write.control.file2(control)
-  on.exit(unlink("param.csdp"))
 
   prob.info <- get.prob.info2(K, length(b))
   LoBounds <- rep(0, p)
@@ -51,15 +51,12 @@ glbOnArray <- function(Cov, callback = function(){}) {
 
     cv <- Cov[i, , ]
     Var <- cv[idx]
-    # Var <- diag(cv)
 
     prob.data$C$blocks[[1L]]$data <- as.double(diag(Var) - cv)
     prob.data$C$blocks[[2L]]$data <- as.double(c(0, -Var))
-    # The two lines above are equivalent to recreating the Rcsdp object:
-    # C <- list(diag(Var) - cv, -Var, LoBounds)
-    # prob.data0 <- Rcsdp:::prepare.data(C, A, opt, prob.info)
 
-    ret <- Rcsdp::csdp_minimal(
+
+    ret <- csdpArma(
       arg1,
       arg2,
       arg3,
@@ -72,17 +69,12 @@ glbOnArray <- function(Cov, callback = function(){}) {
 
     scv <- sum(cv)
 
-    # ret[[3L]][-1L] is equivalent to:
-    # ret[1:3] <- Rcsdp:::get.solution(ret[[1L]], ret[[2L]], ret[[3L]], prob.info)
-    # result <- structure(ret, names = c("X", "Z", "y", "pobj", "dobj", "status"))
-    # or
-    # y <- vector_csdp2R(ret[[3L]])
-
     glbs[i] <- (scv - sum(Var) + sum(ret[[3L]][-1L])) / scv
     callback()
   }
   return(glbs)
 }
+
 
 get.prob.info2 <- function(K, m) {
   # block.types <- ifelse(K$type == "s", 1, 2)
@@ -187,94 +179,106 @@ constraints_R2csdp2 <- function(A, prob.info) {
     lapply(seq_along(A), do.one.constraint)
 }
 
-csdp_minimal <- function(sum.block.sizes, nconstraints, nblocks, block.types, block.sizes, C, A, b) {
-  return(.Call(
-    C_csdp,
-    as.integer(sum.block.sizes),
-    as.integer(nconstraints),
-    as.integer(nblocks),
-    as.integer(block.types),
-    as.integer(block.sizes),
-    C,
-    A,
-    b,
-    PACKAGE="Bayesrel"
-  ))
-}
 
 
-# adjusted code from Rcsdp package and from psych Package, small adjustment to easy_spd function from CSDP library:
-# Revelle, W. (2018) psych: Procedures for Personality and Psychological Research,
-# Northwestern University, Evanston, Illinois, USA, https://CRAN.R-project.org/package=psych Version = 1.8.4.
-# Rcsdp Package of Hector Corrada Bravo
-# CSDP Library by Brian Borchers
-glbOnArray_custom <- function(Cov, callback = function(){}) {
+# # adjusted code from Rcsdp package:
+# glbOnArray <- function(Cov, callback = function(){}) {
+#
+#   d <- dim(Cov)
+#   if (length(d) == 2L) { # turn it into an array if it is a matrix
+#     d <- c(1L, d)
+#     dim(Cov) <- d
+#   }
+#
+#   nSamples <- d[1L]
+#   p <- d[2L]
+#
+#   opt <- rep.int(1L, p)
+#   A <- vector("list", p)
+#   for (i in seq_len(p)) {
+#     b <- rep(0, p)
+#     b[i] <- 1
+#     A[[i]] <- list(diag(b), -b, b)
+#   }
+#   K <- list(type = c("s", "l", "l"), size = rep(p, 3))
+#
+#   control <- Rcsdp::csdp.control(printlevel = 0)
+#   write.control.file2(control)
+#   on.exit(unlink("param.csdp"))
+#
+#   prob.info <- get.prob.info2(K, length(b))
+#   LoBounds <- rep(0, p)
+#
+#   cv <- Cov[1L, , ]
+#   Var <- diag(cv)
+#   C <- list(diag(Var) - cv, -Var, LoBounds)
+#
+#   # make the Rcsdp object once instead of each iteration
+#   prob.data <- list(
+#     C = blkmatrix_R2csdp2(C, prob.info),
+#     A = constraints_R2csdp2(A, prob.info),
+#     b = as.double(c(0, opt))
+#   )
+#
+#   arg1 <- as.integer(sum(prob.info$block.sizes))
+#   arg2 <- as.integer(prob.info$nconstraints)
+#   arg3 <- as.integer(prob.info$nblocks)
+#   arg4 <- as.integer(c(0, prob.info$block.types))
+#   arg5 <- as.integer(c(0, prob.info$block.sizes))
+#
+#   idx <- cbind(1:p, 1:p)
+#
+#   glbs <- numeric(nSamples)
+#   for (i in seq_len(nSamples)) {
+#
+#     cv <- Cov[i, , ]
+#     Var <- cv[idx]
+#     # Var <- diag(cv)
+#
+#     prob.data$C$blocks[[1L]]$data <- as.double(diag(Var) - cv)
+#     prob.data$C$blocks[[2L]]$data <- as.double(c(0, -Var))
+#     # The two lines above are equivalent to recreating the Rcsdp object:
+#     # C <- list(diag(Var) - cv, -Var, LoBounds)
+#     # prob.data0 <- Rcsdp:::prepare.data(C, A, opt, prob.info)
+#
+#     ret <- Rcsdp::csdp_minimal(
+#       arg1,
+#       arg2,
+#       arg3,
+#       arg4,
+#       arg5,
+#       prob.data$C,
+#       prob.data$A,
+#       prob.data$b
+#     )
+#
+#     scv <- sum(cv)
+#
+#     # ret[[3L]][-1L] is equivalent to:
+#     # ret[1:3] <- Rcsdp:::get.solution(ret[[1L]], ret[[2L]], ret[[3L]], prob.info)
+#     # result <- structure(ret, names = c("X", "Z", "y", "pobj", "dobj", "status"))
+#     # or
+#     # y <- vector_csdp2R(ret[[3L]])
+#
+#     glbs[i] <- (scv - sum(Var) + sum(ret[[3L]][-1L])) / scv
+#     callback()
+#   }
+#   return(glbs)
+# }
 
-  d <- dim(Cov)
-  if (length(d) == 2L) { # turn it into an array if it is a matrix
-    d <- c(1L, d)
-    dim(Cov) <- d
-  }
 
-  nSamples <- d[1L]
-  p <- d[2L]
+# csdp_minimal <- function(sum.block.sizes, nconstraints, nblocks, block.types, block.sizes, C, A, b) {
+#   return(.Call(
+#     C_csdp,
+#     as.integer(sum.block.sizes),
+#     as.integer(nconstraints),
+#     as.integer(nblocks),
+#     as.integer(block.types),
+#     as.integer(block.sizes),
+#     C,
+#     A,
+#     b,
+#     PACKAGE="Bayesrel"
+#   ))
+# }
 
-  opt <- rep.int(1L, p)
-  A <- vector("list", p)
-  for (i in seq_len(p)) {
-    b <- rep(0, p)
-    b[i] <- 1
-    A[[i]] <- list(diag(b), -b, b)
-  }
-  K <- list(type = c("s", "l", "l"), size = rep(p, 3))
-
-  prob.info <- get.prob.info2(K, length(b))
-  LoBounds <- rep(0, p)
-
-  cv <- Cov[1L, , ]
-  Var <- diag(cv)
-  C <- list(diag(Var) - cv, -Var, LoBounds)
-
-  # make the Rcsdp object once instead of each iteration
-  prob.data <- list(
-    C = blkmatrix_R2csdp2(C, prob.info),
-    A = constraints_R2csdp2(A, prob.info),
-    b = as.double(c(0, opt))
-  )
-
-  arg1 <- as.integer(sum(prob.info$block.sizes))
-  arg2 <- as.integer(prob.info$nconstraints)
-  arg3 <- as.integer(prob.info$nblocks)
-  arg4 <- as.integer(c(0, prob.info$block.types))
-  arg5 <- as.integer(c(0, prob.info$block.sizes))
-
-  idx <- cbind(1:p, 1:p)
-
-  glbs <- numeric(nSamples)
-  for (i in seq_len(nSamples)) {
-
-    cv <- Cov[i, , ]
-    Var <- cv[idx]
-
-    prob.data$C$blocks[[1L]]$data <- as.double(diag(Var) - cv)
-    prob.data$C$blocks[[2L]]$data <- as.double(c(0, -Var))
-
-
-    ret <- csdpArma(
-      arg1,
-      arg2,
-      arg3,
-      arg4,
-      arg5,
-      prob.data$C,
-      prob.data$A,
-      prob.data$b
-    )
-
-    scv <- sum(cv)
-
-    glbs[i] <- (scv - sum(Var) + sum(ret[[3L]][-1L])) / scv
-    callback()
-  }
-  return(glbs)
-}
