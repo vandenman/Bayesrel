@@ -3,10 +3,12 @@
 //#include <Rinternals.h>
 //#include <stdlib.h> // for NULL
 //#include <R_ext/Rdynload.h>
-#include <declarations.h>
 #include <stdio.h>
 #include <RcppArmadillo.h>
 #include <Rcpp.h>
+extern "C" {
+#include "declarations.h"
+}
 #include "customsdp.h"
 
 

@@ -49,7 +49,7 @@
 #' @importFrom stats cov cov2cor density ecdf qnorm quantile rchisq rgamma rnorm runif sd var
 #' @importFrom Rdpack reprompt
 #'
-#' @useDynLib Bayesrel, .registration=TRUE, .fixes="C_"
+#' @useDynLib Bayesrel, .registration=TRUE
 #' @importFrom Rcpp evalCpp
 #'
 #' @export

@@ -1,5 +1,5 @@
 //
-//  convert.h
+//  customsdp.h
 //
 //
 //  Created by Julius Pfadt on 02.09.20.
@@ -7,6 +7,7 @@
 
 #ifndef customsdp_h
 #define customsdp_h
+#include <RcppArmadillo.h>
 
 
 arma::ivec int_vector_csdp2RArma(int n, int *y);

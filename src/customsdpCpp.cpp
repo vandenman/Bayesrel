@@ -10,7 +10,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include <declarations.h>
+extern "C" {
+#include "declarations.h"
+}
 
 //
 //extern "C" {
@@ -59,19 +61,6 @@
 //           struct paramstruc);
 //}
 
-
-//extern "C" int custom_sdpCpp(
-//      int,
-//      int,
-//      struct blockmatrix,
-//      double*,
-//      struct constraintmatrix *,
-//      double,
-//      struct blockmatrix *,
-//      double **,
-//      struct blockmatrix *,
-//      double *,
-//      double *);
 
 int custom_sdpCpp(
      int n,

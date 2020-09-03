@@ -1,4 +1,6 @@
-/*
+
+
+ /*
   This file contains definitions for the block matrix data structures used
   in CSDP 3.0.  Note that there are an additional set of definitions used
   for sparse constraint matrices.
@@ -56,8 +58,7 @@ struct sparseblock {
   struct sparseblock *next;
   struct sparseblock *nextbyblock;
   double *entries;
-#define NOSHORTS 1
-#ifndef NOSHORTS
+#ifdef NOSHORTS
   unsigned short *iindices;
   unsigned short *jindices;
   int numentries;
@@ -85,6 +86,7 @@ struct sparseblock {
 struct constraintmatrix {
   struct sparseblock *blocks;
 };
+
 
 
 

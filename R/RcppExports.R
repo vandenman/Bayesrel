@@ -5,11 +5,6 @@ csdpArma <- function(n_p, nconstraints_p, nblocks_p, blocktypes_p, blocksizes_p,
     .Call(`_Bayesrel_csdpArma`, n_p, nconstraints_p, nblocks_p, blocktypes_p, blocksizes_p, C_p, A_p, b_p)
 }
 
-#' @importFrom Rcpp evalCpp
-#' @useDynLib Bayesrel, .registration=TRUE
-#'
-NULL
-
 alphaArma <- function(X) {
     .Call(`_Bayesrel_alphaArma`, X)
 }

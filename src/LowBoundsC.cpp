@@ -1,6 +1,4 @@
-//' @importFrom Rcpp evalCpp
-//' @useDynLib Bayesrel, .registration=TRUE
-//'
+
 
 #include <RcppArmadillo.h>
 //[[Rcpp::depends(RcppArmadillo)]]

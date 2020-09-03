@@ -7,7 +7,10 @@
 #include <stdio.h>
 #include <RcppArmadillo.h>
 #include <Rcpp.h>
-#include <blockmat.h>
+extern "C" {
+#include "blockmat.h"
+}
+
 
 //[[Rcpp::depends(RcppArmadillo)]]
 using namespace Rcpp;
@@ -25,14 +28,32 @@ dvec double_vector_csdp2RArma(int n, double *y)
 
 int * int_vector_R2csdpArma(int n, ivec y)
 {
-  return y.memptr();
+  // return y.memptr(); // <- this should also work
+  int *ret;
+  int i;
+  ret = (int *) malloc((n+1) * sizeof(int));
+  if (ret == NULL)
+    return NULL;
+  for (i=1; i<=n; i++)
+    ret[i] = y[i];
+  return ret;
 }
+
 
 
 double * double_vector_R2csdpArma(int n, dvec y)
 {
-  return y.memptr();
+  // return y.memptr(); // <- this should also work
+  double *ret;
+  int i;
+  ret = (double *) malloc((n+1) * sizeof(double));
+  if (ret == NULL)
+    return NULL;
+  for (i=1; i<=n; i++)
+    ret[i] = y[i];
+  return ret;
 }
+
 
 /*
  the input of this function is a kind of list but of class csdpBlkMat
