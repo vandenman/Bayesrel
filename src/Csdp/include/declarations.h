@@ -242,15 +242,15 @@ void dger();
 void dtrsm();
 void dtrmv();
 #else
-double dnrm2_();
-double dasum_();
-double ddot_();
-int idamax_();
-void dgemm_();
-void dgemv_();
-void dger_();
-void dtrsm_();
-void dtrmv_();
+//double dnrm2_();
+//double dasum_();
+//double ddot_();
+//int idamax_();
+//void dgemm_();
+//void dgemv_();
+//void dger_();
+//void dtrsm_();
+//void dtrmv_();
 #endif
 #endif
 
@@ -277,10 +277,10 @@ void dpotrs();
 void dpotri();
 void dtrtri();
 #else
-void dpotrf_();
-void dpotrs_();
-void dpotri_();
-void dtrtri_();
+//void dpotrf_();
+//void dpotrs_();
+//void dpotri_();
+//void dtrtri_();
 #endif
 #endif
 

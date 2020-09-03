@@ -8,7 +8,7 @@
 #include <RcppArmadillo.h>
 #include <Rcpp.h>
 extern "C" {
-  #include <blockmat.h>
+  #include "blockmat.h"
 }
 
 
