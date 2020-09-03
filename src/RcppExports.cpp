@@ -24,9 +24,57 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// alphaArma
+double alphaArma(const arma::mat& X);
+RcppExport SEXP _Bayesrel_alphaArma(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(alphaArma(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// l2Arma
+double l2Arma(const arma::mat& X);
+RcppExport SEXP _Bayesrel_l2Arma(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(l2Arma(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// l6Arma
+double l6Arma(const arma::mat& X);
+RcppExport SEXP _Bayesrel_l6Arma(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(l6Arma(X));
+    return rcpp_result_gen;
+END_RCPP
+}
+// pfaArma
+List pfaArma(const arma::mat& X);
+RcppExport SEXP _Bayesrel_pfaArma(SEXP XSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const arma::mat& >::type X(XSEXP);
+    rcpp_result_gen = Rcpp::wrap(pfaArma(X));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_Bayesrel_csdpArma", (DL_FUNC) &_Bayesrel_csdpArma, 8},
+    {"_Bayesrel_alphaArma", (DL_FUNC) &_Bayesrel_alphaArma, 1},
+    {"_Bayesrel_l2Arma", (DL_FUNC) &_Bayesrel_l2Arma, 1},
+    {"_Bayesrel_l6Arma", (DL_FUNC) &_Bayesrel_l6Arma, 1},
+    {"_Bayesrel_pfaArma", (DL_FUNC) &_Bayesrel_pfaArma, 1},
     {NULL, NULL, 0}
 };
 
