@@ -10,7 +10,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
-#include <declarations.h>
+
+extern "C" {
+  #include "declarations.h"
+}
 
 //
 //extern "C" {

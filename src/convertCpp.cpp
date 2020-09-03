@@ -7,7 +7,10 @@
 #include <stdio.h>
 #include <RcppArmadillo.h>
 #include <Rcpp.h>
-#include <blockmat.h>
+extern "C" {
+  #include <blockmat.h>
+}
+
 
 //[[Rcpp::depends(RcppArmadillo)]]
 using namespace Rcpp;
