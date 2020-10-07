@@ -14,7 +14,7 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
     res$covsamp <- C
     res$data_mis_samp_cov <- tmp_out$dat_mis_samp_cov
     if (item.dropped) {
-      Ctmp <- array(0, c(n.chains, (n.iter - n.burnin)/thin, p, p - 1, p - 1))
+      Ctmp <- array(0, c(n.chains, length(seq(1, n.iter-n.burnin, thin)), p, p - 1, p - 1))
       for (i in 1:p){
         Ctmp[, , i, , ] <- C[ , , -i, -i]
       }
@@ -109,7 +109,7 @@ gibbsFun <- function(data, estimates, n.iter, n.burnin, thin, n.chains, interval
     res$est$Bayes_omega <- mean(res$samp$Bayes_omega)
 
     if (item.dropped){
-      om_samp_ifitem <- array(0, c(n.chains, (n.iter - n.burnin)/thin, p))
+      om_samp_ifitem <- array(0, c(n.chains, length(seq(1, n.iter-n.burnin, thin)), p))
       for (i in 1:p){
         tmp <- data[-i, -i]
         om_samp_ifitem[, , i] <- omegaSampler(tmp, n.iter, n.burnin, thin, n.chains, pairwise, callback)$omega
