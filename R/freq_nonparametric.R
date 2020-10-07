@@ -47,10 +47,8 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
   }
   if (item.dropped){
     Ctmp <- array(0, c(p, p - 1, p - 1))
-    Dtmp <- array(0, c(p, n, p - 1))
     for (i in 1:p){
       Ctmp[i, , ] <- cc[-i, -i]
-      Dtmp[i, , ] <- data[, -i]
     }
   }
 
@@ -182,7 +180,11 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
 
 
         if (item.dropped){
-          res$ifitem$omega <- apply(Dtmp, 1, applyomega_cfa_data, interval = interval, pairwise = pairwise)
+          res$ifitem$omega <- numeric(p)
+          for (i in 1:p) {
+            dtmp <- data[, -i]
+            res$ifitem$omega[i] <- applyomega_cfa_data(dtmp, interval = interval, pairwise = pairwise)
+          }
           if (any(is.na(res$ifitem$omega))) {
             res$ifitem$omega <- apply(Ctmp, 1, applyomega_pfa)
             # for (i in 1:p) {
