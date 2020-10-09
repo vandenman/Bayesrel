@@ -25,11 +25,10 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
       "lambda2" %in% estimates | "lambda4" %in% estimates | "lambda6" %in% estimates |
       "glb" %in% estimates | ("omega" %in% estimates & omega.freq.method == "pfa")){
 
-    boot_data <- array(0, c(n.boot, n, p))
     boot_cov <- array(0, c(n.boot, p, p))
     for (i in 1:n.boot){
-      boot_data[i, , ] <- as.matrix(data[sample.int(n, size = n, replace = TRUE), ])
-      boot_cov[i, , ] <- cov(boot_data[i, , ], use = use.cases)
+      boot_data <- as.matrix(data[sample.int(n, size = n, replace = TRUE), ])
+      boot_cov[i, , ] <- cov(boot_data, use = use.cases)
       callback()
     }
 
@@ -145,11 +144,10 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
       res$fit.object <- out$fit.object
       if (is.null(res$fit.object)) {
         if (is.null(boot_cov)) {
-          boot_data <- array(0, c(n.boot, n, p))
           boot_cov <- array(0, c(n.boot, p, p))
           for (i in 1:n.boot){
-            boot_data[i, , ] <- as.matrix(data[sample.int(n, size = n, replace = TRUE), ])
-            boot_cov[i, , ] <- cov(boot_data[i, , ], use = use.cases)
+            boot_data <- as.matrix(data[sample.int(n, size = n, replace = TRUE), ])
+            boot_cov[i, , ] <- cov(boot_data, use = use.cases)
           }
         }
         res$est$freq_omega <- applyomega_pfa(cc)
@@ -157,8 +155,7 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
         if (length(unique(round(omega_obj, 4))) == 1){
           res$conf$low$freq_omega <- NA
           res$conf$up$freq_omega <- NA
-        }
-        else{
+        } else {
           res$conf$low$freq_omega <- quantile(omega_obj, probs = (1 - interval)/2, na.rm = T)
           res$conf$up$freq_omega <- quantile(omega_obj, probs = interval + (1 - interval)/2, na.rm = T)
         }

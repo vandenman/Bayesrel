@@ -20,11 +20,10 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       "lambda2" %in% estimates | "lambda4" %in% estimates | "lambda6" %in% estimates |
       "glb" %in% estimates | ("omega" %in% estimates & omega.freq.method == "pfa")){
 
-    boot_data <- array(0, c(n.boot, n, p))
     boot_cov <- array(0, c(n.boot, p, p))
     for (i in 1:n.boot){
-      boot_data[i, , ] <- MASS::mvrnorm(n, colMeans(data, na.rm = T), cc)
-      boot_cov[i, , ] <- cov(boot_data[i, , ])
+      boot_data <- MASS::mvrnorm(n, colMeans(data, na.rm = T), cc)
+      boot_cov[i, , ] <- cov(boot_data)
       callback()
     }
 
@@ -130,11 +129,10 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
       res$fit.object <- out$fit.object
       if (any(is.null(out))) {
         if (is.null(boot_cov)) {
-          boot_data <- array(0, c(n.boot, n, p))
           boot_cov <- array(0, c(n.boot, p, p))
           for (i in 1:n.boot){
-            boot_data[i, , ] <- MASS::mvrnorm(n, colMeans(data, na.rm = T), cc)
-            boot_cov[i, , ] <- cov(boot_data[i, , ])
+            boot_data<- MASS::mvrnorm(n, colMeans(data, na.rm = T), cc)
+            boot_cov[i, , ] <- cov(boot_data)
             callback()
           }
         }
