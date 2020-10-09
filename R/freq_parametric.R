@@ -127,7 +127,7 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
     if (omega.freq.method == "cfa"){
       out <- omegaFreqData(data, interval, omega.int.analytic, pairwise, n.boot, callback, parametric)
       res$fit.object <- out$fit.object
-      if (any(is.null(out))) {
+      if (is.null(res$fit.object)) {
         if (is.null(boot_cov)) {
           boot_cov <- array(0, c(n.boot, p, p))
           for (i in 1:n.boot){
