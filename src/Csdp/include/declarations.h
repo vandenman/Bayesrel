@@ -6,12 +6,14 @@
  */
 
 #ifndef CSDPDECLARATIONS
-#define CSDPDECLARATIONS 
+#define CSDPDECLARATIONS
+
 
 #ifndef RcppArmadillo__RcppArmadillo__h
 //Try to get info from RcppArmadillo because someone already made a nice config.hpp that tells us what we can expect
 #include <armadillo_bits/config.hpp>
 #endif
+
 
 #ifndef ARMA_BLAS_UNDERSCORE
 	#define NOUNDERBLAS
@@ -70,7 +72,7 @@ double mat1norm(struct blockmatrix A);
 
 double matinfnorm(struct blockmatrix A);
 
-double calc_pobj(struct blockmatrix C, struct blockmatrix X, 
+double calc_pobj(struct blockmatrix C, struct blockmatrix X,
 		 double constant_offset);
 
 double calc_dobj(int k, double *a, double *y, double constant_offset);
@@ -78,20 +80,20 @@ double calc_dobj(int k, double *a, double *y, double constant_offset);
 double trace_prod(struct blockmatrix A, struct blockmatrix B);
 
 double linesearch(int n, struct blockmatrix dX,
-		  struct blockmatrix work1, struct blockmatrix work2, 
-		  struct blockmatrix work3, struct blockmatrix cholinv, 
+		  struct blockmatrix work1, struct blockmatrix work2,
+		  struct blockmatrix work3, struct blockmatrix cholinv,
 		  double *q, double *z, double *workvec,
 		  double stepfrac,double start, int printlevel);
 
 double pinfeas(int k, struct constraintmatrix *constraints,
 	       struct blockmatrix X, double *a, double *workvec);
 
-double dinfeas(int k, struct blockmatrix C, 
-	       struct constraintmatrix *constraints, double *y, 
+double dinfeas(int k, struct blockmatrix C,
+	       struct constraintmatrix *constraints, double *y,
 	       struct blockmatrix Z, struct blockmatrix work1);
 
-double dimacserr3(int k, struct blockmatrix C, 
-	       struct constraintmatrix *constraints, double *y, 
+double dimacserr3(int k, struct blockmatrix C,
+	       struct constraintmatrix *constraints, double *y,
 	       struct blockmatrix Z, struct blockmatrix work1);
 
 void op_a(int k, struct constraintmatrix *constraints,
@@ -100,14 +102,14 @@ void op_a(int k, struct constraintmatrix *constraints,
 void op_at(int k, double *y, struct constraintmatrix *constraints,
 	   struct blockmatrix result);
 
-void makefill(int k, struct blockmatrix C, 
-	      struct constraintmatrix *constraints, 
-	      struct constraintmatrix *pfill, struct blockmatrix work1, 
+void makefill(int k, struct blockmatrix C,
+	      struct constraintmatrix *constraints,
+	      struct constraintmatrix *pfill, struct blockmatrix work1,
 	      int printlevel);
 
 void op_o(int k, struct constraintmatrix *constraints,
-	  struct sparseblock **byblocks, struct blockmatrix Zi, 
-          struct blockmatrix X, double *O, struct blockmatrix work1, 
+	  struct sparseblock **byblocks, struct blockmatrix Zi,
+          struct blockmatrix X, double *O, struct blockmatrix work1,
           struct blockmatrix work2);
 
 void addscaledmat(struct blockmatrix A, double scale, struct blockmatrix B,
@@ -127,15 +129,15 @@ void mat_mult(double scale1, double scale2, struct blockmatrix A,
 	      struct blockmatrix B, struct blockmatrix C);
 
 void mat_multspa(double scale1, double scale2, struct blockmatrix A,
-		 struct blockmatrix B, struct blockmatrix C, 
+		 struct blockmatrix B, struct blockmatrix C,
 		 struct constraintmatrix fill);
 
 void mat_multspb(double scale1, double scale2, struct blockmatrix A,
-		 struct blockmatrix B, struct blockmatrix C, 
+		 struct blockmatrix B, struct blockmatrix C,
 		 struct constraintmatrix fill);
 
 void mat_multspc(double scale1, double scale2, struct blockmatrix A,
-		 struct blockmatrix B, struct blockmatrix C, 
+		 struct blockmatrix B, struct blockmatrix C,
 		 struct constraintmatrix fill);
 
 void mat_mult_raw(int n, double scale1, double scale2, double *ap,
@@ -152,7 +154,7 @@ void free_mat(struct blockmatrix A);
 
 void initparams(struct paramstruc *params, int *pprintlevel);
 
-void initsoln(int n, int k, struct blockmatrix C, double *a, 
+void initsoln(int n, int k, struct blockmatrix C, double *a,
 	      struct constraintmatrix *constraints, struct blockmatrix *pX0,
 	      double **py0, struct blockmatrix *pZ0);
 
@@ -165,11 +167,11 @@ int chol(struct blockmatrix A);
 int solvesys(int m, int ldam, double *A, double *rhs);
 
 int user_exit(int n, int k, struct blockmatrix C, double *a, double dobj,
-	      double pobj, double constant_offset, 
+	      double pobj, double constant_offset,
 	      struct constraintmatrix *constraints, struct blockmatrix X,
 	      double *y, struct blockmatrix Z, struct paramstruc params);
 
-int read_sol(char *fname, int n, int k, struct blockmatrix C, 
+int read_sol(char *fname, int n, int k, struct blockmatrix C,
 	     struct blockmatrix *pX, double **py, struct blockmatrix *pZ);
 
 int read_prob(char *fname, int *pn, int *pk, struct blockmatrix *pC,
@@ -182,40 +184,40 @@ int write_prob(char *fname, int n, int k, struct blockmatrix C,
 int write_sol(char *fname, int n, int k, struct blockmatrix X,
 	      double *y, struct blockmatrix Z);
 
-void free_prob(int n, int k, struct blockmatrix C, double *a, 
+void free_prob(int n, int k, struct blockmatrix C, double *a,
 	       struct constraintmatrix *constraints, struct blockmatrix X,
 	       double *y, struct blockmatrix Z);
 
 int sdp(int n, int k, struct blockmatrix C, double *a, double constant_offset,
 	struct constraintmatrix *constraints, struct sparseblock **byblocks,
-	struct constraintmatrix fill, struct blockmatrix X, double *y, 
+	struct constraintmatrix fill, struct blockmatrix X, double *y,
 	struct blockmatrix Z, struct blockmatrix cholxinv,
-	struct blockmatrix cholzinv, double *pobj, double *dobj, 
-	struct blockmatrix work1, struct blockmatrix work2,     
+	struct blockmatrix cholzinv, double *pobj, double *dobj,
+	struct blockmatrix work1, struct blockmatrix work2,
 	struct blockmatrix work3,
 	double *workvec1, double *workvec2,
 	double *workvec3, double *workvec4, double *workvec5,
-	double *workvec6, double *workvec7, double *workvec8, 
+	double *workvec6, double *workvec7, double *workvec8,
 	double *diagO, struct blockmatrix bestx, double *besty,
 	struct blockmatrix bestz, struct blockmatrix Zi, double *O,
-	double *rhs, struct blockmatrix dZ, struct blockmatrix dX, 
-	double *dy, double *dy1, double *Fp, int printlevel, 
+	double *rhs, struct blockmatrix dZ, struct blockmatrix dX,
+	double *dy, double *dy1, double *Fp, int printlevel,
 	struct paramstruc parameters);
 
-int easy_sdp(int n, int k, struct blockmatrix C, double *a, 
+int easy_sdp(int n, int k, struct blockmatrix C, double *a,
 	     struct constraintmatrix *constraints, double constant_offset,
 	     struct blockmatrix *pX, double **py, struct blockmatrix *pZ,
 	     double *ppobj, double *pdobj);
 
 void tweakgap(int n, int k, double *a, struct constraintmatrix *constraints,
-	      double gap, struct blockmatrix Z, struct blockmatrix dZ, 
-	      double *y, double *dy, struct blockmatrix work1, 
-	      struct blockmatrix work2, struct blockmatrix work3, 
+	      double gap, struct blockmatrix Z, struct blockmatrix dZ,
+	      double *y, double *dy, struct blockmatrix work1,
+	      struct blockmatrix work2, struct blockmatrix work3,
 	      struct blockmatrix work4, double *workvec1, double *workvec2,
 	      double *workvec3, double *workvec4, int printlevel);
 
 int bisect_(int *n, double *eps1, double *d, double *e, double *e2,
-	    double *lb, double *ub, int *mm, int *m, double *w, int *ind, 
+	    double *lb, double *ub, int *mm, int *m, double *w, int *ind,
 	    int *ierr, double *rv4, double *rv5);
 
 #endif
