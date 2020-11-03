@@ -46,8 +46,11 @@
 #' @importFrom grDevices adjustcolor recordPlot
 #' @importFrom graphics arrows axis legend lines par plot text title
 #' @importFrom methods is
-#' @importFrom stats cov cov2cor density ecdf qnorm quantile rchisq rgamma rnorm runif sd var
+#' @importFrom stats cov cov2cor density ecdf qnorm quantile rchisq rgamma rnorm runif sd var approxfun integrate
 #' @importFrom Rdpack reprompt
+#'
+#' @useDynLib Bayesrel, .registration=TRUE
+#' @importFrom Rcpp evalCpp
 #'
 #' @export
 strel <- function(data = NULL, estimates = c("alpha", "lambda2", "glb", "omega"),

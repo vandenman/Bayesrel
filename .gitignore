@@ -3,3 +3,11 @@
 .RData
 .Ruserdata
 .DS_Store
+inst/doc
+autom4te.cache
+config.log
+config.status
+Makevars
+*.o
+*.so
+*.a

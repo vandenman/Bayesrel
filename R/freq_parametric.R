@@ -75,8 +75,8 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
   }
 
   if ("lambda4" %in% estimates){
-    res$est$freq_lambda4 <- applylambda4(cc)
-    lambda4_obj <- apply(boot_cov, 1, applylambda4, callback)
+    res$est$freq_lambda4 <- applylambda4_nocpp(cc)
+    lambda4_obj <- apply(boot_cov, 1, applylambda4_nocpp, callback)
     if (length(unique(round(lambda4_obj, 4))) == 1){
       res$conf$low$freq_lambda4 <- NA
       res$conf$up$freq_lambda4 <- NA
@@ -86,7 +86,7 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
     }
     res$boot$lambda4 <- lambda4_obj
     if (item.dropped){
-      res$ifitem$lambda4 <- apply(Ctmp, 1, applylambda4)
+      res$ifitem$lambda4 <- apply(Ctmp, 1, applylambda4_nocpp)
     }
   }
 
@@ -107,8 +107,8 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
   }
 
   if ("glb" %in% estimates){
-    res$est$freq_glb <- glbOnArray(cc)
-    glb_obj <- glbOnArray(boot_cov, callback)
+    res$est$freq_glb <- glbOnArray_custom(cc)
+    glb_obj <- glbOnArray_custom(boot_cov, callback)
     if (length(unique(round(glb_obj, 4))) == 1){
       res$conf$low$freq_glb <- NA
       res$conf$up$freq_glb <- NA
@@ -118,7 +118,7 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
     }
     res$boot$glb <- glb_obj
     if (item.dropped){
-      res$ifitem$glb <- glbOnArray(Ctmp)
+      res$ifitem$glb <- (Ctmp)
     }
   }
 
