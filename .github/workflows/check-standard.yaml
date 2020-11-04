@@ -76,7 +76,7 @@ jobs:
           print(getwd())
           print(dir())
           install.packages(".", repos = NULL, type = "source")
-          source("tests/testthat.R")
+          testthat::test_dir("tests/testthat/")
         shell: Rscript {0}
 
       - name: Check
