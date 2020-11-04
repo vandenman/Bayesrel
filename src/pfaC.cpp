@@ -16,6 +16,7 @@ List pfaArma(const arma::mat& X) {
     mat Xcor = diagmat(sds) * X * diagmat(sds);
     Xcor.diag().ones();
     mat XCorInv = inv_sympd(Xcor);
+    XCorInv.print();
     vec smc = 1 - 1 / XCorInv.diag();
     R.diag() = smc;
     double h2 = sum(smc);
@@ -27,6 +28,8 @@ List pfaArma(const arma::mat& X) {
     mat R_mod;
     while (error > .001 || i == 1) {
         eig_sym(eigval, eigvec, R);
+        Rcpp::Rcout << "i = " << i << std::endl;
+        eigval.print("eigval: ");
         lambda = eigvec.col(k-1) * sqrt(eigval(k-1));
         R_mod = lambda * lambda.t();
         double h2_new = trace(R_mod);
