@@ -74,6 +74,8 @@ jobs:
           _R_CHECK_CRAN_INCOMING_REMOTE_: false
         run: |
           print(getwd())
+          print(dir())
+          install.packages(".", repos = NULL, type = "source")
           source("tests/testthat.R")
         shell: Rscript {0}
 
