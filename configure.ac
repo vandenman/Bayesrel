@@ -112,4 +112,3 @@ AC_SUBST(CSDP_TS)
 AC_OUTPUT(src/Makevars)
 
 exit 0
-

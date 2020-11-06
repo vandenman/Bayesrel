@@ -69,6 +69,7 @@ jobs:
         if: runner.os == 'macOS'
         run: |
          brew install automake
+
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
