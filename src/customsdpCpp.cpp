@@ -446,7 +446,7 @@ int custom_sdpCpp(
         for (j=0; j<k+1; j++)
             Cnew.blocks[2].data.vec[j] = negvar(j);
 
-        initArma(n,k,C,a,constraints,&X,&y,&Z);
+        initArma(n,k,Cnew,a,constraints,&X,&y,&Z);
 
         ret=sdp(n,k,Cnew,a,constant_offset,constraints,byblocks,fill,X,y,Z,
            cholxinv,cholzinv,ppobj,pdobj,work1,work2,work3,workvec1,
