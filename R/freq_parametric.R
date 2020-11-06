@@ -118,7 +118,7 @@ freqFun_para <- function(data, n.boot, estimates, interval, omega.freq.method,
     }
     res$boot$glb <- glb_obj
     if (item.dropped){
-      res$ifitem$glb <- (Ctmp)
+      res$ifitem$glb <- glbOnArray_custom(Ctmp)
     }
   }
 
