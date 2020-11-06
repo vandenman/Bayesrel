@@ -1,13 +1,16 @@
 Package: Bayesrel
 Type: Package
 Title: Bayesian Reliability Estimation
-Version: 0.6.5.6
+Version: 0.7.0
 Authors@R: c(person("Julius M.", "Pfadt", email = "julius.pfadt@gmail.com",
                   role = c("aut", "cre")),
              person("Don", "van den Bergh",
-                  role = c("aut")))
+                  role = c("aut")), 
+             person("Joris", "Goosen", 
+                    role = c("aut"))
+                    )
 Description: Functionality for the most common single test reliability estimates is provided:  
-    Coefficient alpha, 'Guttman's' lambda-2/-4/-6, the greatest lower bound and coefficient omega. 
+    Coefficient alpha, 'Guttman's' lambda-2/-4/-6, the Greatest lower bound and coefficient omega. 
     The Bayesian estimates are provided with credible intervals. 
     The frequentist estimates are provided with bootstrapped confidence intervals
     The method for the Bayesian estimates, except for omega, 
@@ -20,7 +23,7 @@ Description: Functionality for the most common single test reliability estimates
     from the 'CSDP' library by 'Brian Borchers' <https://github.com/coin-or/Csdp/wiki>, <doi.org/10.1080/10556789908805765>
     lambda-4 is from 'Benton' (2015) <doi:10.1007/978-3-319-07503-7_19>; 
     the principal factor analysis for the frequentist omega is from 'Schlegel' (2017) 
-    <https://www.r-bloggers.com/iterated-principal-factor-method-of-factor-analysis-with-r/>; 
+    <https://www.r-bloggers.com/2017/03/iterated-principal-factor-method-of-factor-analysis-with-r/>; 
     and the analytic alpha interval is from 'Bonett' and 'Wright' (2015) <doi:10.1002/job.1960>. 
 URL: https://github.com/juliuspf/Bayesrel
 BugReports: https://github.com/juliuspf/Bayesrel/issues
@@ -32,7 +35,4 @@ RdMacros: Rdpack
 RoxygenNote: 7.1.1
 Depends: R (>= 2.10)
 Suggests: 
-    testthat (>= 2.1.0),
-    knitr,
-    rmarkdown
-VignetteBuilder: knitr
+    testthat (>= 2.1.0)

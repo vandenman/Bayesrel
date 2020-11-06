@@ -58,7 +58,7 @@ struct sparseblock {
   struct sparseblock *next;
   struct sparseblock *nextbyblock;
   double *entries;
-#ifdef NOSHORTS
+#ifndef NOSHORTS
   unsigned short *iindices;
   unsigned short *jindices;
   int numentries;

@@ -5,9 +5,10 @@ on:
     branches:
       - master
       - Cpp
-  pull_request:
-    branches:
-      - master
+      - CppJoris
+  # pull_request:
+  #   branches:
+  #     - master
 
 name: R-CMD-check
 
@@ -31,6 +32,9 @@ jobs:
       RSPM: ${{ matrix.config.rspm }}
 
     steps:
+      - name: Configure git
+        run: git config --global core.autocrlf false
+
       - uses: actions/checkout@v2
 
       - uses: r-lib/actions/setup-r@master
@@ -61,7 +65,10 @@ jobs:
           do
             eval sudo $cmd
           done < <(Rscript -e 'cat(remotes::system_requirements("ubuntu", "20.04"), sep = "\n")')
-
+      - name: Install automake / Mac OS
+        if: runner.os == 'macOS'
+        run: |
+         brew install automake
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)

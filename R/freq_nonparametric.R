@@ -90,8 +90,8 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
   }
 
   if ("lambda4" %in% estimates){
-    res$est$freq_lambda4 <- applylambda4(cc)
-    lambda4_obj <- apply(boot_cov, 1, applylambda4, callback)
+    res$est$freq_lambda4 <- applylambda4_nocpp(cc)
+    lambda4_obj <- apply(boot_cov, 1, applylambda4_nocpp, callback)
     if (length(unique(round(lambda4_obj, 4))) == 1){
       res$conf$low$freq_lambda4 <- NA
       res$conf$up$freq_lambda4 <- NA
@@ -101,7 +101,7 @@ freqFun_nonpara <- function(data, n.boot, estimates, interval, omega.freq.method
     }
     res$boot$lambda4 <- lambda4_obj
     if (item.dropped){
-      res$ifitem$lambda4 <- apply(Ctmp, 1, applylambda4)
+      res$ifitem$lambda4 <- apply(Ctmp, 1, applylambda4_nocpp)
     }
   }
 

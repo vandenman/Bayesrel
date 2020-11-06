@@ -22,7 +22,7 @@ priorSamp <- function(p, estimates, n.samp = 2e3){
     out$priorlambda2 <- quantiles(priorlambda2[priorlambda2 >= 0])
   }
   if ("lambda4" %in% estimates){
-    priorlambda4 <- apply(m, MARGIN = 1, applylambda4)
+    priorlambda4 <- apply(m, MARGIN = 1, applylambda4_nocpp)
     out$priorlambda4 <- quantiles(priorlambda4[priorlambda4 >= 0])
   }
   if ("lambda6" %in% estimates){

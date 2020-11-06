@@ -1,3 +1,5 @@
+
+
 /*
  * CSDPDECLARATIONS is used to prevent redefinitions if this file is included
  * twice.
@@ -5,6 +7,22 @@
 
 #ifndef CSDPDECLARATIONS
 #define CSDPDECLARATIONS 
+
+#ifndef RcppArmadillo__RcppArmadillo__h
+//Try to get info from RcppArmadillo because someone already made a nice config.hpp that tells us what we can expect
+#include <armadillo_bits/config.hpp>
+#endif
+
+#ifndef ARMA_BLAS_UNDERSCORE
+	#define NOUNDERBLAS
+	#define NOUNDERLAPACK
+#endif
+
+#ifdef ARMA_BLAS_CAPITALS
+	#define CAPSBLAS
+	#define CAPSLAPACK
+#endif
+
 
 /*
   Other important includes that we need.
@@ -200,89 +218,84 @@ int bisect_(int *n, double *eps1, double *d, double *e, double *e2,
 	    double *lb, double *ub, int *mm, int *m, double *w, int *ind, 
 	    int *ierr, double *rv4, double *rv5);
 
-/*
-  BLAS and LINPACK stuff.
-  */
-
-/*
-  First, BLAS routines.
- */
-
-#ifdef CAPSBLAS
-#ifdef NOUNDERBLAS
-double DNRM2();
-double DASUM();
-double DDOT();
-int IDAMAX();
-void DGEMM();
-void DGEMV();
-void DGER();
-void DTRSM();
-void DTRMV();
-#else
-double DNRM2_();
-double DASUM_();
-double DDOT_();
-int IDAMAX_();
-void DGEMM_();
-void DGEMV_();
-void DGER_();
-void DTRSM_();
-void DTRMV_();
-#endif
-#else
-#ifdef NOUNDERBLAS
-double dnrm2();
-double dasum();
-double ddot();
-int idamax();
-void dgemm();
-void dgemv();
-void dger();
-void dtrsm();
-void dtrmv();
-#else
-//double dnrm2_();
-//double dasum_();
-//double ddot_();
-//int idamax_();
-//void dgemm_();
-//void dgemv_();
-//void dger_();
-//void dtrsm_();
-//void dtrmv_();
-#endif
-#endif
-
-/*
-  LAPACK next.
- */
-
-#ifdef CAPSLAPACK
-#ifdef NOUNDERLAPACK
-void DPOTRF();
-void DPOTRS();
-void DPOTRI();
-void DTRTRI();
-#else
-void DPOTRF_();
-void DPOTRS_();
-void DPOTRI_();
-void DTRTRI_();
-#endif
-#else
-#ifdef NOUNDERLAPACK
-void dpotrf();
-void dpotrs();
-void dpotri();
-void dtrtri();
-#else
-//void dpotrf_();
-//void dpotrs_();
-//void dpotri_();
-//void dtrtri_();
-#endif
 #endif
 
 
+#ifdef  DEFINE_FUNCTIONS_LAPACK_BLAS
+	#ifdef CAPSBLAS
+		#ifdef NOUNDERBLAS
+			double DNRM2();
+			double DASUM();
+			double DDOT();
+			int IDAMAX();
+			void DGEMM();
+			void DGEMV();
+			void DGER();
+			void DTRSM();
+			void DTRMV();
+		#else
+			double DNRM2_();
+			double DASUM_();
+			double DDOT_();
+			int IDAMAX_();
+			void DGEMM_();
+			void DGEMV_();
+			void DGER_();
+			void DTRSM_();
+			void DTRMV_();
+		#endif
+	#else
+		#ifdef NOUNDERBLAS
+			double dnrm2();
+			double dasum();
+			double ddot();
+			int idamax();
+			void dgemm();
+			void dgemv();
+			void dger();
+			void dtrsm();
+			void dtrmv();
+			#else
+			double dnrm2_();
+			double dasum_();
+			double ddot_();
+			int idamax_();
+			void dgemm_();
+			void dgemv_();
+			void dger_();
+			void dtrsm_();
+			void dtrmv_();
+		#endif
+	#endif
+
+	/*
+	LAPACK next.
+	*/
+
+	#ifdef CAPSLAPACK
+		#ifdef NOUNDERLAPACK
+			void DPOTRF();
+			void DPOTRS();
+			void DPOTRI();
+			void DTRTRI();
+		#else
+			void DPOTRF_();
+			void DPOTRS_();
+			void DPOTRI_();
+			void DTRTRI_();
+		#endif
+	#else
+		#ifdef NOUNDERLAPACK
+			void dpotrf();
+			void dpotrs();
+			void dpotri();
+			void dtrtri();
+		#else
+			void dpotrf_();
+			void dpotrs_();
+			void dpotri_();
+			void dtrtri_();
+		#endif
+	#endif
 #endif
+
