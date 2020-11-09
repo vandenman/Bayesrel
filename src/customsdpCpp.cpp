@@ -427,24 +427,63 @@ int custom_sdpCpp(
      *  Now, call sdp().
      */
 // initialise a long vector for all matrix elements with diagonal of zeros, and a vector for the negative variances
-    arma::dvec matvecnovar;
-    arma::dvec negvar(k+1);
+//    arma::dvec matvecnovar;
+//    arma::dvec negvar(k+1);
+//    negvar(0) = 0; // is somehow needed?
     arma::dvec y_p;
     struct blockmatrix Cnew = C;
 
+//	for (j = 0; j < k*k; j+= k + 1)
+//	{
+//		Cnew.blocks[1].data.mat[j] = 0;
+//	}
 
-    negvar(0) = 0; // is somehow needed
+    for(i=0; i<car.n_rows; i++) {
 
-    for(i=0; i<car.n_slices; i++) {
-        negvar.tail(k) = -car.slice(i).diag();
+//        negvar.tail(k) = -car.slice(i).diag();
 
-        matvecnovar = arma::vectorise(arma::diagmat(car.slice(i).diag()) - car.slice(i));
+//        matvecnovar = arma::vectorise(arma::diagmat(car.slice(i).diag()) - car.slice(i));
 
-        for (j=0; j<k*k; j++)
-            Cnew.blocks[1].data.mat[j] = matvecnovar(j);
 
-        for (j=0; j<k+1; j++)
-            Cnew.blocks[2].data.vec[j] = negvar(j);
+//        for (j=0; j<k*k; j++)
+//            Cnew.blocks[1].data.mat[j] = matvecnovar(j);
+
+//        for (j=0; j<k+1; j++)
+//            Cnew.blocks[2].data.vec[j] = negvar(j);
+
+//		if (i == 0)
+//		{
+//			Rcpp::Rcout << "old version" << std::endl;
+
+//			Rcpp::Rcout << "Cnew.blocks[1].data.mat[j]\n" << std::endl;
+//			for (j=0; j<k*k; j++)
+//				Rcpp::Rcout << Cnew.blocks[1].data.mat[j] << std::endl;
+//			Rcpp::Rcout << "Cnew.blocks[2].data.mat[j]" << std::endl;
+//			for (j=0; j<k+1; j++)
+//				Rcpp::Rcout << Cnew.blocks[2].data.mat[j] << std::endl;
+//		}
+
+		for (j=0; j<k-1; j++) for (int j2 = j+1; j2<k; j2++)
+		{
+			Cnew.blocks[1].data.mat[j2 + k*j] = -car(i, j2, j);
+		}
+
+        for (j=0; j<k; j++)
+		{
+            Cnew.blocks[2].data.vec[j+1] = -car(i, j, j);
+		}
+
+//		if (i == 0)
+//		{
+//			Rcpp::Rcout << "new version" << std::endl;
+//			Rcpp::Rcout << "Cnew.blocks[1].data.mat[j]" << std::endl;
+//			for (j=0; j<k*k; j++)
+//				Rcpp::Rcout << Cnew.blocks[1].data.mat[j] << std::endl;
+//			Rcpp::Rcout << "Cnew.blocks[2].data.mat[j]" << std::endl;
+//			for (j=0; j<k+1; j++)
+//				Rcpp::Rcout << Cnew.blocks[2].data.mat[j] << std::endl;
+//		}
+
 
         initArma(n,k,Cnew,a,constraints,&X,&y,&Z);
 
@@ -454,9 +493,12 @@ int custom_sdpCpp(
            diagO,bestx,besty,bestz,Zi,O,rhs,dZ,dX,dy,dy1,Fp,
            printlevel,params);
 
-        y_p = double_vector_csdp2RArma(k, y);
-        y_p(0) = 0;
-        out(i) = arma::accu(y_p);
+		out(i) = 0;
+		for (j = 1; j < k+1; j++)
+			out(i) += y[j];
+//        y_p = double_vector_csdp2RArma(k, y);
+//        y_p(0) = 0;
+//        out(i) = arma::accu(y_p);
     }
 
 

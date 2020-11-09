@@ -27,7 +27,7 @@ arma::dvec csdpArma(
     double *b;
     double pobj, dobj;
     int status;
-    arma::dvec out(car.n_slices);
+    arma::dvec out(car.n_rows);
 
 
     /*
