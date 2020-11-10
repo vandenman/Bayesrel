@@ -45,8 +45,7 @@ glbOnArray_custom <- function(Cov, callback = function(){}, printlevel = 0) {
   arg4 <- as.integer(c(0, prob.info$block.types))
   arg5 <- as.integer(c(0, prob.info$block.sizes))
 
-  # idx <- cbind(1:p, 1:p)
-  # Cov <- aperm(Cov, c(2, 3, 1))
+
   ret <- csdpArma(
     arg1,
     arg2,
@@ -60,14 +59,11 @@ glbOnArray_custom <- function(Cov, callback = function(){}, printlevel = 0) {
     printlevel
   )
 
-  # scv <- apply(Cov, 3, sum)
-  # vars <- apply(Cov, 3, diag)
-  # svars <- apply(vars, 2, sum)
   scv <- apply(Cov, 1, sum)
   vars <- apply(Cov, 1, diag)
   svars <- apply(vars, 2, sum)
   glbs <- (scv - svars + ret) / scv
-#
+
   return(glbs)
 }
 

@@ -20,7 +20,7 @@ arma::dvec csdpArma(
               const Rcpp::List& A_p,
               const arma::dvec& b_p,
               const arma::cube& car,
-              const int         printlevel = 0)
+              const int printlevel = 0)
 {
 
     struct blockmatrix C;
@@ -28,7 +28,6 @@ arma::dvec csdpArma(
     double *b;
     double pobj, dobj;
     int status;
-//    arma::dvec out(car.n_slices);
     arma::dvec out(car.n_rows);
 
 
