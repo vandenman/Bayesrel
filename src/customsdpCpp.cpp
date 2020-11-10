@@ -450,6 +450,14 @@ int custom_sdpCpp(
 		for (j = 1; j < k+1; j++)
 			out(i) += y[j];
 
+		// now compute the actual glb
+		double scv = arma::accu(car.row(i));
+		double svars = 0.0;
+		for (j = 0; j < k; j++)
+			svars += car(i, j, j);
+
+		out(i) = (scv - svars + out(i)) / scv;
+
     }
 
 

@@ -58,6 +58,7 @@ glbOnArray_custom <- function(Cov, callback = function(){}, printlevel = 0) {
     Cov,
     printlevel
   )
+  return(ret)
 
   scv <- apply(Cov, 1, sum)
   vars <- apply(Cov, 1, diag)
@@ -173,7 +174,7 @@ constraints_R2csdp2 <- function(A, prob.info) {
 
 
 # adjusted code from Rcsdp package:
-glbOnArray_nocpp <- function(Cov, callback = function(){}) {
+glbOnArray_nocpp <- function(Cov, callback = function(){}, printlevel = 0) {
 
   d <- dim(Cov)
   if (length(d) == 2L) { # turn it into an array if it is a matrix
@@ -193,7 +194,7 @@ glbOnArray_nocpp <- function(Cov, callback = function(){}) {
   }
   K <- list(type = c("s", "l", "l"), size = rep(p, 3))
 
-  control <- Rcsdp::csdp.control(printlevel = 0)
+  control <- Rcsdp::csdp.control(printlevel = printlevel)
   write.control.file2(control)
   on.exit(unlink("param.csdp"))
 
