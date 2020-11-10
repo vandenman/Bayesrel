@@ -4,7 +4,7 @@
 # Northwestern University, Evanston, Illinois, USA, https://CRAN.R-project.org/package=psych Version = 1.8.4.
 # Rcsdp Package of Hector Corrada Bravo
 # CSDP Library by Brian Borchers
-glbOnArray_custom <- function(Cov, callback = function(){}) {
+glbOnArray_custom <- function(Cov, callback = function(){}, printlevel = 0) {
 
   d <- dim(Cov)
   if (length(d) == 2L) { # turn it into an array if it is a matrix
@@ -45,7 +45,7 @@ glbOnArray_custom <- function(Cov, callback = function(){}) {
   arg4 <- as.integer(c(0, prob.info$block.types))
   arg5 <- as.integer(c(0, prob.info$block.sizes))
 
-  idx <- cbind(1:p, 1:p)
+  # idx <- cbind(1:p, 1:p)
   # Cov <- aperm(Cov, c(2, 3, 1))
   ret <- csdpArma(
     arg1,
@@ -56,14 +56,18 @@ glbOnArray_custom <- function(Cov, callback = function(){}) {
     prob.data$C,
     prob.data$A,
     prob.data$b,
-    Cov
+    Cov,
+    printlevel
   )
 
+  # scv <- apply(Cov, 3, sum)
+  # vars <- apply(Cov, 3, diag)
+  # svars <- apply(vars, 2, sum)
   scv <- apply(Cov, 1, sum)
   vars <- apply(Cov, 1, diag)
   svars <- apply(vars, 2, sum)
   glbs <- (scv - svars + ret) / scv
-
+#
   return(glbs)
 }
 

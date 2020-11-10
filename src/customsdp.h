@@ -36,7 +36,8 @@ int custom_sdpCpp(int n,
     double constant_offset,
     double *ppobj,
     double *pdobj,
-    const arma::cube& car, arma::dvec& out);
+    const arma::cube& car, arma::dvec& out,
+    const int printlevel = 0);
 
 
 #endif /* customsdp_h */

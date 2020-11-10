@@ -27,7 +27,8 @@ int custom_sdpCpp(
      double *ppobj,
      double *pdobj,
      const arma::cube& car,
-     arma::dvec& out)
+     arma::dvec& out,
+     const int printlevel)
 {
   int ret;
   struct constraintmatrix fill;
@@ -57,7 +58,6 @@ int custom_sdpCpp(
   double *dy1;
   double *rhs;
   double *besty;
-  int printlevel;
   int ldam;
   struct sparseblock **byblocks;
   struct sparseblock *ptr;
@@ -92,7 +92,7 @@ int custom_sdpCpp(
    params.affine=0;
    params.perturbobj=1;
    params.fastmode=0;
-   printlevel=0;
+//   printlevel=0;
 
   /*
    *  Allocate working storage
@@ -430,7 +430,7 @@ int custom_sdpCpp(
 //    arma::dvec matvecnovar;
 //    arma::dvec negvar(k+1);
 //    negvar(0) = 0; // is somehow needed?
-    arma::dvec y_p;
+//    arma::dvec y_p;
     struct blockmatrix Cnew = C;
 
 //	for (j = 0; j < k*k; j+= k + 1)
@@ -438,7 +438,8 @@ int custom_sdpCpp(
 //		Cnew.blocks[1].data.mat[j] = 0;
 //	}
 
-    for(i=0; i<car.n_rows; i++) {
+//    for(i=0; i<car.n_slices; i++) {
+	for(i=0; i<car.n_rows; i++) {
 
 //        negvar.tail(k) = -car.slice(i).diag();
 
@@ -454,7 +455,6 @@ int custom_sdpCpp(
 //		if (i == 0)
 //		{
 //			Rcpp::Rcout << "old version" << std::endl;
-
 //			Rcpp::Rcout << "Cnew.blocks[1].data.mat[j]\n" << std::endl;
 //			for (j=0; j<k*k; j++)
 //				Rcpp::Rcout << Cnew.blocks[1].data.mat[j] << std::endl;
@@ -465,12 +465,16 @@ int custom_sdpCpp(
 
 		for (j=0; j<k-1; j++) for (int j2 = j+1; j2<k; j2++)
 		{
-			Cnew.blocks[1].data.mat[j2 + k*j] = -car(i, j2, j);
+//			Cnew.blocks[1].data.mat[j2 + k*j ] = -car(j2, j, i);
+//			Cnew.blocks[1].data.mat[j  + k*j2] = -car(j2, j, i);
+			Cnew.blocks[1].data.mat[j2 + k*j ] = -car(i, j2, j);
+			Cnew.blocks[1].data.mat[j  + k*j2] = -car(i, j2, j);
 		}
 
         for (j=0; j<k; j++)
 		{
-            Cnew.blocks[2].data.vec[j+1] = -car(i, j, j);
+//            Cnew.blocks[2].data.vec[j+1] = -car(j, j, i);
+			Cnew.blocks[2].data.vec[j+1] = -car(i, j, j);
 		}
 
 //		if (i == 0)

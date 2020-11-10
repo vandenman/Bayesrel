@@ -19,7 +19,8 @@ arma::dvec csdpArma(
               const Rcpp::List& C_p,
               const Rcpp::List& A_p,
               const arma::dvec& b_p,
-              const arma::cube& car)
+              const arma::cube& car,
+              const int         printlevel = 0)
 {
 
     struct blockmatrix C;
@@ -27,6 +28,7 @@ arma::dvec csdpArma(
     double *b;
     double pobj, dobj;
     int status;
+//    arma::dvec out(car.n_slices);
     arma::dvec out(car.n_rows);
 
 
@@ -48,7 +50,7 @@ arma::dvec csdpArma(
     /*
      * Solve the problem
      */
-    status = custom_sdpCpp(n_p,nconstraints_p,C,b,constraints,0.0,&pobj,&dobj, car, out);
+    status = custom_sdpCpp(n_p,nconstraints_p,C,b,constraints,0.0,&pobj,&dobj, car, out, printlevel);
 
 
     // free_prob(n_p,nconstraints_p,C,b,constraints,X,y,Z);
