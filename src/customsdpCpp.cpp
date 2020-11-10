@@ -20,7 +20,7 @@ extern "C" {
 int custom_sdpCpp(
      int n,
      int k,
-     const blockmatrix& C,
+     blockmatrix& C,
      double *a,
      struct constraintmatrix *constraints,
      double constant_offset,
@@ -431,7 +431,7 @@ int custom_sdpCpp(
 //    arma::dvec negvar(k+1);
 //    negvar(0) = 0; // is somehow needed?
 //    arma::dvec y_p;
-    struct blockmatrix Cnew = C;
+//    struct blockmatrix Cnew = C;
 
 //	for (j = 0; j < k*k; j+= k + 1)
 //	{
@@ -467,14 +467,14 @@ int custom_sdpCpp(
 		{
 //			Cnew.blocks[1].data.mat[j2 + k*j ] = -car(j2, j, i);
 //			Cnew.blocks[1].data.mat[j  + k*j2] = -car(j2, j, i);
-			Cnew.blocks[1].data.mat[j2 + k*j ] = -car(i, j2, j);
-			Cnew.blocks[1].data.mat[j  + k*j2] = -car(i, j2, j);
+			C.blocks[1].data.mat[j2 + k*j ] = -car(i, j2, j);
+			C.blocks[1].data.mat[j  + k*j2] = -car(i, j2, j);
 		}
 
         for (j=0; j<k; j++)
 		{
 //            Cnew.blocks[2].data.vec[j+1] = -car(j, j, i);
-			Cnew.blocks[2].data.vec[j+1] = -car(i, j, j);
+			C.blocks[2].data.vec[j+1] = -car(i, j, j);
 		}
 
 //		if (i == 0)
@@ -489,9 +489,9 @@ int custom_sdpCpp(
 //		}
 
 
-        initArma(n,k,Cnew,a,constraints,&X,&y,&Z);
+        initArma(n,k,C,a,constraints,&X,&y,&Z);
 
-        ret=sdp(n,k,Cnew,a,constant_offset,constraints,byblocks,fill,X,y,Z,
+        ret=sdp(n,k,C,a,constant_offset,constraints,byblocks,fill,X,y,Z,
            cholxinv,cholzinv,ppobj,pdobj,work1,work2,work3,workvec1,
            workvec2,workvec3,workvec4,workvec5,workvec6,workvec7,workvec8,
            diagO,bestx,besty,bestz,Zi,O,rhs,dZ,dX,dy,dy1,Fp,

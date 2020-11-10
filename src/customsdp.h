@@ -30,7 +30,7 @@ void initArma(int n,
 
 int custom_sdpCpp(int n,
     int k,
-    const blockmatrix& C,
+    blockmatrix& C,
     double *a,
     struct constraintmatrix *constraints,
     double constant_offset,
